@@ -21,7 +21,7 @@ public class xmlParsing {
     try {
 
 
-  File fXmlFile = new File("dataMaskerRules.xml");
+        File fXmlFile = new File("dataMaskerRules.xml");
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(fXmlFile);
