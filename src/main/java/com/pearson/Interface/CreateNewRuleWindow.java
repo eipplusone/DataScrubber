@@ -4,6 +4,10 @@
  */
 package com.pearson.Interface;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author UMA99J5
@@ -115,10 +119,22 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // open the new shuffle rule window
-       //NewShuffleRuleWindow srw = new NewShuffleRuleWindow();
-      // srw.setVisible(true);
-      // srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        try {
+            // open the new shuffle rule window
+           
+           //try {
+          //              new NewShuffleRuleWindow("core", "dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306").setVisible(true);
+           //         } catch (SQLException ex) {
+                //        Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+                 //       ex.printStackTrace();
+                //    }
+                
+          NewShuffleRuleWindow srw = new NewShuffleRuleWindow("core", "dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306");
+          srw.setVisible(true);
+          srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
