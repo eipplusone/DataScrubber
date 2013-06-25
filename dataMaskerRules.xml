@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<mySQLTable>
+    <rule id="1">
+        <dependency>none</dependency>
+        <column>last_name</column>
+        <type>shuffle</type>
+    </rule>
+    <rule id="2">
+        <dependency>rule1</dependency>
+        <column>first_name,middle_name, gender</column>
+
+        <type>shuffle</type>
+    </rule>
+    <rule id="3">
+        <dependency>rule2</dependency>
+        <column>code, local_code, date_of_birth, grade</column>
+        <type>shuffle</type>
+    </rule>
+
+
+    <rule>
+        <type>shuffle</type>
+    </rule>
+    <rule id="3">
+        <dependency>rule2</dependency>
+        <column>code, local_code, date_of_birth, grade</column>
+        <type>shuffle</type>
+    </rule>
+    <rule id="4">
+        <dependency>rule3</dependency>
+        <column>change_date, change_user</column>
+        <type>shuffle</type>
+    </rule>
+        
+
+</mySQLTable>
