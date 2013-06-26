@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
-<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://pearson.com/xmlexample/russes" xmlns="http://pearson.com/xmlexample/russes" elementFormDefault="qualified">
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
 
-    <xs:element name="russes">
+    <xs:element name="rules">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="russ" type="russ" maxOccurs="unbounded"/>
+                <xs:element name="rule" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     
     
-    
-    <xs:complexType name="russ">
+    <xs:element name="russ">
+    <xs:complexType>
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="nullable" type="xs:int"/>
+            <xs:element name="nullable" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
-    
+    </xs:element>
     
     
     

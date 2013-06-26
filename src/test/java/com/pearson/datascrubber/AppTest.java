@@ -1,4 +1,4 @@
-package com.pearson.DataScrubber;
+package com.pearson.datascrubber;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
