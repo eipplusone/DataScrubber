@@ -145,7 +145,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // exit
-        setVisible(false);
+        dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**

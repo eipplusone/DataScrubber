@@ -4,8 +4,10 @@
  */
 package com.pearson.Interface;
 
+import com.pearson.Database.DatabaseManager;
 import com.pearson.SQL.Database;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
@@ -226,7 +228,7 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         // Close jFrame
-       setVisible(false);
+       dispose();
        //s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
 
     }//GEN-LAST:event_CancelButtonActionPerformed
@@ -285,10 +287,15 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         //test connection and open the createNewRuleWindow 
-        setVisible(false);
+        dispose();
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
+        Connection connection = DatabaseManager.getConnection();
+        
+    
+        
+        
     }//GEN-LAST:event_OKButtonActionPerformed
 
     /**
