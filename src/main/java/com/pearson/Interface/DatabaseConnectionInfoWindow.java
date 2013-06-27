@@ -287,7 +287,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         //test connection and open the createNewRuleWindow 
         setVisible(false);
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
-        
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_OKButtonActionPerformed
