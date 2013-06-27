@@ -3,34 +3,55 @@ package com.pearson.Interface;
 import java.awt.Component;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.accessibility.Accessible;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import noNamespace.MaskingSetDocument;
+import noNamespace.MaskingSetDocument.MaskingSet;
+import org.apache.commons.lang.math.RandomUtils;
+import org.apache.xmlbeans.XmlOptions;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 
 /**
  *
  * @author UMA99J5
  */
 public class MainWindow extends javax.swing.JFrame {
-    private Object openButton;
-    
-   // public void windowClosed(WindowEvent e){
-   //     dispose();
-  //  }
-   // private Component jMenuItem2;
-    
 
+    private Object openButton;
+    private DefaultTreeModel rulesInSetTreeModel;
+    MaskingSet maskingSet;
+
+    // public void windowClosed(WindowEvent e){
+    //     dispose();
+    //  }
+    // private Component jMenuItem2;
     /**
      * Creates new form DataMaskFrontEndGUI
      */
     public MainWindow() {
+        rulesInSetTreeModel = new DefaultTreeModel(null);
         initComponents();
-        
+        DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) RulesInSetTree.getCellRenderer();
+        renderer.setLeafIcon(null);
+        renderer.setClosedIcon(null);
+        renderer.setOpenIcon(null);
+
     }
 
     /**
@@ -43,41 +64,31 @@ public class MainWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        rulesInSet = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        RulesInSetPane = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        RulesInSetTree = new javax.swing.JTree();
         settings = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         exit = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
-        maskingSet = new javax.swing.JMenu();
-        newMaskingSet = new javax.swing.JMenuItem();
-        openMaskingSet = new javax.swing.JMenuItem();
-        clearMaskingSet = new javax.swing.JMenuItem();
-        saveSet = new javax.swing.JMenuItem();
-        saveSetAs = new javax.swing.JMenuItem();
-        rule = new javax.swing.JMenu();
-        newRule = new javax.swing.JMenuItem();
-        deleteRule = new javax.swing.JMenuItem();
-        disableRule = new javax.swing.JMenuItem();
+        maskingSetMenuItem = new javax.swing.JMenu();
+        newMaskingSetMenuButton = new javax.swing.JMenuItem();
+        openMaskingSetMenuButton = new javax.swing.JMenuItem();
+        clearMaskingSetMenuButton = new javax.swing.JMenuItem();
+        saveSetMenuButton = new javax.swing.JMenuItem();
+        saveSetAsMenuButton = new javax.swing.JMenuItem();
+        ruleMenuItem = new javax.swing.JMenu();
+        newRuleMenuButton = new javax.swing.JMenuItem();
+        deleteRuleMenuButton = new javax.swing.JMenuItem();
+        disableRuleMenuButton = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Rule #", "Rule Type", "Target", "Columns"
-            }
-        ));
-        rulesInSet.setViewportView(jTable1);
+        RulesInSetTree.setModel(rulesInSetTreeModel);
+        jScrollPane1.setViewportView(RulesInSetTree);
 
-        jTabbedPane1.addTab("Rules in Set", rulesInSet);
+        RulesInSetPane.addTab("Rules in Set", jScrollPane1);
 
         jCheckBox1.setText("New Disable FK Constraints Rule...");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +120,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap(344, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Settings", settings);
+        RulesInSetPane.addTab("Settings", settings);
 
         exit.setText("Exit");
         exit.addActionListener(new java.awt.event.ActionListener() {
@@ -125,7 +136,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(RulesInSetPane)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(223, 223, 223)
                         .addComponent(exit)
@@ -136,63 +147,63 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(RulesInSetPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(exit)
                 .addContainerGap())
         );
 
-        maskingSet.setText("Masking Set");
-        maskingSet.addActionListener(new java.awt.event.ActionListener() {
+        maskingSetMenuItem.setText("Masking Set");
+        maskingSetMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                maskingSetActionPerformed(evt);
+                maskingSetMenuItemActionPerformed(evt);
             }
         });
 
-        newMaskingSet.setText("New Masking Set...");
-        newMaskingSet.addActionListener(new java.awt.event.ActionListener() {
+        newMaskingSetMenuButton.setText("New Masking Set...");
+        newMaskingSetMenuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newMaskingSetActionPerformed(evt);
+                newMaskingSetMenuButtonActionPerformed(evt);
             }
         });
-        maskingSet.add(newMaskingSet);
+        maskingSetMenuItem.add(newMaskingSetMenuButton);
 
-        openMaskingSet.setText("Open Masking Set...");
-        openMaskingSet.addActionListener(new java.awt.event.ActionListener() {
+        openMaskingSetMenuButton.setText("Open Masking Set...");
+        openMaskingSetMenuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openMaskingSetActionPerformed(evt);
+                openMaskingSetMenuButtonActionPerformed(evt);
             }
         });
-        maskingSet.add(openMaskingSet);
+        maskingSetMenuItem.add(openMaskingSetMenuButton);
 
-        clearMaskingSet.setText("Clear Masking Set...");
-        maskingSet.add(clearMaskingSet);
+        clearMaskingSetMenuButton.setText("Clear Masking Set...");
+        maskingSetMenuItem.add(clearMaskingSetMenuButton);
 
-        saveSet.setText("Save Set...");
-        maskingSet.add(saveSet);
+        saveSetMenuButton.setText("Save Set...");
+        maskingSetMenuItem.add(saveSetMenuButton);
 
-        saveSetAs.setText("Save Set As...");
-        maskingSet.add(saveSetAs);
+        saveSetAsMenuButton.setText("Save Set As...");
+        maskingSetMenuItem.add(saveSetAsMenuButton);
 
-        jMenuBar1.add(maskingSet);
+        jMenuBar1.add(maskingSetMenuItem);
 
-        rule.setText("Rule");
+        ruleMenuItem.setText("Rule");
 
-        newRule.setText("New Rule...");
-        newRule.addActionListener(new java.awt.event.ActionListener() {
+        newRuleMenuButton.setText("New Rule...");
+        newRuleMenuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newRuleActionPerformed(evt);
+                newRuleMenuButtonActionPerformed(evt);
             }
         });
-        rule.add(newRule);
+        ruleMenuItem.add(newRuleMenuButton);
 
-        deleteRule.setText("Delete Rule...");
-        rule.add(deleteRule);
+        deleteRuleMenuButton.setText("Delete Rule...");
+        ruleMenuItem.add(deleteRuleMenuButton);
 
-        disableRule.setText("Disable Rule...");
-        rule.add(disableRule);
+        disableRuleMenuButton.setText("Disable Rule...");
+        ruleMenuItem.add(disableRuleMenuButton);
 
-        jMenuBar1.add(rule);
+        jMenuBar1.add(ruleMenuItem);
 
         setJMenuBar(jMenuBar1);
 
@@ -204,66 +215,86 @@ public class MainWindow extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 76, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void newMaskingSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMaskingSetActionPerformed
-       
-       DatabaseConnectionInfoWindow s = new DatabaseConnectionInfoWindow();
-       s.setVisible(true);
-       s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+    private void newMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMaskingSetMenuButtonActionPerformed
+
+        // need to do checks if a masking set has already been created and if the user wants
+        // to save it
         
-    }//GEN-LAST:event_newMaskingSetActionPerformed
-
+        File temp_set = new File("temp_set.xml");
         
+        MaskingSetDocument doc = MaskingSetDocument.Factory.newInstance();
+        maskingSet = doc.addNewMaskingSet();
+        maskingSet.setName("New set/Empty");
+        maskingSet.setDateCreated(new GregorianCalendar());
+        maskingSet.addNewRules();
+        
+        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode(maskingSet.getName()));
+        
+        
+        XmlOptions options = new XmlOptions();
+        options.setSavePrettyPrint();
+        options.setSavePrettyPrintIndent(4);
+        options.setUseDefaultNamespace();
+        
+        try {
+            doc.save(temp_set, options);
+    //        DatabaseConnectionInfoWindow s = new DatabaseConnectionInfoWindow();
+    //        s.setVisible(true);
+    //        s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
+    }//GEN-LAST:event_newMaskingSetMenuButtonActionPerformed
 
-    private void openMaskingSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMaskingSetActionPerformed
+    private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMaskingSetMenuButtonActionPerformed
         // create a file chooser
         JFileChooser fc = new JFileChooser();
-        int returnVal = fc.showDialog(openMaskingSet, "atttach");
-        if (evt.getSource() == openButton){
+        int returnVal = fc.showDialog(openMaskingSetMenuButton, "atttach");
+        if (evt.getSource() == openButton) {
             //handle open button action
-   
-            if(returnVal == JFileChooser.APPROVE_OPTION){
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
-               
-                System.out.println("Opening:"+file.getName());}
-            else {
+
+                System.out.println("Opening:" + file.getName());
+            } else {
                 System.out.println("Open command cancelled by user");
             }
         }
     }
 
-        private int showOpenDialog(JMenuItem jMenuItem2) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        
-        
-    }//GEN-LAST:event_openMaskingSetActionPerformed
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    private int showOpenDialog(JMenuItem jMenuItem2) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
-    private void newRuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRuleActionPerformed
+
+    }//GEN-LAST:event_openMaskingSetMenuButtonActionPerformed
+
+    private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRuleMenuButtonActionPerformed
         // TODO add your handling code here:
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
         iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_newRuleActionPerformed
+    }//GEN-LAST:event_newRuleMenuButtonActionPerformed
 
-    private void maskingSetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetActionPerformed
+    private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetMenuItemActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_maskingSetActionPerformed
+    }//GEN-LAST:event_maskingSetMenuItemActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // Exit
         System.exit(0);
     }//GEN-LAST:event_exitActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -299,29 +330,25 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
     }
-    
-    
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem clearMaskingSet;
-    private javax.swing.JMenuItem deleteRule;
-    private javax.swing.JMenuItem disableRule;
+    private javax.swing.JTabbedPane RulesInSetPane;
+    private javax.swing.JTree RulesInSetTree;
+    private javax.swing.JMenuItem clearMaskingSetMenuButton;
+    private javax.swing.JMenuItem deleteRuleMenuButton;
+    private javax.swing.JMenuItem disableRuleMenuButton;
     private javax.swing.JButton exit;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JMenu maskingSet;
-    private javax.swing.JMenuItem newMaskingSet;
-    private javax.swing.JMenuItem newRule;
-    private javax.swing.JMenuItem openMaskingSet;
-    private javax.swing.JMenu rule;
-    private javax.swing.JScrollPane rulesInSet;
-    private javax.swing.JMenuItem saveSet;
-    private javax.swing.JMenuItem saveSetAs;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu maskingSetMenuItem;
+    private javax.swing.JMenuItem newMaskingSetMenuButton;
+    private javax.swing.JMenuItem newRuleMenuButton;
+    private javax.swing.JMenuItem openMaskingSetMenuButton;
+    private javax.swing.JMenu ruleMenuItem;
+    private javax.swing.JMenuItem saveSetAsMenuButton;
+    private javax.swing.JMenuItem saveSetMenuButton;
     private javax.swing.JPanel settings;
     // End of variables declaration//GEN-END:variables
 

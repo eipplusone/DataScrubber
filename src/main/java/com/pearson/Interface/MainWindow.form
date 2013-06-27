@@ -1,69 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.5" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.7" maxVersion="1.8" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
-        <Menu class="javax.swing.JMenu" name="maskingSet">
+        <Menu class="javax.swing.JMenu" name="maskingSetMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Masking Set"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskingSetActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maskingSetMenuItemActionPerformed"/>
           </Events>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="newMaskingSet">
+            <MenuItem class="javax.swing.JMenuItem" name="newMaskingSetMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New Masking Set..."/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMaskingSetActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMaskingSetMenuButtonActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="openMaskingSet">
+            <MenuItem class="javax.swing.JMenuItem" name="openMaskingSetMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Open Masking Set..."/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openMaskingSetActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openMaskingSetMenuButtonActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="clearMaskingSet">
+            <MenuItem class="javax.swing.JMenuItem" name="clearMaskingSetMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Clear Masking Set..."/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="saveSet">
+            <MenuItem class="javax.swing.JMenuItem" name="saveSetMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save Set..."/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="saveSetAs">
+            <MenuItem class="javax.swing.JMenuItem" name="saveSetAsMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save Set As..."/>
               </Properties>
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="rule">
+        <Menu class="javax.swing.JMenu" name="ruleMenuItem">
           <Properties>
             <Property name="text" type="java.lang.String" value="Rule"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="newRule">
+            <MenuItem class="javax.swing.JMenuItem" name="newRuleMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="New Rule..."/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newRuleActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newRuleMenuButtonActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="deleteRule">
+            <MenuItem class="javax.swing.JMenuItem" name="deleteRuleMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Delete Rule..."/>
               </Properties>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="disableRule">
+            <MenuItem class="javax.swing.JMenuItem" name="disableRuleMenuButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Disable Rule..."/>
               </Properties>
@@ -101,10 +101,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="76" max="32767" attributes="0"/>
-          </Group>
+          <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -117,7 +114,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jTabbedPane1" max="32767" attributes="0"/>
+                      <Component id="RulesInSetPane" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="223" max="-2" attributes="0"/>
                           <Component id="exit" max="-2" attributes="0"/>
@@ -132,7 +129,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jTabbedPane1" min="-2" max="-2" attributes="0"/>
+                  <Component id="RulesInSetPane" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="exit" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -141,11 +138,11 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JTabbedPane" name="jTabbedPane1">
+        <Container class="javax.swing.JTabbedPane" name="RulesInSetPane">
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
           <SubComponents>
-            <Container class="javax.swing.JScrollPane" name="rulesInSet">
+            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
@@ -159,42 +156,10 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTree" name="RulesInSetTree">
                   <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="4" rowCount="4">
-                        <Column editable="true" title="Rule #" type="java.lang.Object"/>
-                        <Column editable="true" title="Rule Type" type="java.lang.Object"/>
-                        <Column editable="true" title="Target" type="java.lang.Object"/>
-                        <Column editable="true" title="Columns" type="java.lang.Object"/>
-                      </Table>
-                    </Property>
-                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                      </TableColumnModel>
-                    </Property>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                    <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="rulesInSetTreeModel" type="code"/>
                     </Property>
                   </Properties>
                 </Component>
