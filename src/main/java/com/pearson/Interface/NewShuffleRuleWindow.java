@@ -8,7 +8,10 @@ import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 import java.io.File;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import java.io.IOException;
+=======
+>>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
 =======
 >>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
 import java.sql.ResultSet;
@@ -48,16 +51,23 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
      */
     public NewShuffleRuleWindow() throws SQLException {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
 
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
+<<<<<<< HEAD
 
 =======
 
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
+        
+>>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
+=======
         
 >>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
         database.fillTables();
@@ -404,6 +414,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         File tempFile = new File("temp_file.xml");
 <<<<<<< HEAD
+<<<<<<< HEAD
         MaskingSetDocument doc = null;
 
 
@@ -421,12 +432,17 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         Rules rulesInSet = doc.getMaskingSet().getRules();
                 ;
 =======
+=======
+>>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
         
         ArrayList<String> columns = new ArrayList<>();
         for(Object column : listModel.toArray()) columns.add((String)column);
         
         MaskingSetDocument doc = MaskingSetDocument.Factory.
    ;
+<<<<<<< HEAD
+>>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
+=======
 >>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
     /**
