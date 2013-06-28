@@ -1,5 +1,6 @@
 package com.pearson.Interface;
 
+import com.pearson.Rules.Rule;
 import java.awt.Component;
 import java.awt.event.*;
 import java.io.File;
@@ -20,7 +21,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
+import noNamespace.RulesDocument.Rules;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 /*
  * To change this template, choose Tools | Templates
@@ -51,6 +54,7 @@ public class MainWindow extends javax.swing.JFrame {
         renderer.setLeafIcon(null);
         renderer.setClosedIcon(null);
         renderer.setOpenIcon(null);
+        UIManager.setMainWindow(this);
 
     }
 
@@ -230,7 +234,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         MaskingSetDocument doc = MaskingSetDocument.Factory.newInstance();
         maskingSet = doc.addNewMaskingSet();
-        maskingSet.setName("New set/Empty");
+        maskingSet.setName("New masking set/Empty: Click \"Rule\" in order to add a new rule ");
         maskingSet.setDateCreated(new GregorianCalendar());
         maskingSet.addNewRules();
         
@@ -281,6 +285,7 @@ public class MainWindow extends javax.swing.JFrame {
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
         iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        
     }//GEN-LAST:event_newRuleMenuButtonActionPerformed
 
     private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetMenuItemActionPerformed
