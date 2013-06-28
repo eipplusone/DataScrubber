@@ -7,13 +7,7 @@ import com.pearson.SQL.Column;
 import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 import java.io.File;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import java.io.IOException;
-=======
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
-=======
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -50,26 +44,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
      * connection
      */
     public NewShuffleRuleWindow() throws SQLException {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
 
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
-<<<<<<< HEAD
 
-=======
-
-        database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
-                UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
-                + ":" + UIManager.getPort());
-        
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
-=======
-        
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
         database.fillTables();
         // end of preparing database structure
 
@@ -413,8 +392,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private void createShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
         // TODO add your handling code here:
         File tempFile = new File("temp_file.xml");
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         MaskingSetDocument doc = null;
 
 
@@ -430,20 +408,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         Rules rulesInSet = doc.getMaskingSet().getRules();
-                ;
-=======
-=======
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
-        
-        ArrayList<String> columns = new ArrayList<>();
-        for(Object column : listModel.toArray()) columns.add((String)column);
-        
-        MaskingSetDocument doc = MaskingSetDocument.Factory.
-   ;
-<<<<<<< HEAD
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
-=======
->>>>>>> 1074859e4d6ce3970576a12ca338ce23dad7cf81
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
     /**
      * @param args the command line arguments
