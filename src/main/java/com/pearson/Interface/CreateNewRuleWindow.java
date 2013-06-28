@@ -4,6 +4,10 @@
  */
 package com.pearson.Interface;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author UMA99J5
@@ -109,16 +113,21 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // open the new substitution rule window
-       NewSubstitutionRuleWindow rw = new NewSubstitutionRuleWindow();
-       rw.setVisible(true);
-       rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        NewSubstitutionRuleWindow rw = new NewSubstitutionRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // open the new shuffle rule window
-       //NewShuffleRuleWindow srw = new NewShuffleRuleWindow();
-      // srw.setVisible(true);
-      // srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        NewShuffleRuleWindow srw = null;
+        try {
+            srw = new NewShuffleRuleWindow();
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        srw.setVisible(true);
+        srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

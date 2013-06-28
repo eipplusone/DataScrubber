@@ -4,7 +4,9 @@ import com.pearson.SQL.Database;
 import com.pearson.DataScrubber.Launcher;
 import com.pearson.Database.DatabaseInterface;
 import com.pearson.SQL.Column;
+import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -38,9 +40,12 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
      * to enter that window he already should have passed checks on correct
      * connection
      */
-    public NewShuffleRuleWindow(String schema_name, String username, String password, String url) throws SQLException {
+    public NewShuffleRuleWindow() throws SQLException {
 
-        database = new Database(schema_name, username, password, url);
+        database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
+                UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
+                + ":" + UIManager.getPort());
+        
         database.fillTables();
         // end of preparing database structure
 
@@ -245,6 +250,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         });
 
         createShuffleRuleButton.setText("Create Shuffle Rule");
+        createShuffleRuleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createShuffleRuleButtonActionPerformed(evt);
+            }
+        });
 
         helpButton.setText("Help");
 
@@ -362,6 +372,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         firstTimeSelected = true;
         columnsComboBox.removeAllItems();
+        listModel.removeAllElements();
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
         String tableSelected = tableNames.get(row);
         for (Column column : database.tables.get(tableSelected).columns) {
@@ -374,6 +385,17 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
         listModel.removeElement(ColumnsSelectedList.getSelectedValue().toString());
     }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void createShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
+        // TODO add your handling code here:
+        File tempFile = new File("temp_file.xml");
+        
+        ArrayList<String> columns = new ArrayList<>();
+        for(Object column : listModel.toArray()) columns.add((String)column);
+        
+        MaskingSetDocument doc = MaskingSetDocument.Factory.
+   ;
+    }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -406,7 +428,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
-                    new NewShuffleRuleWindow("core", "dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306").setVisible(true);
+                    new NewShuffleRuleWindow().setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
                     ex.printStackTrace();
