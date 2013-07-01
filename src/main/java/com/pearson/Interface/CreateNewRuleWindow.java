@@ -7,7 +7,6 @@ package com.pearson.Interface;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.pearson.Interface.DatabaseConnectionInfoWindow;
 
 /**
  *
@@ -59,11 +58,6 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         });
 
         jButton3.setText("Cancel");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -119,34 +113,27 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // open the new substitution rule window
-       NewSubstitutionRuleWindow rw = new NewSubstitutionRuleWindow();
-       rw.setVisible(true);
-       rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        NewSubstitutionRuleWindow rw = null;
         try {
-            // open the new shuffle rule window
-           
-           //try {
-          //              new NewShuffleRuleWindow("core", "dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306").setVisible(true);
-           //         } catch (SQLException ex) {
-                //        Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
-                 //       ex.printStackTrace();
-                //    }
-            
-          NewShuffleRuleWindow srw = new NewShuffleRuleWindow("core", "dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306");
-          srw.setVisible(true);
-          srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        rw = new NewSubstitutionRuleWindow();
         } catch (SQLException ex) {
             Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // exit
-        dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // open the new shuffle rule window
+        NewShuffleRuleWindow srw = null;
+        try {
+            srw = new NewShuffleRuleWindow();
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        srw.setVisible(true);
+        srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

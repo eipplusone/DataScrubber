@@ -4,10 +4,8 @@
  */
 package com.pearson.Interface;
 
-import com.pearson.Database.DatabaseManager;
 import com.pearson.SQL.Database;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
@@ -19,6 +17,12 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     //public void windowClosed(WindowEvent e){
     //    dispose();
     // }
+
+    String username = null;
+    String password = null;
+    String url = null;
+    String defaultSchema = null;
+    String port = null;
 
     /**
      * Creates new form NewMaskingSet
@@ -228,8 +232,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
         // Close jFrame
-       dispose();
-       //s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        dispose();
+        //s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
 
     }//GEN-LAST:event_CancelButtonActionPerformed
 
@@ -238,64 +242,79 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelButtonMouseExited
 
     private void TestConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestConnectionButtonActionPerformed
-        String username = null;
-        String password = null;
-        String url = null;
-        String defaultSchema;
-        String port = null;
 
-        for (int i = 0; i == 0; i++) {
-            username = UserNameField.getText();
-            if (username.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the username");
-                break;
-            }
-
-            password = PasswordField.getText();
-            if (password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the password");
-                break;
-            }
-            
-            port = PortField.getText();
-            if (port.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter port number");
-                break;
-            }
-
-            url = HostNameField.getText();
-            if (url.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the url");
-                break;
-            }
-
-            defaultSchema = DefaultSchemaField.getText();
-            if (defaultSchema.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the default schema");
-                break;
-            }
-
+        if (isInputNotEmpty()) {
+            fetch();
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
                 JOptionPane.showMessageDialog(null, "Connection has been established");
-                break;
             } else {
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-                break;
             }
         }
+
     }//GEN-LAST:event_TestConnectionButtonActionPerformed
+
+    private boolean isInputNotEmpty() {
+        for (int i = 0; i == 0; i++) {
+            String username = UserNameField.getText();
+            if (username.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter the username");
+                return false;
+            }
+            String password = PasswordField.getText();
+            if (password.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter the password");
+                return false;
+            }
+            String port = PortField.getText();
+            if (port.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter port number");
+                return false;
+            }
+            String url = HostNameField.getText();
+            if (url.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter the url");
+                return false;
+            }
+            String defaultSchema = DefaultSchemaField.getText();
+            if (defaultSchema.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Please enter the default schema");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void fetch() {
+        username = UserNameField.getText();
+        password = PasswordField.getText();
+        port = PortField.getText();
+        url = HostNameField.getText();
+        defaultSchema = DefaultSchemaField.getText();
+
+    }
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
         //test connection and open the createNewRuleWindow 
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+                JOptionPane.showMessageDialog(null, "Connection has been established");
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
         dispose();
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
-        Connection connection = DatabaseManager.getConnection();
-        
-    
-        
-        
     }//GEN-LAST:event_OKButtonActionPerformed
 
     /**
