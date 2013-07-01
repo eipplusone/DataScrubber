@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <!--under contruction-->
+    <xs:element name="rule_type">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="shuffle"/>
+                <xs:enumeration value="substitute"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+
+    <!--simple types-->
+    <xs:element name="column" type="xs:string"/>
+    <xs:element name="date_created" type="xs:date"/>
+    <xs:element name="name" type="xs:string"/>
+    
+    <!-- definition of attributes-->
+    <xs:attribute name="target" type="xs:string"/>
+    <xs:attribute name="set_id" type="xs:string"/>
+
+    <!--complex types-->
+    <xs:element name="masking_set">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="name"/>
+                <xs:element ref="date_created" />
+                <xs:element ref="rules" maxOccurs="1" minOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute ref="set_id" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="shuffle_rule">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="column" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute ref="target" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!--substitution rule is under construction-->
+    <xs:element name="substitution_rule">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="column" maxOccurs="1" minOccurs="1" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+        
+    <xs:element name="rules">
+        <xs:complexType>
+            <xs:choice>                
+                <xs:element ref="shuffle_rule" maxOccurs="unbounded"/>
+                <xs:element ref="substitution_rule" maxOccurs="unbounded"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    
+</xs:schema>
