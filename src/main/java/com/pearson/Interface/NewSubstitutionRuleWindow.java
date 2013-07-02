@@ -31,7 +31,7 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
     /**
      * Creates new form NewSubstitutionRule
      */
-    Database database1;
+    Database database;
     ArrayList<String> tableNames =  new ArrayList<>();
     ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
@@ -42,14 +42,14 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
      * database information has been passed over. **/
     
     public NewSubstitutionRuleWindow() throws SQLException {
-        database1 = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
+        database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
 
-        database1.fillTables();
+        database.fillTables();
         // end of preparing database structure
 
-        for (MySQLTable table : database1.tables.values()) {
+        for (MySQLTable table : database.tables.values()) {
             tableNames.add(table.getTableName());
         }
 
@@ -250,7 +250,7 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         listModel.removeAllElements();
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
         String tableSelected = tableNames.get(row);
-        for (Column column : database1.tables.get(tableSelected).columns) {
+        for (Column column : database.tables.get(tableSelected).columns) {
             ColumnsComboBox.addItem(column.name);
         }
         firstTimeSelected = false;
