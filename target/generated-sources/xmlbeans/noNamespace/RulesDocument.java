@@ -17,7 +17,7 @@ package noNamespace;
 public interface RulesDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RulesDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sFF183B216F265EDBA4CE556C93C12418").resolveHandle("rulesa41edoctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RulesDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("rulesa41edoctype");
     
     /**
      * Gets the "rules" element
@@ -42,7 +42,7 @@ public interface RulesDocument extends org.apache.xmlbeans.XmlObject
     public interface Rules extends org.apache.xmlbeans.XmlObject
     {
         public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rules.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sFF183B216F265EDBA4CE556C93C12418").resolveHandle("rules1491elemtype");
+            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rules.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("rules1491elemtype");
         
         /**
          * Gets array of all "rule" elements

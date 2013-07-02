@@ -16,7 +16,7 @@ package noNamespace;
 public interface ShuffleRule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(ShuffleRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sFF183B216F265EDBA4CE556C93C12418").resolveHandle("shufflerule316btype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(ShuffleRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("shufflerule316btype");
     
     /**
      * Gets the "column" element

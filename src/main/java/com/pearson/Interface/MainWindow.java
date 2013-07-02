@@ -26,6 +26,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -36,11 +37,12 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
  * @author UMA99J5
  */
 public class MainWindow extends javax.swing.JFrame {
-
+    
     private Object openButton;
     private DefaultTreeModel rulesInSetTreeModel;
     MaskingSet maskingSet;
     XMLInterface xmlInterface;
+
 
     // public void windowClosed(WindowEvent e){
     //     dispose();
@@ -214,6 +216,7 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addContainerGap())
+
         );
 
         pack();
@@ -223,6 +226,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
+
 
         try {
             xmlInterface = new XMLInterface(new File("temp_file.xml"));
@@ -237,7 +241,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_newMaskingSetMenuButtonActionPerformed
 
-    private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMaskingSetMenuButtonActionPerformed
+    private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                         
         // create a file chooser
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
@@ -248,6 +252,7 @@ public class MainWindow extends javax.swing.JFrame {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 file = fc.getSelectedFile();
+
             }
         }
 
@@ -272,24 +277,23 @@ public class MainWindow extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
 
-    }//GEN-LAST:event_openMaskingSetMenuButtonActionPerformed
 
-
-    private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRuleMenuButtonActionPerformed
+    }   
+	
+    private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
         // TODO add your handling code here:
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
         iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
 
-    }//GEN-LAST:event_newRuleMenuButtonActionPerformed
-
+    }                                                 
     private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_maskingSetMenuItemActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }                                          
 
     /**
      * @param args the command line arguments

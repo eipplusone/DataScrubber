@@ -7,13 +7,13 @@ import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 import java.io.File;
 import java.io.IOException;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
-
 import noNamespace.RulesDocument.Rules;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -43,10 +43,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
      */
     public NewShuffleRuleWindow() throws SQLException {
 
+
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
-
+  
         // fill in table structure so we have access to it later
         database.fillTables();
         for (MySQLTable table : database.tables.values()) {
@@ -362,7 +363,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit
-        dispose();
+        setVisible(false);
 
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -385,7 +386,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             columnsComboBox.addItem(column.name);
         }
         firstTimeSelected = false;
-    }//GEN-LAST:event_tablesSelectedTableMouseClicked
+    }//GEN-LAST:event_tablesSelectedTableMouseClicked                                                   
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
