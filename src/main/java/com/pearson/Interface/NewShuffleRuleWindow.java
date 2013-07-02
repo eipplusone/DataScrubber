@@ -1,24 +1,22 @@
 package com.pearson.Interface;
 
+import com.pearson.Interface.Models.ItemsSelectedTableModel;
 import com.pearson.SQL.Database;
-import com.pearson.DataScrubber.Launcher;
-import com.pearson.Database.DatabaseInterface;
 import com.pearson.SQL.Column;
 import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.tree.TreeSelectionModel;
+
 import noNamespace.RulesDocument.Rules;
 import org.apache.xmlbeans.XmlException;
-
+import org.apache.xmlbeans.XmlOptions;
 
 /*
  * To change this template, choose Tools | Templates
@@ -49,16 +47,15 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
 
+        // fill in table structure so we have access to it later
         database.fillTables();
-        // end of preparing database structure
-
         for (MySQLTable table : database.tables.values()) {
             tableNames.add(table.getTableName());
         }
 
         listModel = new DefaultListModel();
-
         initComponents();
+        // allow only one table to be selected inside table list
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
@@ -102,7 +99,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
         selectTableLabel.setText("Select Table");
 
-        tablesSelectedTable.setModel(new com.pearson.Interface.ItemsSelectedTableModel(tableNames));
+        tablesSelectedTable.setModel(new ItemsSelectedTableModel(tableNames));
         tablesSelectedTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablesSelectedTableMouseClicked(evt);
@@ -349,7 +346,9 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_errorTextAreaAncestorAdded
 
     private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
-        // TODO add your handling code here:
+
+        // mouse clicked on the tables selected triggers this event
+        // we want to make sure not to update it
         if (!firstTimeSelected) {
             String column = (String) columnsComboBox.getSelectedItem();
             listModel.addElement(column);
@@ -372,11 +371,15 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_tablesSelectedTableComponentShown
 
     private void tablesSelectedTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablesSelectedTableMouseClicked
-        // TODO add your handling code here:
+
+        // need to check if a new table was selected for the first time
+        // otherwise it triggers actionPerformed on comboBox for some reason
         firstTimeSelected = true;
-        columnsComboBox.removeAllItems();
+        columnsComboBox.removeAllItems(); // remove columns from previoulsy selected table
         listModel.removeAllElements();
+
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
+
         String tableSelected = tableNames.get(row);
         for (Column column : database.tables.get(tableSelected).columns) {
             columnsComboBox.addItem(column.name);
@@ -390,29 +393,52 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void createShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
-        // TODO add your handling code here:
-        File tempFile = new File("temp_file.xml");
 
-        MaskingSetDocument doc = null;
-
-
+        File temporaryFile = new File("temp_file.xml");
+        MaskingSetDocument maskingSetDocument = null;
         ArrayList<String> columns = new ArrayList<>();
+
         for (Object column : listModel.toArray()) {
             columns.add((String) column);
         }
+
+        // first write new rule to a temporary file
         try {
-            doc = MaskingSetDocument.Factory.parse(tempFile);
+            maskingSetDocument = MaskingSetDocument.Factory.parse(temporaryFile);
         } catch (XmlException ex) {
             Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Rules rulesInSet = doc.getMaskingSet().getRules();
+
+        Rules rulesInSet = maskingSetDocument.getMaskingSet().getRules();
+        //ShuffleRule newRule = rulesInSet.addNewShuffleRule();
+        String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
+
+        //newRule.setTarget(targetTable);
+        //newRule.setColumnArray((String[]) columns.toArray());
+
+        XmlOptions options = new XmlOptions();
+        options.setSavePrettyPrint();
+        options.setSavePrettyPrintIndent(4);
+        options.setUseDefaultNamespace();
+        
+        try {
+            maskingSetDocument.save(temporaryFile, options);
+        } catch (IOException ex) {
+            Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        // second let the main window that we created a rule
+        // so it updates with new information
+        //UIManager.getMainWindow().updateRule(newRule);
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

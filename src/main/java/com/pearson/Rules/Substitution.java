@@ -14,34 +14,34 @@ public class Substitution extends Rule{
 
     String columnName;
 
-    public Substitution(MySQLTable mySQLTable, String columnName) {
+    public Substitution(String mySQLTable, String columnName) {
 
         super(mySQLTable);
         this.columnName = columnName;
 
     }
 
-    public void setToNull() throws SQLException {
-
-        disableConstraints();
-        mySQLTable.setColumnToNull(columnName);
-        enableConstraints();
-
-    }
-
-    private void disableConstraints() throws SQLException {
-
-        mySQLTable.disableUniqueChecks();
-        mySQLTable.disableForeignKeyConstraints();
-        mySQLTable.disableTriggers();
-
-    }
-
-    private void enableConstraints() throws SQLException {
-
-        mySQLTable.enableTriggers();
-        mySQLTable.enableForeignKeyConstraints();
-        mySQLTable.enableUniqueChecks();
-
-    }
+//    public void setToNull() throws SQLException {
+//
+//        disableConstraints();
+//        mySQLTable.setColumnToNull(columnName);
+//        enableConstraints();
+//
+//    }
+//
+//    private void disableConstraints() throws SQLException {
+//
+//        mySQLTable.disableUniqueChecks();
+//        mySQLTable.disableForeignKeyConstraints();
+//        mySQLTable.disableTriggers();
+//
+//    }
+//
+//    private void enableConstraints() throws SQLException {
+//
+//        mySQLTable.enableTriggers();
+//        mySQLTable.enableForeignKeyConstraints();
+//        mySQLTable.enableUniqueChecks();
+//
+//    }
 }

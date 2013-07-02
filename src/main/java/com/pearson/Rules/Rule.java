@@ -12,9 +12,9 @@ import com.pearson.SQL.MySQLTable;
 public abstract class Rule {
 
 
-    MySQLTable mySQLTable;
+    String mySQLTable;
 
-    public Rule(MySQLTable mySQLTable){
+    public Rule(String mySQLTable){
         this.mySQLTable = mySQLTable;
     }
 

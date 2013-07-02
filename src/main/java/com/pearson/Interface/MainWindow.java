@@ -1,20 +1,18 @@
 package com.pearson.Interface;
 
+import com.pearson.Interface.Models.RulesTreeTableModel;
 import com.pearson.Rules.Rule;
-import java.awt.Component;
-import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.accessibility.Accessible;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -22,9 +20,12 @@ import javax.swing.tree.MutableTreeNode;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.RulesDocument.Rules;
+import noNamespace.ShuffleRule;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
+import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
+import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -39,6 +40,7 @@ public class MainWindow extends javax.swing.JFrame {
     private Object openButton;
     private DefaultTreeModel rulesInSetTreeModel;
     MaskingSet maskingSet;
+    XMLInterface xmlInterface;
 
     // public void windowClosed(WindowEvent e){
     //     dispose();
@@ -48,9 +50,12 @@ public class MainWindow extends javax.swing.JFrame {
      * Creates new form DataMaskFrontEndGUI
      */
     public MainWindow() {
+        
         rulesInSetTreeModel = new DefaultTreeModel(null);
         initComponents();
+        
         DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) RulesInSetTree.getCellRenderer();
+        
         renderer.setLeafIcon(null);
         renderer.setClosedIcon(null);
         renderer.setOpenIcon(null);
@@ -74,7 +79,8 @@ public class MainWindow extends javax.swing.JFrame {
         settings = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-        exit = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TestTree = new org.jdesktop.swingx.JXTreeTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         maskingSetMenuItem = new javax.swing.JMenu();
         newMaskingSetMenuButton = new javax.swing.JMenuItem();
@@ -112,7 +118,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jCheckBox3)
                     .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(260, Short.MAX_VALUE))
+                .addContainerGap(280, Short.MAX_VALUE))
         );
         settingsLayout.setVerticalGroup(
             settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,40 +127,26 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jCheckBox1)
                 .addGap(23, 23, 23)
                 .addComponent(jCheckBox3)
-                .addContainerGap(344, Short.MAX_VALUE))
+                .addContainerGap(417, Short.MAX_VALUE))
         );
 
         RulesInSetPane.addTab("Settings", settings);
 
-        exit.setText("Exit");
-        exit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitActionPerformed(evt);
-            }
-        });
+        jScrollPane2.setViewportView(TestTree);
+
+        RulesInSetPane.addTab("TestPane", jScrollPane2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(RulesInSetPane)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(223, 223, 223)
-                        .addComponent(exit)
-                        .addGap(265, 265, 265)))
-                .addContainerGap())
+            .addComponent(RulesInSetPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(RulesInSetPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(exit)
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addComponent(RulesInSetPane))
         );
 
         maskingSetMenuItem.setText("Masking Set");
@@ -219,7 +211,9 @@ public class MainWindow extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
 
         pack();
@@ -229,49 +223,49 @@ public class MainWindow extends javax.swing.JFrame {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
-        
-        File temp_set = new File("temp_set.xml");
-        
-        MaskingSetDocument doc = MaskingSetDocument.Factory.newInstance();
-        maskingSet = doc.addNewMaskingSet();
-        maskingSet.setName("New masking set/Empty: Click \"Rule\" in order to add a new rule ");
-        maskingSet.setDateCreated(new GregorianCalendar());
-        maskingSet.addNewRules();
-        
-        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode(maskingSet.getName()));
-        
-        
-        XmlOptions options = new XmlOptions();
-        options.setSavePrettyPrint();
-        options.setSavePrettyPrintIndent(4);
-        options.setUseDefaultNamespace();
-        
+
         try {
-            doc.save(temp_set, options);
-    //        DatabaseConnectionInfoWindow s = new DatabaseConnectionInfoWindow();
-    //        s.setVisible(true);
-    //        s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-        } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            xmlInterface = new XMLInterface(new File("temp_file.xml"));
+        } catch (XmlException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        xmlInterface.createNewFile();
+
+        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode("Empty masking set"));
 
     }//GEN-LAST:event_newMaskingSetMenuButtonActionPerformed
 
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMaskingSetMenuButtonActionPerformed
         // create a file chooser
         JFileChooser fc = new JFileChooser();
-        int returnVal = fc.showDialog(openMaskingSetMenuButton, "atttach");
-        if (evt.getSource() == openButton) {
+        int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
+        File file = null;
+
+        if (evt.getSource() == openMaskingSetMenuButton) {
             //handle open button action
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-
-                System.out.println("Opening:" + file.getName());
-            } else {
-                System.out.println("Open command cancelled by user");
+                file = fc.getSelectedFile();
             }
         }
+
+        try {
+            xmlInterface = new XMLInterface(file);
+        } catch (XmlException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        rulesInSetTreeModel = new DefaultTreeModel(xmlInterface.getRulesTree());
+        RulesInSetTree.setModel(rulesInSetTreeModel);
+        LinkedList<String> columnNames = new LinkedList<>();
+        columnNames.add("Rule ID");
+        columnNames.add("Target");
+        columnNames.add("Columns");
+        RulesTreeTableModel rulesTreeTableModel= new RulesTreeTableModel(xmlInterface.getRulesTree(), columnNames);
+        TestTree.setTreeTableModel(rulesTreeTableModel);
     }
 
     private int showOpenDialog(JMenuItem jMenuItem2) {
@@ -285,17 +279,12 @@ public class MainWindow extends javax.swing.JFrame {
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
         iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-        
+
     }//GEN-LAST:event_newRuleMenuButtonActionPerformed
 
     private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_maskingSetMenuItemActionPerformed
-
-    private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-        // Exit
-        System.exit(0);
-    }//GEN-LAST:event_exitActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
@@ -338,15 +327,16 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane RulesInSetPane;
     private javax.swing.JTree RulesInSetTree;
+    private org.jdesktop.swingx.JXTreeTable TestTree;
     private javax.swing.JMenuItem clearMaskingSetMenuButton;
     private javax.swing.JMenuItem deleteRuleMenuButton;
     private javax.swing.JMenuItem disableRuleMenuButton;
-    private javax.swing.JButton exit;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenu maskingSetMenuItem;
     private javax.swing.JMenuItem newMaskingSetMenuButton;
     private javax.swing.JMenuItem newRuleMenuButton;
@@ -359,5 +349,67 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void close() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Updates mainWindow with the new rule information
+     *
+     * @param newRule rule to add to mainWindow UI
+     *
+     */
+    public void updateRule(ShuffleRule newRule) {
+    }
+
+    /**
+     * Updates mainWIndow with maskingSet from a file TODO - do a validity check
+     * of the xml file
+     *
+     * @param updateFile file to update window with
+     */
+    public void updateFromFile(File updateFile) {
+
+        MaskingSetDocument updateDocument = null;
+
+        try {
+            updateDocument = MaskingSetDocument.Factory.parse(updateFile);
+        } catch (XmlException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Rules rules = updateDocument.getMaskingSet().getRules();
+
+    }
+
+    /**
+     * Parses through masking set file and returns a hashmap of rules with their
+     * types
+     *
+     * @param xmlFile
+     * @return
+     */
+    private HashMap<String, Rule> getRuleHashMap(File xmlFile) {
+        
+        MaskingSetDocument updateDocument = null;
+        HashMap<String, Rule> returnMap = null;
+        
+        try {
+            updateDocument = MaskingSetDocument.Factory.parse(xmlFile);
+        } catch (XmlException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Rules rules = updateDocument.getMaskingSet().getRules();
+        
+//        for (ShuffleRule rule: rules) {
+//            //Rule ruleToAdd = new Rule(database.rule.getTarget()) {
+//           // }
+//            //returnMap.put(null, null)
+//        }
+
+        return null;
     }
 }

@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <masking_set>
-    <name>New masking set/Empty: Click "Rule" in order to add a new rule</name>
+    <name>TestSet</name>
     <date_created>2013-06-27-05:00</date_created>
-    <rules/>
+    <rules>
+        <rule target="atable" rule_type="shuffle">
+            <id>1</id>
+            <shuffle>
+                <column>whatsup</column>
+            </shuffle>
+            <dependencies>
+                <rule target="atable" rule_type="shuffle">
+                    <id>1-1</id>
+                    <shuffle>
+                        <column>not much, how are you?</column>
+                    </shuffle>
+                    <dependencies>
+                        <rule target="atable" rule_type="shuffle">
+                            <id>1-2</id>
+                            <shuffle>
+                                <column>I am a leaf! Whatup?</column>
+                            </shuffle>
+                        </rule>
+                        <rule target="atable" rule_type="shuffle">
+                            <id>1-3</id>
+                            <shuffle>
+                                <column>me too, me too! Not much bro</column>
+                            </shuffle>
+                        </rule>
+                    </dependencies>
+                </rule>
+            </dependencies>
+        </rule>
+        <rule target="atable" rule_type="shuffle">
+            <id>2</id>
+            <shuffle>
+                <column>lolcat1</column>
+                <column>lolcat2</column>
+                <column>lolcat3</column>
+            </shuffle>
+            <dependencies>
+                <rule target="atable" rule_type="substitution">
+                    <id>2-1</id>
+                    <substitution>
+                        <column>whatsup</column>
+                    </substitution>
+                </rule>
+            </dependencies>
+        </rule>
+    </rules>
 </masking_set>

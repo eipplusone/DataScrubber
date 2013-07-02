@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pearson.Interface;
+package com.pearson.Interface.Models;
 
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;

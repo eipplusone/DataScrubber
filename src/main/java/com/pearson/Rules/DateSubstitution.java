@@ -18,33 +18,33 @@ import com.pearson.Utilities.Constants;
  */
 public class DateSubstitution extends Substitution {
 
-    public DateSubstitution(MySQLTable mySQLTable, String columnName) {
+    public DateSubstitution(String mySQLTable, String columnName) {
         super(mySQLTable, columnName);
     }
 
-    public void setDateTo(Date date) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, date);
-    }
-
-    public void setDateTo(Timestamp timestamp) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, timestamp);
-    }
-
-    public void setDateTo(Time time) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, time);
-    }
-
-    public void setRandomDate(int yearPeriod, Date date) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, getRandomDate(yearPeriod, date));
-    }
-
-    public void setRandomDate(int yearPeriod, Timestamp timestamp) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, getRandomTimeStamp(yearPeriod, timestamp));
-    }
-
-    public void setDateWithinPeriod(int yearPeriod, Time time) throws SQLException {
-        mySQLTable.setColumnToValue(columnName, getRandomTime(yearPeriod, time));
-    }
+//    public void setDateTo(Date date) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, date);
+//    }
+//
+//    public void setDateTo(Timestamp timestamp) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, timestamp);
+//    }
+//
+//    public void setDateTo(Time time) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, time);
+//    }
+//
+//    public void setRandomDate(int yearPeriod, Date date) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, getRandomDate(yearPeriod, date));
+//    }
+//
+//    public void setRandomDate(int yearPeriod, Timestamp timestamp) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, getRandomTimeStamp(yearPeriod, timestamp));
+//    }
+//
+//    public void setDateWithinPeriod(int yearPeriod, Time time) throws SQLException {
+//        mySQLTable.setColumnToValue(columnName, getRandomTime(yearPeriod, time));
+//    }
 
     private Date getRandomDate(int yearPeriod, Date date){
 
