@@ -362,7 +362,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit
-        setVisible(false);
+        dispose();
 
     }//GEN-LAST:event_cancelButtonActionPerformed
 

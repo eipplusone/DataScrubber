@@ -274,6 +274,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_openMaskingSetMenuButtonActionPerformed
 
+
     private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRuleMenuButtonActionPerformed
         // TODO add your handling code here:
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();

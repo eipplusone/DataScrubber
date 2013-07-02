@@ -151,7 +151,6 @@
             <artifactId>beansbinding</artifactId>
             <version>1.2.1</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans</artifactId>
@@ -164,6 +163,5 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
