@@ -1,6 +1,5 @@
 package com.pearson.Rules;
 
-import com.pearson.SQL.MySQLTable;
 
 /**
  * Created with IntelliJ IDEA.

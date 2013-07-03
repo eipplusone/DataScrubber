@@ -5,8 +5,6 @@
 package com.pearson.Interface;
 import com.pearson.SQL.Database;
 import com.pearson.Interface.Models.ItemsSelectedTableModel;
-import com.pearson.DataScrubber.Launcher;
-import com.pearson.Database.DatabaseInterface;
 import com.pearson.SQL.Column;
 import noNamespace.*;
 import com.pearson.SQL.MySQLTable;

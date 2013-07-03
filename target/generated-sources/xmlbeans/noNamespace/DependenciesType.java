@@ -16,7 +16,7 @@ package noNamespace;
 public interface DependenciesType extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(DependenciesType.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("dependenciestype1147type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(DependenciesType.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("dependenciestype1147type");
     
     /**
      * Gets array of all "rule" elements

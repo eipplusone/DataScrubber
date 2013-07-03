@@ -35,7 +35,7 @@
                 <xs:element name="shuffle" type="shuffle_rule"/>
                 <xs:element name="substitute" type="substitution_rule"/>
             </xs:choice>
-            <xs:element name="dependencies" type="dependencies_type"/>
+            <xs:element name="dependencies" type="dependencies_type" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute ref="target" use="required"/>
         <xs:attribute ref="rule_type" use="required"/>
@@ -43,13 +43,13 @@
 
     <xs:complexType name="shuffle_rule">
         <xs:sequence>
-            <xs:element ref="column" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="column" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="substitution_rule">
         <xs:sequence>
-            <xs:element ref="column" maxOccurs="unbounded"/>
+            <xs:element ref="column" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -64,7 +64,6 @@
 
                 <xs:element ref="rules" maxOccurs="1" minOccurs="1"/>
             </xs:sequence>
-            <xs:attribute ref="set_id" use="required"/>
         </xs:complexType>
     </xs:element>
 

@@ -1,7 +1,5 @@
 package com.pearson.Rules;
 
-import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.SQL.MySQLTable;
 
 import java.sql.SQLException;
 import java.util.Random;

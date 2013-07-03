@@ -5,6 +5,7 @@ import com.pearson.SQL.Database;
 import com.pearson.SQL.Column;
 import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
+
 import noNamespace.RulesDocument.Rules;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -22,8 +24,8 @@ import org.apache.xmlbeans.XmlOptions;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
- *
  * @author UMA99J5
  */
 public class NewShuffleRuleWindow extends javax.swing.JFrame {
@@ -33,10 +35,37 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList ColumnsSelectedList;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JComboBox columnsComboBox;
+    private javax.swing.JButton createShuffleRuleButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JCheckBox enableWhereClauseCheckbox;
+    private javax.swing.JPanel errorMgrPane;
+    private javax.swing.JScrollPane errorScrollPane;
+    private javax.swing.JTextArea errorTextArea;
+    private javax.swing.JButton helpButton;
+    private javax.swing.JCheckBox ignoreErrorsCheckbox;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel newShuffleRuleLabel;
+    private javax.swing.JLabel pseudoCodeLabel;
+    private javax.swing.JTextField pseudoCodeTextfield;
+    private javax.swing.JLabel selectTableLabel;
+    private javax.swing.JLabel shortDescriptionLabel;
+    private javax.swing.JPanel shuffleColumnsPane;
+    private javax.swing.JTabbedPane shuffleTabbedPane;
+    private javax.swing.JCheckBox skipCheckBox;
+    private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JLabel tableSelected;
+    private javax.swing.JTable tablesSelectedTable;
+    private javax.swing.JPanel whereClausePane;
+    private javax.swing.JScrollPane whereClauseScrollpane;
+    private javax.swing.JTextArea whereClauseTextArea;
 
     /**
      * Creates new form NewShuffleRule
-     *
+     * <p/>
      * This method throws an exception, but by the time we have allowed the user
      * to enter that window he already should have passed checks on correct
      * connection
@@ -47,7 +76,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
                 + ":" + UIManager.getPort());
-  
+
         // fill in table structure so we have access to it later
         database.fillTables();
         for (MySQLTable table : database.tables.values()) {
@@ -58,6 +87,48 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         initComponents();
         // allow only one table to be selected inside table list
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new NewShuffleRuleWindow().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
@@ -133,19 +204,19 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         javax.swing.GroupLayout shuffleColumnsPaneLayout = new javax.swing.GroupLayout(shuffleColumnsPane);
         shuffleColumnsPane.setLayout(shuffleColumnsPaneLayout);
         shuffleColumnsPaneLayout.setHorizontalGroup(
-            shuffleColumnsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(shuffleColumnsPaneLayout.createSequentialGroup()
-                .addComponent(deleteButton)
-                .addGap(0, 399, Short.MAX_VALUE))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                shuffleColumnsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(shuffleColumnsPaneLayout.createSequentialGroup()
+                                .addComponent(deleteButton)
+                                .addGap(0, 399, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         shuffleColumnsPaneLayout.setVerticalGroup(
-            shuffleColumnsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(shuffleColumnsPaneLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                shuffleColumnsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(shuffleColumnsPaneLayout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(deleteButton)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         shuffleTabbedPane.addTab("List of Columns", shuffleColumnsPane);
@@ -168,28 +239,28 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         javax.swing.GroupLayout whereClausePaneLayout = new javax.swing.GroupLayout(whereClausePane);
         whereClausePane.setLayout(whereClausePaneLayout);
         whereClausePaneLayout.setHorizontalGroup(
-            whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(whereClausePaneLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                    .addComponent(enableWhereClauseCheckbox)
-                    .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pseudoCodeTextfield))
-                .addContainerGap(38, Short.MAX_VALUE))
+                whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(whereClausePaneLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
+                                        .addComponent(enableWhereClauseCheckbox)
+                                        .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(pseudoCodeTextfield))
+                                .addContainerGap(38, Short.MAX_VALUE))
         );
         whereClausePaneLayout.setVerticalGroup(
-            whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(whereClausePaneLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pseudoCodeTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(enableWhereClauseCheckbox)
-                .addGap(18, 18, 18)
-                .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(whereClausePaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pseudoCodeTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(enableWhereClauseCheckbox)
+                                .addGap(18, 18, 18)
+                                .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         shuffleTabbedPane.addTab("Where Clause", whereClausePane);
@@ -206,9 +277,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         errorTextArea.addAncestorListener(new javax.swing.event.AncestorListener() {
             public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
             }
+
             public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
                 errorTextAreaAncestorAdded(evt);
             }
+
             public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
             }
         });
@@ -220,25 +293,25 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         javax.swing.GroupLayout errorMgrPaneLayout = new javax.swing.GroupLayout(errorMgrPane);
         errorMgrPane.setLayout(errorMgrPaneLayout);
         errorMgrPaneLayout.setHorizontalGroup(
-            errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorMgrPaneLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(skipCheckBox)
-                    .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ignoreErrorsCheckbox))
-                .addContainerGap(212, Short.MAX_VALUE))
+                errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(errorMgrPaneLayout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(skipCheckBox)
+                                        .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ignoreErrorsCheckbox))
+                                .addContainerGap(212, Short.MAX_VALUE))
         );
         errorMgrPaneLayout.setVerticalGroup(
-            errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(errorMgrPaneLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(ignoreErrorsCheckbox)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(skipCheckBox)
-                .addContainerGap(139, Short.MAX_VALUE))
+                errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(errorMgrPaneLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(ignoreErrorsCheckbox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(skipCheckBox)
+                                .addContainerGap(139, Short.MAX_VALUE))
         );
 
         shuffleTabbedPane.addTab("Error Mgr", errorMgrPane);
@@ -262,79 +335,79 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         columnsComboBox.setModel(new javax.swing.DefaultComboBoxModel(
 
         )
-    );
-    columnsComboBox.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            columnsComboBoxActionPerformed(evt);
-        }
-    });
+        );
+        columnsComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                columnsComboBoxActionPerformed(evt);
+            }
+        });
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(selectTableLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addGap(497, 497, 497))
-        .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(251, 251, 251)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tableSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(newShuffleRuleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(254, 254, 254)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(columnsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(shuffleTabbedPane)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(selectTableLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(497, 497, 497))
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(60, 60, 60)
-                                    .addComponent(createShuffleRuleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(45, 45, 45)
-                                    .addComponent(helpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addComponent(shortDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(117, 117, 117)))))
-            .addContainerGap())
-    );
-    layout.setVerticalGroup(
-        layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(layout.createSequentialGroup()
-            .addContainerGap()
-            .addComponent(newShuffleRuleLabel)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(18, 18, 18)
-                    .addComponent(tableSelected))
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(25, 25, 25)
-                    .addComponent(selectTableLabel)))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(shortDescriptionLabel)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createSequentialGroup()
-                    .addComponent(columnsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(22, 22, 22)
-                    .addComponent(shuffleTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(8, 8, 8)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(cancelButton)
-                .addComponent(createShuffleRuleButton)
-                .addComponent(helpButton))
-            .addContainerGap(29, Short.MAX_VALUE))
-    );
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(251, 251, 251)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(tableSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(newShuffleRuleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(254, 254, 254)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(columnsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(shuffleTabbedPane)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(layout.createSequentialGroup()
+                                                                                .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addGap(60, 60, 60)
+                                                                                .addComponent(createShuffleRuleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                                .addGap(45, 45, 45)
+                                                                                .addComponent(helpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                        .addComponent(shortDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGap(117, 117, 117)))))
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(newShuffleRuleLabel)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(tableSelected))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(25, 25, 25)
+                                                .addComponent(selectTableLabel)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(shortDescriptionLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(columnsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(22, 22, 22)
+                                                .addComponent(shuffleTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(8, 8, 8)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(cancelButton)
+                                        .addComponent(createShuffleRuleButton)
+                                        .addComponent(helpButton))
+                                .addContainerGap(29, Short.MAX_VALUE))
+        );
 
-    pack();
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed
@@ -352,7 +425,10 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // we want to make sure not to update it
         if (!firstTimeSelected) {
             String column = (String) columnsComboBox.getSelectedItem();
-            listModel.addElement(column);
+            if (!listModel.contains(column)) {
+                listModel.addElement(column);
+
+            }
         }
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
@@ -386,7 +462,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             columnsComboBox.addItem(column.name);
         }
         firstTimeSelected = false;
-    }//GEN-LAST:event_tablesSelectedTableMouseClicked                                                   
+    }//GEN-LAST:event_tablesSelectedTableMouseClicked
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // TODO add your handling code here:
@@ -423,85 +499,16 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         options.setSavePrettyPrint();
         options.setSavePrettyPrintIndent(4);
         options.setUseDefaultNamespace();
-        
+
         try {
             maskingSetDocument.save(temporaryFile, options);
         } catch (IOException ex) {
             Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // second let the main window that we created a rule
         // so it updates with new information
         //UIManager.getMainWindow().updateRule(newRule);
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new NewShuffleRuleWindow().setVisible(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    ex.printStackTrace();
-                }
-            }
-        });
-    }
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList ColumnsSelectedList;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JComboBox columnsComboBox;
-    private javax.swing.JButton createShuffleRuleButton;
-    private javax.swing.JButton deleteButton;
-    private javax.swing.JCheckBox enableWhereClauseCheckbox;
-    private javax.swing.JPanel errorMgrPane;
-    private javax.swing.JScrollPane errorScrollPane;
-    private javax.swing.JTextArea errorTextArea;
-    private javax.swing.JButton helpButton;
-    private javax.swing.JCheckBox ignoreErrorsCheckbox;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel newShuffleRuleLabel;
-    private javax.swing.JLabel pseudoCodeLabel;
-    private javax.swing.JTextField pseudoCodeTextfield;
-    private javax.swing.JLabel selectTableLabel;
-    private javax.swing.JLabel shortDescriptionLabel;
-    private javax.swing.JPanel shuffleColumnsPane;
-    private javax.swing.JTabbedPane shuffleTabbedPane;
-    private javax.swing.JCheckBox skipCheckBox;
-    private javax.swing.JScrollPane tableScrollPane;
-    private javax.swing.JLabel tableSelected;
-    private javax.swing.JTable tablesSelectedTable;
-    private javax.swing.JPanel whereClausePane;
-    private javax.swing.JScrollPane whereClauseScrollpane;
-    private javax.swing.JTextArea whereClauseTextArea;
     // End of variables declaration//GEN-END:variables
 }

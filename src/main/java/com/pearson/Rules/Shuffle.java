@@ -46,9 +46,9 @@ public class Shuffle extends Rule {
 //        // begin shuffling
 //        for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
 //            // two random rows to be swapped
-//            ResultSet randomRow1 = mySQLTable.getRandomRow(columnNames);
-//            ResultSet randomRow2 = mySQLTable.getRandomRow(columnNames);
-//            mySQLTable.swap(randomRow1, randomRow2, columnNames);
+//            ResultSet randomRow1 = mySQLTable.getRandomRow(COLUMN_NAMES);
+//            ResultSet randomRow2 = mySQLTable.getRandomRow(COLUMN_NAMES);
+//            mySQLTable.swap(randomRow1, randomRow2, COLUMN_NAMES);
 //        }
 //        // get the result set that has already been shuffled
 //
