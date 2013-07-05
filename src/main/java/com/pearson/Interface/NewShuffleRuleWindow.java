@@ -129,10 +129,10 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         shuffleColumnsPaneLayout.setVerticalGroup(
             shuffleColumnsPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(shuffleColumnsPaneLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(deleteButton)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         shuffleTabbedPane.addTab("List of Columns", shuffleColumnsPane);
