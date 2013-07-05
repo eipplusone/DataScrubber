@@ -17,7 +17,7 @@ package noNamespace;
 public interface RuleTypeAttribute extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RuleTypeAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("ruletypee4d2attrtypetype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RuleTypeAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("ruletypee4d2attrtypetype");
     
     /**
      * Gets the "rule_type" attribute

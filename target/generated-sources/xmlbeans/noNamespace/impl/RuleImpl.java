@@ -269,6 +269,18 @@ public class RuleImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentI
     }
     
     /**
+     * True if has "dependencies" element
+     */
+    public boolean isSetDependencies()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            return get_store().count_elements(DEPENDENCIES$6) != 0;
+        }
+    }
+    
+    /**
      * Sets the "dependencies" element
      */
     public void setDependencies(noNamespace.DependenciesType dependencies)
@@ -297,6 +309,18 @@ public class RuleImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentI
             noNamespace.DependenciesType target = null;
             target = (noNamespace.DependenciesType)get_store().add_element_user(DEPENDENCIES$6);
             return target;
+        }
+    }
+    
+    /**
+     * Unsets the "dependencies" element
+     */
+    public void unsetDependencies()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            get_store().remove_element(DEPENDENCIES$6, 0);
         }
     }
     

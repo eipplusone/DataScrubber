@@ -4,27 +4,22 @@ import com.pearson.Interface.Models.RulesTreeTableModel;
 import com.pearson.Rules.Rule;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.accessibility.Accessible;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
+
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
+import noNamespace.RulesDocument;
 import noNamespace.RulesDocument.Rules;
 import noNamespace.ShuffleRule;
-import org.apache.commons.lang.math.RandomUtils;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
+import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 
 /*
@@ -38,8 +33,7 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
  */
 public class MainWindow extends javax.swing.JFrame {
     
-    private Object openButton;
-    private DefaultTreeModel rulesInSetTreeModel;
+    private RulesTreeTableModel rulesInSetTreeModel;
     MaskingSet maskingSet;
     XMLInterface xmlInterface;
 
@@ -53,11 +47,10 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         
-        rulesInSetTreeModel = new DefaultTreeModel(null);
         initComponents();
         
         DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) RulesInSetTree.getCellRenderer();
-        
+
         renderer.setLeafIcon(null);
         renderer.setClosedIcon(null);
         renderer.setOpenIcon(null);
@@ -228,16 +221,11 @@ public class MainWindow extends javax.swing.JFrame {
         // to save it
 
 
-        try {
+
             xmlInterface = new XMLInterface(new File("temp_file.xml"));
-        } catch (XmlException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         xmlInterface.createNewFile();
 
-        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode("Empty masking set"));
+//        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode("Empty masking set"));
 
     }//GEN-LAST:event_newMaskingSetMenuButtonActionPerformed
 
@@ -256,21 +244,15 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
-        try {
             xmlInterface = new XMLInterface(file);
-        } catch (XmlException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        rulesInSetTreeModel = new DefaultTreeModel(xmlInterface.getRulesTree());
-        RulesInSetTree.setModel(rulesInSetTreeModel);
+
+
         LinkedList<String> columnNames = new LinkedList<>();
         columnNames.add("Rule ID");
         columnNames.add("Target");
         columnNames.add("Columns");
-        RulesTreeTableModel rulesTreeTableModel= new RulesTreeTableModel(xmlInterface.getRulesTree(), columnNames);
-        TestTree.setTreeTableModel(rulesTreeTableModel);
+
+        TestTree.setTreeTableModel(new DefaultTreeTableModel(xmlInterface.getRulesTree(), columnNames));
     }
 
     private int showOpenDialog(JMenuItem jMenuItem2) {

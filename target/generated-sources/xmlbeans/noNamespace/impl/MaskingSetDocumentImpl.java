@@ -94,8 +94,6 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             new javax.xml.namespace.QName("", "date_created");
         private static final javax.xml.namespace.QName RULES$4 = 
             new javax.xml.namespace.QName("", "rules");
-        private static final javax.xml.namespace.QName SETID$6 = 
-            new javax.xml.namespace.QName("", "set_id");
         
         
         /**
@@ -281,74 +279,6 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
                 noNamespace.RulesDocument.Rules target = null;
                 target = (noNamespace.RulesDocument.Rules)get_store().add_element_user(RULES$4);
                 return target;
-            }
-        }
-        
-        /**
-         * Gets the "set_id" attribute
-         */
-        public java.lang.String getSetId()
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SETID$6);
-                if (target == null)
-                {
-                    return null;
-                }
-                return target.getStringValue();
-            }
-        }
-        
-        /**
-         * Gets (as xml) the "set_id" attribute
-         */
-        public org.apache.xmlbeans.XmlString xgetSetId()
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.XmlString target = null;
-                target = (org.apache.xmlbeans.XmlString)get_store().find_attribute_user(SETID$6);
-                return target;
-            }
-        }
-        
-        /**
-         * Sets the "set_id" attribute
-         */
-        public void setSetId(java.lang.String setId)
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SETID$6);
-                if (target == null)
-                {
-                    target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(SETID$6);
-                }
-                target.setStringValue(setId);
-            }
-        }
-        
-        /**
-         * Sets (as xml) the "set_id" attribute
-         */
-        public void xsetSetId(org.apache.xmlbeans.XmlString setId)
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.XmlString target = null;
-                target = (org.apache.xmlbeans.XmlString)get_store().find_attribute_user(SETID$6);
-                if (target == null)
-                {
-                    target = (org.apache.xmlbeans.XmlString)get_store().add_attribute_user(SETID$6);
-                }
-                target.set(setId);
             }
         }
     }

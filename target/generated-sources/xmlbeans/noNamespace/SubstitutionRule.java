@@ -16,77 +16,27 @@ package noNamespace;
 public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sAEFF8DE3818CBF30EDEBA860C02AC468").resolveHandle("substitutionrule97b5type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("substitutionrule97b5type");
     
     /**
-     * Gets array of all "column" elements
+     * Gets the "column" element
      */
-    java.lang.String[] getColumnArray();
+    java.lang.String getColumn();
     
     /**
-     * Gets ith "column" element
+     * Gets (as xml) the "column" element
      */
-    java.lang.String getColumnArray(int i);
+    org.apache.xmlbeans.XmlString xgetColumn();
     
     /**
-     * Gets (as xml) array of all "column" elements
+     * Sets the "column" element
      */
-    org.apache.xmlbeans.XmlString[] xgetColumnArray();
+    void setColumn(java.lang.String column);
     
     /**
-     * Gets (as xml) ith "column" element
+     * Sets (as xml) the "column" element
      */
-    org.apache.xmlbeans.XmlString xgetColumnArray(int i);
-    
-    /**
-     * Returns number of "column" element
-     */
-    int sizeOfColumnArray();
-    
-    /**
-     * Sets array of all "column" element
-     */
-    void setColumnArray(java.lang.String[] columnArray);
-    
-    /**
-     * Sets ith "column" element
-     */
-    void setColumnArray(int i, java.lang.String column);
-    
-    /**
-     * Sets (as xml) array of all "column" element
-     */
-    void xsetColumnArray(org.apache.xmlbeans.XmlString[] columnArray);
-    
-    /**
-     * Sets (as xml) ith "column" element
-     */
-    void xsetColumnArray(int i, org.apache.xmlbeans.XmlString column);
-    
-    /**
-     * Inserts the value as the ith "column" element
-     */
-    void insertColumn(int i, java.lang.String column);
-    
-    /**
-     * Appends the value as the last "column" element
-     */
-    void addColumn(java.lang.String column);
-    
-    /**
-     * Inserts and returns a new empty value (as xml) as the ith "column" element
-     */
-    org.apache.xmlbeans.XmlString insertNewColumn(int i);
-    
-    /**
-     * Appends and returns a new empty value (as xml) as the last "column" element
-     */
-    org.apache.xmlbeans.XmlString addNewColumn();
-    
-    /**
-     * Removes the ith "column" element
-     */
-    void removeColumn(int i);
+    void xsetColumn(org.apache.xmlbeans.XmlString column);
     
     /**
      * A factory class with static methods for creating instances

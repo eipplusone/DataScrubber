@@ -1,6 +1,5 @@
 package com.pearson.Rules;
 
-import com.pearson.SQL.MySQLTable;
 
 import java.sql.SQLException;
 

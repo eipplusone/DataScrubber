@@ -41,9 +41,9 @@
             <dependencies>
                 <rule target="atable" rule_type="substitution">
                     <id>2-1</id>
-                    <substitution>
+                    <substitute>
                         <column>whatsup</column>
-                    </substitution>
+                    </substitute>
                 </rule>
             </dependencies>
         </rule>
