@@ -8,9 +8,12 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.sun.xml.internal.bind.v2.model.core.ID;
 import noNamespace.MaskingSetDocument;
@@ -20,6 +23,7 @@ import noNamespace.RulesDocument.Rules;
 import noNamespace.ShuffleRule;
 import org.apache.xmlbeans.XmlException;
 import org.jdesktop.swingx.JXTreeTable;
+import org.jdesktop.swingx.tree.DefaultXTreeCellRenderer;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 
 /*
@@ -48,14 +52,20 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow() {
         
         initComponents();
-        
+        TestTree.setComponentPopupMenu(new JPopupMenu("label"));
+
         DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) RulesInSetTree.getCellRenderer();
 
         renderer.setLeafIcon(null);
         renderer.setClosedIcon(null);
         renderer.setOpenIcon(null);
-        UIManager.setMainWindow(this);
 
+        TestTree.setLeafIcon(null);
+        TestTree.setClosedIcon(null);
+        TestTree.setOpenIcon(null);
+        TestTree.getTreeSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        UIManager.setMainWindow(this);
     }
 
     /**
@@ -96,11 +106,6 @@ public class MainWindow extends javax.swing.JFrame {
         RulesInSetPane.addTab("Rules in Set", jScrollPane1);
 
         jCheckBox1.setText("New Disable FK Constraints Rule...");
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
-        });
 
         jCheckBox3.setText("New Disable Triggers Rule...");
 
@@ -219,17 +224,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
-
-
-
-            xmlInterface = new XMLInterface(new File("temp_file.xml"));
         xmlInterface.createNewFile();
-
-//        rulesInSetTreeModel.setRoot(new DefaultMutableTreeNode("Empty masking set"));
-
     }//GEN-LAST:event_newMaskingSetMenuButtonActionPerformed
 
-    private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                         
+    private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMaskingSetMenuButtonActionPerformed
         // create a file chooser
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
@@ -244,38 +242,32 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
-            xmlInterface = new XMLInterface(file);
-
+            XMLInterface.setXMLFile(file);
 
         LinkedList<String> columnNames = new LinkedList<>();
         columnNames.add("Rule ID");
         columnNames.add("Target");
         columnNames.add("Columns");
 
-        TestTree.setTreeTableModel(new DefaultTreeTableModel(xmlInterface.getRulesTree(), columnNames));
-    }
+        updateTreeModel();
+        TestTree.expandAll();
 
-    private int showOpenDialog(JMenuItem jMenuItem2) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }//GEN-LAST:event_openMaskingSetMenuButtonActionPerformed
 
+    private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newRuleMenuButtonActionPerformed
 
-
-    }   
-	
-    private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-        // TODO add your handling code here:
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
         iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
 
-    }                                                 
+    }//GEN-LAST:event_newRuleMenuButtonActionPerformed
     private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maskingSetMenuItemActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_maskingSetMenuItemActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
-    }                                          
+    public JXTreeTable getTestTree() {
+        return TestTree;
+    }
 
     /**
      * @param args the command line arguments
@@ -399,4 +391,18 @@ public class MainWindow extends javax.swing.JFrame {
 
         return null;
     }
+
+    public RulesTreeTableModel getRulesInSetTreeModel() {
+        return rulesInSetTreeModel;
+    }
+
+    /**
+     * Updates the rules in set view
+     */
+    public void updateTreeModel() {
+
+        rulesInSetTreeModel = new RulesTreeTableModel(xmlInterface.getRulesTree());
+        TestTree.setTreeTableModel(rulesInSetTreeModel);
+    }
 }
+

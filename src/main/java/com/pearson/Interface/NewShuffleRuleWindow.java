@@ -1,6 +1,7 @@
 package com.pearson.Interface;
 
 import com.pearson.Interface.Models.ItemsSelectedTableModel;
+import com.pearson.Rules.Shuffle;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.Column;
 import noNamespace.*;
@@ -13,8 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 
 import noNamespace.RulesDocument.Rules;
 import org.apache.xmlbeans.XmlException;
@@ -35,6 +35,8 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
+    DependenciesType dependency;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList ColumnsSelectedList;
     private javax.swing.JButton cancelButton;
@@ -87,6 +89,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         initComponents();
         // allow only one table to be selected inside table list
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+    
+    public NewShuffleRuleWindow(DependenciesType dependency) throws SQLException {
+        this();
+        this.dependency = dependency;
     }
 
     /**
@@ -425,10 +432,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // we want to make sure not to update it
         if (!firstTimeSelected) {
             String column = (String) columnsComboBox.getSelectedItem();
-            if (!listModel.contains(column)) {
                 listModel.addElement(column);
-
-            }
         }
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
@@ -469,46 +473,46 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         listModel.removeElement(ColumnsSelectedList.getSelectedValue().toString());
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    // this code works only if we create a rule without being dependent on another rule todo version 1.0 make create new rule dependent on another rule
     private void createShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
 
-        File temporaryFile = new File("temp_file.xml");
-        MaskingSetDocument maskingSetDocument = null;
         ArrayList<String> columns = new ArrayList<>();
 
+        // get all column names user has entered
         for (Object column : listModel.toArray()) {
             columns.add((String) column);
         }
 
-        // first write new rule to a temporary file
-        try {
-            maskingSetDocument = MaskingSetDocument.Factory.parse(temporaryFile);
-        } catch (XmlException ex) {
-            Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
 
-        Rules rulesInSet = maskingSetDocument.getMaskingSet().getRules();
-        //ShuffleRule newRule = rulesInSet.addNewShuffleRule();
+        // build the rule according to information from this window
+        Rule newRule = rulesInSet.addNewRule();
+        ShuffleRule newRuleShuffle = newRule.addNewShuffle();
+        // add new columns
+        for(String column : columns){
+            newRuleShuffle.addColumn(column);
+        }
         String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
+        newRule.setTarget(targetTable);
+        newRule.setId(rulesInSet.getRuleArray().length + "");
+        newRule.setRuleType(RuleType.SHUFFLE);
+
+        // let other windows know that masking set has change
+
 
         //newRule.setTarget(targetTable);
         //newRule.setColumnArray((String[]) columns.toArray());
 
-        XmlOptions options = new XmlOptions();
-        options.setSavePrettyPrint();
-        options.setSavePrettyPrintIndent(4);
-        options.setUseDefaultNamespace();
-
         try {
-            maskingSetDocument.save(temporaryFile, options);
-        } catch (IOException ex) {
-            Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+            XMLInterface.saveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Couldn't create the rule - please see the log file");
         }
 
-        // second let the main window that we created a rule
-        // so it updates with new information
-        //UIManager.getMainWindow().updateRule(newRule);
+        UIManager.update();
+
+        dispose();
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
     // End of variables declaration//GEN-END:variables
 }

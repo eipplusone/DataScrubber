@@ -122,6 +122,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        dispose();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -134,6 +135,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        dispose();
         srw.setVisible(true);
         srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_jButton2ActionPerformed

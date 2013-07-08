@@ -11,7 +11,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author UMA99J5
+ * @author Ruslan Kiselev, Jia Ma
  */
 public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     //public void windowClosed(WindowEvent e){
@@ -30,6 +30,10 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     public DatabaseConnectionInfoWindow() {
         initComponents();
 
+        HostNameField.setText(UIManager.getUrl());
+        UserNameField.setText(UIManager.getUsername());
+        PasswordField.setText(UIManager.getPassword());
+        DefaultSchemaField.setText(UIManager.getDefaultSchema());
     }
 
     /**
@@ -78,11 +82,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         HostNameLabel.setText("Host Name:");
 
-        HostNameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HostNameFieldActionPerformed(evt);
-            }
-        });
 
         PortField.setText("3306");
 
@@ -100,11 +99,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         });
 
         CancelButton.setText("Cancel");
-        CancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                CancelButtonMouseExited(evt);
-            }
-        });
         CancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CancelButtonActionPerformed(evt);
@@ -226,20 +220,10 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void HostNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HostNameFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_HostNameFieldActionPerformed
-
     private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelButtonActionPerformed
-        // Close jFrame
+
         dispose();
-        //s.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-
     }//GEN-LAST:event_CancelButtonActionPerformed
-
-    private void CancelButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelButtonMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_CancelButtonMouseExited
 
     private void TestConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TestConnectionButtonActionPerformed
 
@@ -299,13 +283,18 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         if (isInputNotEmpty()) {
             fetch();
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-                JOptionPane.showMessageDialog(null, "Connection has been established");
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
 
                 UIManager.setUsername(username);
                 UIManager.setPassword(password);
                 UIManager.setUrl(url);
                 UIManager.setDefaultSchema(defaultSchema);
                 UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
             } else {
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
             }

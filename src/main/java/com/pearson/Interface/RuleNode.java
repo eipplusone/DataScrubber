@@ -1,7 +1,13 @@
 package com.pearson.Interface;
 
 import com.pearson.Interface.Models.RulesTreeTableModel;
+import noNamespace.MaskingSetDocument;
+import noNamespace.Rule;
+import noNamespace.RuleType;
 import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
+
+import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.Arrays;
 
 /**
  * @author Ruslan Kiselev
@@ -11,33 +17,43 @@ import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
  */
 public class RuleNode extends AbstractMutableTreeTableNode {
 
-    public RuleNode(Object[] data) {
+    public RuleNode(Rule rule){
 
-        super(data);
+        super(rule);
     }
 
+    /**
+     *
+     *
+     * @param column
+     * @return
+     */
     @Override
-    public Object getValueAt(int column) {
+    public Object getValueAt(int column){
 
-        return getUserObject()[column];
-    }
+        Rule rule = (Rule) getUserObject();
 
-    @Override
-    public void setValueAt(Object aValue, int column) {
-
-        getUserObject()[column] = aValue;
+        switch (column) {
+            case RulesTreeTableModel.RULE_ID_COLUMN:
+                return rule.getId();
+            case RulesTreeTableModel.TARGET_COLUMN:
+                return rule.getTarget();
+            case RulesTreeTableModel.COLUMN_NAMES_COLUMN:
+                if (rule.getRuleType() == RuleType.SHUFFLE) {
+                    String returnString = Arrays.toString(rule.getShuffle().getColumnArray());
+                    returnString = returnString.substring(1, returnString.length() - 1); // delete the braces from array.toString
+                    return returnString;
+                } else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
+                    return rule.getSubstitute().getColumn();
+                }
+        }
+        throw new IllegalArgumentException("Column out of range");
     }
 
     @Override
     public int getColumnCount() {
-        
+
         return RulesTreeTableModel.COLUMN_NAMES.length;
-    }
-
-    @Override
-    public Object[] getUserObject() {
-
-        return (Object[]) super.getUserObject();
     }
 
 }

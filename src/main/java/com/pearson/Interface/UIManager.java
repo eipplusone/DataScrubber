@@ -4,6 +4,7 @@
  */
 package com.pearson.Interface;
 
+import com.pearson.Interface.Models.RulesTreeTableModel;
 import noNamespace.MaskingSetDocument;
 
 /**
@@ -18,6 +19,7 @@ public class UIManager {
     private static String url = null;
     private static String defaultSchema;
     private static String port = null;
+    private static boolean userEnteredLogInInformation = false;
 
     static public MainWindow getMainWindow() {
         return mainWindow;
@@ -69,6 +71,17 @@ public class UIManager {
     public static void setPort(String port) {
         UIManager.port = port;
     }
-    
-    
+
+
+    public static void update() {
+        mainWindow.updateTreeModel();
+    }
+
+    public static void setUserEnteredLogInInformation(boolean b) {
+        userEnteredLogInInformation = true;
+    }
+
+    public static boolean getUserEnteredLogInInformation() {
+        return userEnteredLogInInformation;
+    }
 }

@@ -33,22 +33,26 @@ import org.apache.xmlbeans.XmlException;
  */
 public class XMLInterface {
 
-    File xmlFile;
-    MaskingSetDocument setDocument;
-    XmlOptions options;
+    private static File xmlFile = new File("temp_set.xml");
+    private static MaskingSetDocument setDocument;
+    public final static XmlOptions options = initialiseOptions();
+
+    public static File getXmlFile() {
+        return xmlFile;
+    }
+
+    public static MaskingSetDocument getSetDocument() {
+        return setDocument;
+    }
 
     /**
      * Default constructor assumes that we just created a new set and have not
      * specified a name for it yet
      */
-    public XMLInterface(File xmlFile) {
+    public static void setXMLFile(File xmlFile_) {
 
-        this.xmlFile = xmlFile;
+        xmlFile = xmlFile_;
 
-        options = new XmlOptions();
-        options.setSavePrettyPrint();
-        options.setSavePrettyPrintIndent(4);
-        options.setUseDefaultNamespace();
 
         try {
             ArrayList validationErrors = new ArrayList<>();
@@ -72,7 +76,7 @@ public class XMLInterface {
     /**
      * Creates a new representation of the XML rule file internally.
      */
-    public void createNewFile() {
+    public static void createNewFile() {
 
         MaskingSetDocument setDocument = MaskingSetDocument.Factory.newInstance();
         MaskingSet maskingSet = setDocument.addNewMaskingSet();
@@ -92,13 +96,21 @@ public class XMLInterface {
      * Returns a Tree composed of rules inside the rules set. The first level of rules are children of root
      * the root itself is masking set object
      */
-    public RuleNode getRulesTree() {
+    public static RuleNode getRulesTree() {
 
         MaskingSet maskingSet = setDocument.getMaskingSet();
         RulesDocument.Rules rules = maskingSet.getRules();
 
+        Rule rootRule = RulesDocument.Factory.newInstance().addNewRules().addNewRule();
+
+        // a dummy root rule; it is not displayed inside main window
+        rootRule.setId("Root");
+        rootRule.setTarget("Root");
+        rootRule.setRuleType(RuleType.SHUFFLE);
+        rootRule.addNewShuffle();
+
         // root is not displayed; it only creates number of columns TODO make it more generic
-        RuleNode root = new RuleNode(new Object[] {"root", "root", "root"});
+        RuleNode root = new RuleNode(rootRule);
 
         for (Rule rule : rules.getRuleArray()) {
             appendNode(rule, root);
@@ -106,24 +118,8 @@ public class XMLInterface {
         return root;
     }
 
-    /**
-     * Used to construct a rule node. Was imposed by the logic of swingx library.
-     *
-     * @param rule
-     * @return
-     */
-    private RuleNode constructRuleNode(Rule rule) {
-        Object[] data = new Object[RulesTreeTableModel.COLUMN_NAMES.length];
-        for (int i = 0; i < data.length; i++) {
-            data[RulesTreeTableModel.RULE_ID_COLUMN] = rule.getId();
-            data[RulesTreeTableModel.TARGET_COLUMN] = rule.getTarget();
-            if (rule.getRuleType() == RuleType.SHUFFLE) {
-                data[RulesTreeTableModel.COLUMN_NAMES_COLUMN] = Arrays.toString(rule.getShuffle().getColumnArray());
-            } else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
-                data[RulesTreeTableModel.COLUMN_NAMES_COLUMN] = rule.getSubstitute().getColumn();
-            }
-        }
-        return new RuleNode(data);
+    public static void saveFile() throws IOException {
+        setDocument.save(xmlFile, options);
     }
 
 /**
@@ -132,9 +128,9 @@ public class XMLInterface {
  * @param rule Rule from the first level of masking set
  * @param root Pointer to the root of the tree
  */
-    private void appendNode(Rule rule, RuleNode root) {
+    private static void appendNode(Rule rule, RuleNode root) {
 
-        RuleNode ruleNode = constructRuleNode(rule);
+        RuleNode ruleNode = new RuleNode(rule);
         root.add(ruleNode);
 
         if (rule.getDependencies() == null) { // if root is leaf
@@ -143,5 +139,17 @@ public class XMLInterface {
         for (Rule ruleDummy : rule.getDependencies().getRuleArray()) {
             appendNode(ruleDummy, ruleNode);
         }
+    }
+
+    // static initializer for xmlOptions
+    private static XmlOptions initialiseOptions(){
+
+        XmlOptions options = new XmlOptions();
+
+        options.setSavePrettyPrint();
+        options.setSavePrettyPrintIndent(4);
+        options.setUseDefaultNamespace();
+
+        return options;
     }
 }

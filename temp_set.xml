@@ -47,5 +47,36 @@
                 </rule>
             </dependencies>
         </rule>
+        <rule target="batch_step_execution_context" rule_type="shuffle">
+            <id>3</id>
+            <shuffle>
+                <column>STEP_EXECUTION_ID</column>
+                <column>SHORT_CONTEXT</column>
+            </shuffle>
+        </rule>
+        <rule target="batch_job_params" rule_type="shuffle">
+            <id>4</id>
+            <shuffle>
+                <column>TYPE_CD</column>
+                <column>DATE_VAL</column>
+            </shuffle>
+        </rule>
+        <rule target="batch_job_seq" rule_type="shuffle">
+            <id>5</id>
+            <shuffle>
+                <column>ID</column>
+                <column>ID</column>
+                <column>ID</column>
+            </shuffle>
+        </rule>
+        <rule target="cas_user" rule_type="shuffle">
+            <id>6</id>
+            <shuffle>
+                <column>user_name</column>
+                <column>failed_attempts</column>
+                <column>password</column>
+                <column>cas_user_id</column>
+            </shuffle>
+        </rule>
     </rules>
 </masking_set>
