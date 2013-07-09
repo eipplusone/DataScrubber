@@ -183,6 +183,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="UserNameField">
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="UserNameFieldKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="PasswordLabel">
           <Properties>
@@ -190,6 +193,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JPasswordField" name="PasswordField">
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="PasswordFieldKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="HostNameLabel">
           <Properties>
@@ -197,11 +203,17 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="HostNameField">
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="HostNameFieldKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="PortField">
           <Properties>
             <Property name="text" type="java.lang.String" value="3306"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="PortFieldKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="PortLabel">
           <Properties>

@@ -79,11 +79,34 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         UserNameLabel.setText("User Name:");
 
+        UserNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                UserNameFieldKeyPressed(evt);
+            }
+        });
+
         PasswordLabel.setText("Password:");
+
+        PasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PasswordFieldKeyPressed(evt);
+            }
+        });
 
         HostNameLabel.setText("Host Name:");
 
+        HostNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                HostNameFieldKeyPressed(evt);
+            }
+        });
+
         PortField.setText("3306");
+        PortField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PortFieldKeyPressed(evt);
+            }
+        });
 
         PortLabel.setText("Port:");
 
@@ -340,7 +363,131 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
     }//GEN-LAST:event_DefaultSchemaFieldKeyPressed
-    }   
+    }
+    private void HostNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HostNameFieldKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }            
+    }//GEN-LAST:event_HostNameFieldKeyPressed
+
+    private void PortFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PortFieldKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }            
+    }//GEN-LAST:event_PortFieldKeyPressed
+
+    private void UserNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UserNameFieldKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }            
+    }//GEN-LAST:event_UserNameFieldKeyPressed
+
+    private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }            
+    }//GEN-LAST:event_PasswordFieldKeyPressed
+      
     /**
      * test to see if enter key is typed
      */
