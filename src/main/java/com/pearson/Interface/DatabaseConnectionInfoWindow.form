@@ -197,9 +197,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="HostNameField">
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="HostNameFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="PortField">
           <Properties>
@@ -222,6 +219,9 @@
               <Connection code="true" type="code"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="DefaultSchemaFieldKeyPressed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="TestConnectionButton">
           <Properties>
@@ -236,7 +236,6 @@
             <Property name="text" type="java.lang.String" value="Cancel"/>
           </Properties>
           <Events>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="CancelButtonMouseExited"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="CancelButtonActionPerformed"/>
           </Events>
         </Component>

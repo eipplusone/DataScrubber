@@ -5,10 +5,12 @@
 package com.pearson.Interface;
 
 import com.pearson.SQL.Database;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
-
+import java.util.EventListener;
 /**
  *
  * @author Ruslan Kiselev, Jia Ma
@@ -17,7 +19,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     //public void windowClosed(WindowEvent e){
     //    dispose();
     // }
-
     String username = null;
     String password = null;
     String url = null;
@@ -82,7 +83,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         HostNameLabel.setText("Host Name:");
 
-
         PortField.setText("3306");
 
         PortLabel.setText("Port:");
@@ -90,6 +90,11 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         DefaultSchemaLabel.setText("Default Schema:");
 
         DefaultSchemaField.setEditable(true);
+        DefaultSchemaField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                DefaultSchemaFieldKeyPressed(evt);
+            }
+        });
 
         TestConnectionButton.setText("Test Connection");
         TestConnectionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -306,6 +311,41 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_OKButtonActionPerformed
 
+    private void DefaultSchemaFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DefaultSchemaFieldKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }//GEN-LAST:event_DefaultSchemaFieldKeyPressed
+    }   
+    /**
+     * test to see if enter key is typed
+     */
+    
+   
     /**
      * @param args the command line arguments
      */

@@ -37,7 +37,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     boolean firstTimeSelected = true;
     DependenciesType dependency;
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JList ColumnsSelectedList;
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox columnsComboBox;
@@ -443,7 +443,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit
-        setVisible(false);
+        dispose();
 
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -514,5 +514,5 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
         dispose();
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }

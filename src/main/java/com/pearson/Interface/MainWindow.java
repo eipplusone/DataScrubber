@@ -15,7 +15,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.RulesDocument;
@@ -102,7 +101,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         RulesInSetTree.setModel(rulesInSetTreeModel);
         jScrollPane1.setViewportView(RulesInSetTree);
-
+		jScrollPane1.setViewportView(TestTree);
         RulesInSetPane.addTab("Rules in Set", jScrollPane1);
 
         jCheckBox1.setText("New Disable FK Constraints Rule...");
@@ -132,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         RulesInSetPane.addTab("Settings", settings);
 
-        jScrollPane2.setViewportView(TestTree);
+        
 
         RulesInSetPane.addTab("TestPane", jScrollPane2);
 
@@ -246,6 +245,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         LinkedList<String> columnNames = new LinkedList<>();
         columnNames.add("Rule ID");
+        columnNames.add("Rule Type");
         columnNames.add("Target");
         columnNames.add("Columns");
 

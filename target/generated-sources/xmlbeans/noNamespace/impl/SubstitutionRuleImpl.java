@@ -91,4 +91,19 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
             target.set(column);
         }
     }
+    
+    
+    /**
+     * Appends the value as the last "column" element
+     */
+    public void addColumn(java.lang.String column)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(COLUMN$0);
+            target.setStringValue(column);
+        }
+    }
 }

@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.tree.TreeSelectionModel;
 import noNamespace.RulesDocument.Rules;
 import org.apache.xmlbeans.XmlException;
+import com.pearson.Rules.Substitution;
+
 
 /**
  *
@@ -35,6 +38,7 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
     ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
+    DependenciesType dependency;
     
     /** Similar to new shuffle rule window, this method throws an exception, 
      * by the time when users open the new substitution rule window, 
@@ -82,8 +86,8 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         ColumnsSelectedList = new javax.swing.JList();
         DeleteButton = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        createSubstitutionRule = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -151,17 +155,17 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("List of Columns", jPanel4);
 
-        jButton5.setText("Cancel");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Create Substitution Rule");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        createSubstitutionRule.setText("Create Substitution Rule");
+        createSubstitutionRule.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                createSubstitutionRuleActionPerformed(evt);
             }
         });
 
@@ -195,11 +199,11 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
                             .addComponent(ColumnsComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTabbedPane2)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(421, 421, 421)
-                        .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(37, 37, 37)
-                        .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(30, 30, 30)))
+                        .addGap(408, 408, 408)
+                        .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(54, 54, 54)
+                        .addComponent(createSubstitutionRule, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(26, 26, 26)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -223,19 +227,20 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
                         .addComponent(ColumnsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancelButton)
+                    .addComponent(createSubstitutionRule))
+                .addGap(21, 21, 21))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit
-       setVisible(false);
-    }//GEN-LAST:event_jButton5ActionPerformed
+       dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void tablesSelectedTableComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tablesSelectedTableComponentShown
         // TODO add your handling code here:
@@ -263,24 +268,42 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ColumnsComboBoxActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void createSubstitutionRuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSubstitutionRuleActionPerformed
         // create new substitution rule
-         File tempFile = new File("temp_file1.xml");
-
-        MaskingSetDocument doc = null;
-
-
         ArrayList<String> columns = new ArrayList<>();
+
+        // get all column names user has entered
         for (Object column : listModel.toArray()) {
             columns.add((String) column);
         }
-        try {
-            doc = MaskingSetDocument.Factory.parse(tempFile);
-        } catch (XmlException | IOException ex) {
-            Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+
+        Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
+
+        // build the rule according to information from this window
+        Rule newRule = rulesInSet.addNewRule();
+        SubstitutionRule newRuleSubstitution = newRule.addNewSubstitute();
+        // add new columns
+        for(String column : columns){
+            newRuleSubstitution.addColumn(column);
         }
-        Rules rulesInSet = doc.getMaskingSet().getRules();
-    }//GEN-LAST:event_jButton6ActionPerformed
+        String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
+        newRule.setTarget(targetTable);
+        newRule.setId(rulesInSet.getRuleArray().length + "");
+        newRule.setRuleType(RuleType.SUBSTITUTION);
+
+        // let other windows know that masking set has change
+
+        try {
+            XMLInterface.saveFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Couldn't create the rule - please see the log file");
+        }
+
+        UIManager.update();
+
+        dispose();
+    }//GEN-LAST:event_createSubstitutionRuleActionPerformed
 
     private void DeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteButtonActionPerformed
         // TODO add your handling code here:
@@ -334,8 +357,8 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
     private javax.swing.JList ColumnsSelectedList;
     private javax.swing.JButton DeleteButton;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JButton createSubstitutionRule;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -347,4 +370,6 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JTable tablesSelectedTable;
     // End of variables declaration//GEN-END:variables
+
+    
 }

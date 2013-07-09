@@ -37,7 +37,10 @@ public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
      * Sets (as xml) the "column" element
      */
     void xsetColumn(org.apache.xmlbeans.XmlString column);
-    
+    /**
+     * Appends the value as the last "column" element
+     */
+    void addColumn(java.lang.String column);
     /**
      * A factory class with static methods for creating instances
      * of this type.

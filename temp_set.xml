@@ -78,5 +78,31 @@
                 <column>cas_user_id</column>
             </shuffle>
         </rule>
+        <rule target="cas_user" rule_type="shuffle">
+            <id>7</id>
+            <shuffle>
+                <column>user_name</column>
+                <column>password</column>
+                <column>failed_attempts</column>
+            </shuffle>
+        </rule>
+        <rule target="contact_hist" rule_type="substitution">
+            <id>8</id>
+            <substitute>
+                <column>contact_id</column>
+                <column>contact_type_id</column>
+                <column>org_id</column>
+                <column>title</column>
+            </substitute>
+        </rule>
+        <rule target="entity_field" rule_type="substitution">
+            <id>9</id>
+            <substitute>
+                <column>entity_data_type_id</column>
+                <column>entity_data_type_id</column>
+                <column>code</column>
+                <column>name</column>
+            </substitute>
+        </rule>
     </rules>
 </masking_set>
