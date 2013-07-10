@@ -83,7 +83,7 @@ public class MainWindow extends javax.swing.JFrame {
         settings = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-        jScrollPane2 = new javax.swing.JScrollPane();
+       
         TestTree = new org.jdesktop.swingx.JXTreeTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         maskingSetMenuItem = new javax.swing.JMenu();
@@ -133,7 +133,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         
 
-        RulesInSetPane.addTab("TestPane", jScrollPane2);
+        
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -315,7 +315,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+
     private javax.swing.JMenu maskingSetMenuItem;
     private javax.swing.JMenuItem newMaskingSetMenuButton;
     private javax.swing.JMenuItem newRuleMenuButton;
