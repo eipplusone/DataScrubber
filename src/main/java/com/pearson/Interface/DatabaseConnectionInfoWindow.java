@@ -77,6 +77,12 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPanel2KeyPressed(evt);
+            }
+        });
+
         UserNameLabel.setText("User Name:");
 
         UserNameField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -363,6 +369,9 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
     }//GEN-LAST:event_DefaultSchemaFieldKeyPressed
+    if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
     }
     private void HostNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HostNameFieldKeyPressed
         // TODO add your handling code here:
@@ -392,7 +401,10 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
-    }            
+    } 
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
     }//GEN-LAST:event_HostNameFieldKeyPressed
 
     private void PortFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PortFieldKeyPressed
@@ -423,7 +435,10 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
-    }            
+    }      
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
     }//GEN-LAST:event_PortFieldKeyPressed
 
     private void UserNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UserNameFieldKeyPressed
@@ -454,7 +469,10 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
-    }            
+    }   
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
     }//GEN-LAST:event_UserNameFieldKeyPressed
 
     private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
@@ -480,13 +498,25 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
             }
         }
+        
+        
 
         dispose();
         CreateNewRuleWindow rw = new CreateNewRuleWindow();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
-    }            
+    }    
+        
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
     }//GEN-LAST:event_PasswordFieldKeyPressed
+
+    private void jPanel2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel2KeyPressed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_jPanel2KeyPressed
       
     /**
      * test to see if enter key is typed
