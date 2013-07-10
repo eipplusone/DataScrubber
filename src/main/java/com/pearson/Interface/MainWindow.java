@@ -330,7 +330,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (!XMLInterface.isLeaf(ruleToDelete)) {
             Object[] options = {"Delete all child rules", "Cancel"};
             int userChoice = JOptionPane.showOptionDialog(null, "Deleting parent rule will result in deleting all child rules." +
-                    "Please choose one of the following", "Are you sure you want to delete this rule?",
+                    " Please choose one of the following", "Are you sure you want to delete this rule?",
                     JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 
             if (userChoice != JOptionPane.YES_OPTION){

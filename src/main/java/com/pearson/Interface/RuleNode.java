@@ -56,4 +56,8 @@ public class RuleNode extends AbstractMutableTreeTableNode {
         return RulesTreeTableModel.COLUMN_NAMES.length;
     }
 
+    public Rule getRule(){
+        return (Rule) getUserObject();
+    }
+
 }

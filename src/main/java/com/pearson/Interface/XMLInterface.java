@@ -33,9 +33,9 @@ import org.apache.xmlbeans.XmlException;
  */
 public class XMLInterface {
 
+    public final static XmlOptions options = initialiseOptions();
     private static File xmlFile = new File("temp_set.xml"); // todo several applications running
     private static MaskingSetDocument setDocument;
-    public final static XmlOptions options = initialiseOptions();
 
     public static File getXmlFile() {
         return xmlFile;
@@ -118,12 +118,12 @@ public class XMLInterface {
         return root;
     }
 
-/**
- * A recursive method-helpers that initialises tree with the information from masking set
- *
- * @param rule Rule from the first level of masking set
- * @param root Pointer to the root of the tree
- */
+    /**
+     * A recursive method-helpers that initialises tree with the information from masking set
+     *
+     * @param rule Rule from the first level of masking set
+     * @param root Pointer to the root of the tree
+     */
     private static void appendNode(Rule rule, RuleNode root) {
 
         RuleNode ruleNode = new RuleNode(rule);
@@ -139,9 +139,10 @@ public class XMLInterface {
 
     /**
      * Static initialiser for options
+     *
      * @return
      */
-    private static XmlOptions initialiseOptions(){
+    private static XmlOptions initialiseOptions() {
 
         XmlOptions options = new XmlOptions();
 
@@ -157,39 +158,97 @@ public class XMLInterface {
      *
      * @param id - rule of id
      */
-    public static Rule getRule(String id){
+    public static Rule getRule(String id) {
 
-        String [] ids = id.split("-");
+        String[] ids = id.split("-");
         RulesDocument.Rules rules = setDocument.getMaskingSet().getRules();
         // get the rule with the first index
         Rule rule = rules.getRuleArray(Integer.valueOf(ids[0]) - 1); // -1 since we display rules ids start counting from 1
         // if it has dependencies, go through dependencies to get the rule
-        for(int i = 1; i < ids.length; i++){
+        for (int i = 1; i < ids.length; i++) {
             rule = rule.getDependencies().getRuleArray(Integer.valueOf(ids[i]) - 1);
         }
 
         return rule;
     }
 
+    public static void generateIDs() {
+
+        RulesDocument.Rules rules = setDocument.getMaskingSet().getRules();
+
+        for (int i = 0; i < rules.getRuleArray().length; i++) {
+            Rule rule = rules.getRuleArray(i);
+            // set id to it position within array plus 1
+            rule.setId((i + 1) + "");
+            generateIDs(rule);
+        }
+    }
+
+    private static void generateIDs(Rule root) {
+
+        if (isLeaf(root)) {
+            return;
+        }
+
+        Rule[] dependencyArray = root.getDependencies().getRuleArray();
+        for (int i = 0; i < dependencyArray.length; i++) {
+            Rule childRule = dependencyArray[i];
+            childRule.setId(root.getId() + "-" + (i + 1));
+            generateIDs(childRule);
+        }
+    }
+
     public static void addDependencyToRule(Rule rule) {
         rule.addNewDependencies();
     }
 
-    public static void removeRule(Rule childRule) {
+    public static void removeRule(Rule ruleToDelete) {
 
-        Rule parentRule = getParent(childRule);
-        String id = childRule.getId();
+        RulesDocument.Rules rules = setDocument.getMaskingSet().getRules();
 
-        int childIndex;
-        // last index of id minus one is the index of that rule inside it's parent rule
-        if (XMLInterface.isLeaf(childRule)) {
-            childIndex = id.charAt(0) - '0' - 1;
+        if (XMLInterface.isFirstLevelRule(ruleToDelete)) {
+            rules.removeRule(Integer.valueOf(ruleToDelete.getId()) - 1);
+        } else {
+            // if it's not the first-level rule, we would have to get the parent rule in order to delete it
+            Rule parentRule = getParent(ruleToDelete);
+            String id = ruleToDelete.getId();
+
+            // last index of id minus one is the index of that rule inside it's parent rule
+            int childIndex = id.charAt(id.length() - 1) - '0' - 1;
+
+            parentRule.getDependencies().removeRule(childIndex);
+            if (parentRule.getDependencies().getRuleArray() == null) {
+                // if there are no more rules
+                parentRule.unsetDependencies();
+            }
+
         }
-        else {
-            childIndex = id.charAt(id.length() - 1) - '0' - 1;
-        }
 
-        parentRule.getDependencies().removeRule(childIndex);
+        // since we deleted rule, ids mush be changed (bad design, todo: improve rule-delete logic; might need architecture difference)
+        generateIDs();
+    }
+
+    private static boolean isFirstLevelRule(Rule ruleToDelete) {
+
+        return !ruleToDelete.getId().contains("-");
+    }
+
+    public static Rule getParent(Rule childRule) {
+
+        String childID = childRule.getId();
+        // if there are no "-" is it the first level rule - it's parent is the first and only root dummy rule
+        if (isFirstLevelRule(childRule)) throw new IllegalArgumentException("The rule is first-level rule");
+
+        // get everything before last '-' - that is the parent id
+        String parentID = childID.substring(0, childID.lastIndexOf("-"));
+
+        return getRule(parentID);
+    }
+
+    public static boolean isLeaf(Rule rule) {
+
+        if (rule.getDependencies() == null) return true;
+        else return false;
     }
 
     /**
@@ -198,24 +257,6 @@ public class XMLInterface {
     public static void saveCurrentFile() throws IOException {
 
         setDocument.save(xmlFile, options);
-    }
-
-    public static Rule getParent(Rule childRule){
-
-      // get everything before last '-' - that is the parent id
-      String childID = childRule.getId();
-      String parentID = childID.substring(0, childID.lastIndexOf("-"));
-
-        return getRule(parentID);
-    }
-
-    public static boolean isLeaf(Rule rule){
-
-        if(rule.getDependencies() == null){
-            return true;
-        }
-
-        return false;
     }
 }
 

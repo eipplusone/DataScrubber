@@ -10,16 +10,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <simpleType
-
-    <xs:simpleType name="substitution_type">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="setToValue"/>
-            <xs:enumeration value="setToNull"/>
-            <xs:enumeration value="setToRandom"/>
-        </xs:restriction>
-    </xs:simpleType>
-
     <xs:element name="column" type="xs:string"/>
     <xs:element name="date_created" type="xs:date"/>
     <xs:element name="name" type="xs:string"/>

@@ -496,19 +496,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         newRule.setRuleType(RuleType.SHUFFLE);
 
-        // let other windows know that masking set has change
-
-
-        //newRule.setTarget(targetTable);
-        //newRule.setColumnArray((String[]) columns.toArray());
-
-        try {
-            XMLInterface.saveFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Couldn't create the rule - please see the log file");
-        }
-
         UIManager.update();
 
         dispose();
