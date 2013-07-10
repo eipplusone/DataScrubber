@@ -43,12 +43,12 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JComboBox columnsComboBox;
     private javax.swing.JButton createShuffleRuleButton;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JCheckBox enableWhereClauseCheckbox;
-    private javax.swing.JPanel errorMgrPane;
-    private javax.swing.JScrollPane errorScrollPane;
-    private javax.swing.JTextArea errorTextArea;
+   // private javax.swing.JCheckBox enableWhereClauseCheckbox;
+   // private javax.swing.JPanel errorMgrPane;
+    //private javax.swing.JScrollPane errorScrollPane;
+   // private javax.swing.JTextArea errorTextArea;
     private javax.swing.JButton helpButton;
-    private javax.swing.JCheckBox ignoreErrorsCheckbox;
+    //private javax.swing.JCheckBox ignoreErrorsCheckbox;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel newShuffleRuleLabel;
     private javax.swing.JLabel pseudoCodeLabel;
@@ -61,9 +61,9 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JLabel tableSelected;
     private javax.swing.JTable tablesSelectedTable;
-    private javax.swing.JPanel whereClausePane;
-    private javax.swing.JScrollPane whereClauseScrollpane;
-    private javax.swing.JTextArea whereClauseTextArea;
+    //private javax.swing.JPanel whereClausePane;
+   // private javax.swing.JScrollPane whereClauseScrollpane;
+   // private javax.swing.JTextArea whereClauseTextArea;
 
     /**
      * Creates new form NewShuffleRule
@@ -158,16 +158,16 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ColumnsSelectedList = new javax.swing.JList();
-        whereClausePane = new javax.swing.JPanel();
+        //whereClausePane = new javax.swing.JPanel();
         pseudoCodeLabel = new javax.swing.JLabel();
         pseudoCodeTextfield = new javax.swing.JTextField();
-        enableWhereClauseCheckbox = new javax.swing.JCheckBox();
-        whereClauseScrollpane = new javax.swing.JScrollPane();
-        whereClauseTextArea = new javax.swing.JTextArea();
-        errorMgrPane = new javax.swing.JPanel();
-        ignoreErrorsCheckbox = new javax.swing.JCheckBox();
-        errorScrollPane = new javax.swing.JScrollPane();
-        errorTextArea = new javax.swing.JTextArea();
+        //enableWhereClauseCheckbox = new javax.swing.JCheckBox();
+        //whereClauseScrollpane = new javax.swing.JScrollPane();
+        //whereClauseTextArea = new javax.swing.JTextArea();
+        //errorMgrPane = new javax.swing.JPanel();
+        //ignoreErrorsCheckbox = new javax.swing.JCheckBox();
+        //errorScrollPane = new javax.swing.JScrollPane();
+       // errorTextArea = new javax.swing.JTextArea();
         skipCheckBox = new javax.swing.JCheckBox();
         cancelButton = new javax.swing.JButton();
         createShuffleRuleButton = new javax.swing.JButton();
@@ -192,9 +192,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         tableScrollPane.setViewportView(tablesSelectedTable);
 
         newShuffleRuleLabel.setText("New Shuffle Rule");
-
-        tableSelected.setText("Table:");
-
         shortDescriptionLabel.setText("Select Columns");
 
         deleteButton.setText("Delete");
@@ -230,7 +227,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
         pseudoCodeLabel.setText("Pseudo code");
 
-        enableWhereClauseCheckbox.setText("Enable Where Clause");
+        /**enableWhereClauseCheckbox.setText("Enable Where Clause");
         enableWhereClauseCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enableWhereClauseCheckboxActionPerformed(evt);
@@ -321,7 +318,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
                                 .addContainerGap(139, Short.MAX_VALUE))
         );
 
-        shuffleTabbedPane.addTab("Error Mgr", errorMgrPane);
+        shuffleTabbedPane.addTab("Error Mgr", errorMgrPane); **/
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -337,7 +334,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             }
         });
 
-        helpButton.setText("Help");
+//helpButton.setText("Help");
 
         columnsComboBox.setModel(new javax.swing.DefaultComboBoxModel(
 
@@ -417,14 +414,14 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed
+    //private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed
         // TODO add your handling code here:
-        whereClauseTextArea.setVisible(enableWhereClauseCheckbox.isSelected());
-    }//GEN-LAST:event_enableWhereClauseCheckboxActionPerformed
+        //whereClauseTextArea.setVisible(enableWhereClauseCheckbox.isSelected());
+   // }//GEN-LAST:event_enableWhereClauseCheckboxActionPerformed
 
-    private void errorTextAreaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_errorTextAreaAncestorAdded
+    //private void errorTextAreaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_errorTextAreaAncestorAdded
         // TODO add your handling code here:
-    }//GEN-LAST:event_errorTextAreaAncestorAdded
+  //  }//GEN-LAST:event_errorTextAreaAncestorAdded
 
     private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
 
@@ -436,10 +433,10 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
-    private void ignoreErrorsCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreErrorsCheckboxActionPerformed
+    //private void ignoreErrorsCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreErrorsCheckboxActionPerformed
         // TODO add your handling code here:
-        errorTextArea.setVisible(ignoreErrorsCheckbox.isSelected());
-    }//GEN-LAST:event_ignoreErrorsCheckboxActionPerformed
+      //  errorTextArea.setVisible(ignoreErrorsCheckbox.isSelected());
+   // }//GEN-LAST:event_ignoreErrorsCheckboxActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit

@@ -337,9 +337,9 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     private void DefaultSchemaFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DefaultSchemaFieldKeyPressed
         // if enter key is pressed in DefaultSchemaField, and all inputs are not empty, 
         //open the create new rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        if (isInputNotEmpty()) {
+            int kc = evt.getKeyCode();
+            if (kc == evt.VK_ENTER){
+            if (isInputNotEmpty()) {
             fetch();
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
 
