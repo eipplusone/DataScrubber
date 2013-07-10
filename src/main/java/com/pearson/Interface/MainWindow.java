@@ -89,13 +89,12 @@ public class MainWindow extends javax.swing.JFrame {
         maskingSetMenuItem = new javax.swing.JMenu();
         newMaskingSetMenuButton = new javax.swing.JMenuItem();
         openMaskingSetMenuButton = new javax.swing.JMenuItem();
-        clearMaskingSetMenuButton = new javax.swing.JMenuItem();
+        
         saveSetMenuButton = new javax.swing.JMenuItem();
         saveSetAsMenuButton = new javax.swing.JMenuItem();
         ruleMenuItem = new javax.swing.JMenu();
         newRuleMenuButton = new javax.swing.JMenuItem();
-        deleteRuleMenuButton = new javax.swing.JMenuItem();
-        disableRuleMenuButton = new javax.swing.JMenuItem();
+        
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -171,8 +170,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
         maskingSetMenuItem.add(openMaskingSetMenuButton);
 
-        clearMaskingSetMenuButton.setText("Clear Masking Set...");
-        maskingSetMenuItem.add(clearMaskingSetMenuButton);
+        
+        
 
         saveSetMenuButton.setText("Save Set...");
         maskingSetMenuItem.add(saveSetMenuButton);
@@ -192,11 +191,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
         ruleMenuItem.add(newRuleMenuButton);
 
-        deleteRuleMenuButton.setText("Delete Rule...");
-        ruleMenuItem.add(deleteRuleMenuButton);
+        
 
-        disableRuleMenuButton.setText("Disable Rule...");
-        ruleMenuItem.add(disableRuleMenuButton);
+        
 
         jMenuBar1.add(ruleMenuItem);
 
@@ -307,9 +304,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTabbedPane RulesInSetPane;
     private javax.swing.JTree RulesInSetTree;
     private org.jdesktop.swingx.JXTreeTable TestTree;
-    private javax.swing.JMenuItem clearMaskingSetMenuButton;
-    private javax.swing.JMenuItem deleteRuleMenuButton;
-    private javax.swing.JMenuItem disableRuleMenuButton;
+    
+    
+    
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JMenuBar jMenuBar1;
