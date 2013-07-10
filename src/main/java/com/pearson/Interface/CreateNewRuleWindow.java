@@ -161,12 +161,12 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_newShuffleRuleButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
+        // action event for cancle button
         dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void newSubstitutionRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed by user on new shuffle rule button, open the new substitution rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         NewSubstitutionRuleWindow rw = null;
@@ -183,7 +183,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_newSubstitutionRuleButtonKeyPressed
 
     private void newShuffleRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed by user on new shuffle rule button, open the new shuffle rule window
          int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
             NewShuffleRuleWindow srw = null;
@@ -199,7 +199,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_newShuffleRuleButtonKeyPressed
 
     private void cancelButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cancelButtonKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed on cancel button, close the window
          int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
             dispose();

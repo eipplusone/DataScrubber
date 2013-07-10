@@ -77,12 +77,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel2.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jPanel2KeyPressed(evt);
-            }
-        });
-
         UserNameLabel.setText("User Name:");
 
         UserNameField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -341,7 +335,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_OKButtonActionPerformed
 
     private void DefaultSchemaFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DefaultSchemaFieldKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed in DefaultSchemaField, and all inputs are not empty, 
+        //open the create new rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         if (isInputNotEmpty()) {
@@ -374,7 +369,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
         }
     }
     private void HostNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HostNameFieldKeyPressed
-        // TODO add your handling code here:
+       // if enter key is pressed in HostnameField, and all inputs are not empty, 
+        //open the create new rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         if (isInputNotEmpty()) {
@@ -408,7 +404,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_HostNameFieldKeyPressed
 
     private void PortFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PortFieldKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed in PortField, and all inputs are not empty, 
+        //open the create new rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         if (isInputNotEmpty()) {
@@ -442,7 +439,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_PortFieldKeyPressed
 
     private void UserNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UserNameFieldKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed in usernameFieldKey, and all inputs are not empty, 
+        //open the create new rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         if (isInputNotEmpty()) {
@@ -476,7 +474,8 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_UserNameFieldKeyPressed
 
     private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
-        // TODO add your handling code here:
+        // if enter key is pressed in PasswordField, and all inputs are not empty, 
+        //open the create new rule window
         int kc = evt.getKeyCode();
         if (kc == evt.VK_ENTER){
         if (isInputNotEmpty()) {
@@ -511,16 +510,7 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
             dispose();
         }
     }//GEN-LAST:event_PasswordFieldKeyPressed
-
-    private void jPanel2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel2KeyPressed
-        // TODO add your handling code here:
-        
-        
-    }//GEN-LAST:event_jPanel2KeyPressed
       
-    /**
-     * test to see if enter key is typed
-     */
     
    
     /**
