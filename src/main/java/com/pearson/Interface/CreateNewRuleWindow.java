@@ -32,36 +32,51 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        createLable = new javax.swing.JLabel();
+        chooseTypeLabel = new javax.swing.JLabel();
+        newSubstitutionRuleButton = new javax.swing.JButton();
+        newShuffleRuleButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Create a New Masking Rule");
+        createLable.setText("Create a New Masking Rule");
 
-        jLabel2.setText("Choose the Masking Rule Type");
+        chooseTypeLabel.setText("Choose the Masking Rule Type");
 
-        jButton1.setText("New Substitution Rule...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        newSubstitutionRuleButton.setText("New Substitution Rule...");
+        newSubstitutionRuleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                newSubstitutionRuleButtonActionPerformed(evt);
+            }
+        });
+        newSubstitutionRuleButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                newSubstitutionRuleButtonKeyPressed(evt);
             }
         });
 
-        jButton2.setText("New Shuffle Rule...");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        newShuffleRuleButton.setText("New Shuffle Rule...");
+        newShuffleRuleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                newShuffleRuleButtonActionPerformed(evt);
+            }
+        });
+        newShuffleRuleButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                newShuffleRuleButtonKeyPressed(evt);
             }
         });
 
-        jButton3.setText("Cancel");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        cancelButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                cancelButtonKeyPressed(evt);
             }
         });
 
@@ -73,33 +88,33 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(132, 132, 132)
-                        .addComponent(jLabel1))
+                        .addComponent(createLable))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(124, 124, 124)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
-                            .addComponent(jLabel2)))
+                            .addComponent(newSubstitutionRuleButton)
+                            .addComponent(chooseTypeLabel)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(136, 136, 136)
-                        .addComponent(jButton2))
+                        .addComponent(newShuffleRuleButton))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(158, 158, 158)
-                        .addComponent(jButton3)))
+                        .addComponent(cancelButton)))
                 .addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(createLable)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
+                .addComponent(chooseTypeLabel)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(newSubstitutionRuleButton)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(newShuffleRuleButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
-                .addComponent(jButton3)
+                .addComponent(cancelButton)
                 .addGap(60, 60, 60))
         );
 
@@ -117,7 +132,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void newSubstitutionRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonActionPerformed
         // open the new substitution rule window
 
 
@@ -130,9 +145,9 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         dispose();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_newSubstitutionRuleButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void newShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonActionPerformed
         // open the new shuffle rule window
         NewShuffleRuleWindow srw = null;
         try {
@@ -143,12 +158,53 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         dispose();
         srw.setVisible(true);
         srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_newShuffleRuleButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // TODO add your handling code here:
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void newSubstitutionRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonKeyPressed
+        // TODO add your handling code here:
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        NewSubstitutionRuleWindow rw = null;
+        try {
+        rw = new NewSubstitutionRuleWindow();
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+            
+        }
+    }//GEN-LAST:event_newSubstitutionRuleButtonKeyPressed
+
+    private void newShuffleRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonKeyPressed
+        // TODO add your handling code here:
+         int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+            NewShuffleRuleWindow srw = null;
+        try {
+            srw = new NewShuffleRuleWindow();
+        } catch (SQLException ex) {
+            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dispose();
+        srw.setVisible(true);
+        srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        }
+    }//GEN-LAST:event_newShuffleRuleButtonKeyPressed
+
+    private void cancelButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cancelButtonKeyPressed
+        // TODO add your handling code here:
+         int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+            dispose();
+        }
+    }//GEN-LAST:event_cancelButtonKeyPressed
 
     /**
      * @param args the command line arguments
@@ -185,11 +241,11 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel chooseTypeLabel;
+    private javax.swing.JLabel createLable;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton newShuffleRuleButton;
+    private javax.swing.JButton newSubstitutionRuleButton;
     // End of variables declaration//GEN-END:variables
 }
