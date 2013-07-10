@@ -239,7 +239,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_TestConnectionButtonActionPerformed
 
     private boolean isInputNotEmpty() {
-        for (int i = 0; i == 0; i++) {
             String username = UserNameField.getText();
             if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please enter the username");
@@ -265,7 +264,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please enter the default schema");
                 return false;
             }
-        }
         return true;
     }
 
@@ -295,15 +293,16 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
                 UIManager.setDefaultSchema(defaultSchema);
                 UIManager.setPort(port);
                 UIManager.setUserEnteredLogInInformation(true);
+
+                dispose();
+                CreateNewRuleWindow rw = new CreateNewRuleWindow();
+                rw.setVisible(true);
+                rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
             } else {
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
             }
         }
 
-        dispose();
-        CreateNewRuleWindow rw = new CreateNewRuleWindow();
-        rw.setVisible(true);
-        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE);
     }//GEN-LAST:event_OKButtonActionPerformed
 
     /**

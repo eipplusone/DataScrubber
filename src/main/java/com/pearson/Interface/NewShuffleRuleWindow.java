@@ -1,13 +1,12 @@
 package com.pearson.Interface;
 
 import com.pearson.Interface.Models.ItemsSelectedTableModel;
-import com.pearson.Rules.Shuffle;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.Column;
 import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 
-import java.io.File;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
 import java.sql.SQLException;
@@ -17,8 +16,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import noNamespace.RulesDocument.Rules;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
 
 /*
  * To change this template, choose Tools | Templates
@@ -35,7 +32,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
-    DependenciesType dependency;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList ColumnsSelectedList;
@@ -66,14 +62,13 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea whereClauseTextArea;
 
     /**
-     * Creates new form NewShuffleRule
+     * Default constructor; creates new form NewShuffleRule
      * <p/>
      * This method throws an exception, but by the time we have allowed the user
      * to enter that window he already should have passed checks on correct
      * connection
      */
     public NewShuffleRuleWindow() throws SQLException {
-
 
         database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
                 UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
@@ -89,11 +84,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         initComponents();
         // allow only one table to be selected inside table list
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    }
-    
-    public NewShuffleRuleWindow(DependenciesType dependency) throws SQLException {
-        this();
-        this.dependency = dependency;
     }
 
     /**
@@ -474,7 +464,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     // this code works only if we create a rule without being dependent on another rule todo version 1.0 make create new rule dependent on another rule
-    private void createShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
+    private void createShuffleRuleButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
 
         ArrayList<String> columns = new ArrayList<>();
 
@@ -486,7 +476,15 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
 
         // build the rule according to information from this window
-        Rule newRule = rulesInSet.addNewRule();
+        Rule parentRule = UIManager.getParentRule();
+        Rule newRule;
+        // depending on whether is an independent rule or dependent
+        if (UIManager.getParentRule() == null) {
+            newRule = rulesInSet.addNewRule();
+        }
+        else {
+            newRule = parentRule.getDependencies().addNewRule();
+        }
         ShuffleRule newRuleShuffle = newRule.addNewShuffle();
         // add new columns
         for(String column : columns){
@@ -494,7 +492,8 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         }
         String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
         newRule.setTarget(targetTable);
-        newRule.setId(rulesInSet.getRuleArray().length + "");
+        // get the id of the parent rule and concat it with incremented number of rules inside parent rule dependency
+        newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         newRule.setRuleType(RuleType.SHUFFLE);
 
         // let other windows know that masking set has change

@@ -5,7 +5,9 @@
 package com.pearson.Interface;
 
 import com.pearson.Interface.Models.RulesTreeTableModel;
+import noNamespace.DependenciesType;
 import noNamespace.MaskingSetDocument;
+import noNamespace.Rule;
 
 /**
  *
@@ -20,6 +22,7 @@ public class UIManager {
     private static String defaultSchema;
     private static String port = null;
     private static boolean userEnteredLogInInformation = false;
+    private static Rule parentRule;
 
     static public MainWindow getMainWindow() {
         return mainWindow;
@@ -83,5 +86,13 @@ public class UIManager {
 
     public static boolean getUserEnteredLogInInformation() {
         return userEnteredLogInInformation;
+    }
+
+    public static Rule getParentRule() {
+        return parentRule;
+    }
+
+    public static void setParentRule(Rule parentRule_){
+        parentRule = parentRule_;
     }
 }

@@ -33,7 +33,7 @@ import org.apache.xmlbeans.XmlException;
  */
 public class XMLInterface {
 
-    private static File xmlFile = new File("temp_set.xml");
+    private static File xmlFile = new File("temp_set.xml"); // todo several applications running
     private static MaskingSetDocument setDocument;
     public final static XmlOptions options = initialiseOptions();
 
@@ -118,10 +118,6 @@ public class XMLInterface {
         return root;
     }
 
-    public static void saveFile() throws IOException {
-        setDocument.save(xmlFile, options);
-    }
-
 /**
  * A recursive method-helpers that initialises tree with the information from masking set
  *
@@ -136,12 +132,15 @@ public class XMLInterface {
         if (rule.getDependencies() == null) { // if root is leaf
             return;
         }
-        for (Rule ruleDummy : rule.getDependencies().getRuleArray()) {
-            appendNode(ruleDummy, ruleNode);
+        for (Rule childRule : rule.getDependencies().getRuleArray()) {
+            appendNode(childRule, ruleNode);
         }
     }
 
-    // static initializer for xmlOptions
+    /**
+     * Static initialiser for options
+     * @return
+     */
     private static XmlOptions initialiseOptions(){
 
         XmlOptions options = new XmlOptions();
@@ -152,4 +151,71 @@ public class XMLInterface {
 
         return options;
     }
+
+    /**
+     * Returns rule from current document
+     *
+     * @param id - rule of id
+     */
+    public static Rule getRule(String id){
+
+        String [] ids = id.split("-");
+        RulesDocument.Rules rules = setDocument.getMaskingSet().getRules();
+        // get the rule with the first index
+        Rule rule = rules.getRuleArray(Integer.valueOf(ids[0]) - 1); // -1 since we display rules ids start counting from 1
+        // if it has dependencies, go through dependencies to get the rule
+        for(int i = 1; i < ids.length; i++){
+            rule = rule.getDependencies().getRuleArray(Integer.valueOf(ids[i]) - 1);
+        }
+
+        return rule;
+    }
+
+    public static void addDependencyToRule(Rule rule) {
+        rule.addNewDependencies();
+    }
+
+    public static void removeRule(Rule childRule) {
+
+        Rule parentRule = getParent(childRule);
+        String id = childRule.getId();
+
+        int childIndex;
+        // last index of id minus one is the index of that rule inside it's parent rule
+        if (XMLInterface.isLeaf(childRule)) {
+            childIndex = id.charAt(0) - '0' - 1;
+        }
+        else {
+            childIndex = id.charAt(id.length() - 1) - '0' - 1;
+        }
+
+        parentRule.getDependencies().removeRule(childIndex);
+    }
+
+    /**
+     * Saves the current masking set under the xmlFile specified inside XMLInterface
+     */
+    public static void saveCurrentFile() throws IOException {
+
+        setDocument.save(xmlFile, options);
+    }
+
+    public static Rule getParent(Rule childRule){
+
+      // get everything before last '-' - that is the parent id
+      String childID = childRule.getId();
+      String parentID = childID.substring(0, childID.lastIndexOf("-"));
+
+        return getRule(parentID);
+    }
+
+    public static boolean isLeaf(Rule rule){
+
+        if(rule.getDependencies() == null){
+            return true;
+        }
+
+        return false;
+    }
 }
+
