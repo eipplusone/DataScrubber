@@ -10,8 +10,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <simpleType
-
     <xs:simpleType name="substitution_type">
         <xs:restriction base="xs:string">
             <xs:enumeration value="setToValue"/>
