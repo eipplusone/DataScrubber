@@ -1,18 +1,22 @@
 package com.pearson.Interface.Windows;
 
+import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Models.RulesTreeTableModel;
 
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.pearson.Readers.SetReader;
+import com.pearson.SQL.Database;
 import noNamespace.Rule;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
@@ -302,8 +306,18 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
 
+        Database database = null;
+        try {
+            database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(),
+                    com.pearson.Interface.UIManager.getUsername(),
+                    com.pearson.Interface.UIManager.getPassword(),
+                    com.pearson.Interface.UIManager.getUrl());
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+
         SetReader setReader = new SetReader(XMLInterface.getSetDocument());
-        setReader.run();
+        setReader.run(database);
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
