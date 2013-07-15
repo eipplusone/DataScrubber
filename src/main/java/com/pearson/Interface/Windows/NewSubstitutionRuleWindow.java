@@ -5,6 +5,7 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
@@ -20,9 +21,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
 
 import noNamespace.RulesDocument.Rules;
+
+import javax.swing.*;
+import javax.swing.UIManager;
 
 
 /**
@@ -369,7 +372,10 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         // select table from the window
         isFirstTimeSelected = true;
         isTableSelected = true;
+
         columnsComboBox.removeAllItems();
+        typeOfSubstitutionComboBox.removeAllItems();
+
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
         tableSelected = tableNames.get(row);
         for (Column column : database.tables.get(tableSelected).columns.values()) {
@@ -410,7 +416,7 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
 
     private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
 
-        if (!isTableSelected || !isFirstTimeSelected) return;
+        if (!isTableSelected || isFirstTimeSelected) return;
 
         String columnSelectedString = columnsComboBox.getSelectedItem().toString();
 
@@ -477,6 +483,11 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
             valueOrBrowseLabel.setText("Please Enter Max String Size");
             valueOrBrowseLabel.setVisible(true);
             valueTextField.setVisible(true);
+        }
+        else{
+            valueTextField.setVisible(false);
+            valueOrBrowseLabel.setVisible(false);
+            browseButton.setVisible(false);
         }
 
         selectedTypeOfSubstitutionLabel.setText(selectedType);

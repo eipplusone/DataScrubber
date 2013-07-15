@@ -7,16 +7,15 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
-import noNamespace.MaskingSetDocument;
+import com.pearson.Readers.SetReader;
 import noNamespace.Rule;
-import noNamespace.RulesDocument.Rules;
-import org.apache.xmlbeans.XmlException;
+import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
+import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
 
 /*
  * To change this template, choose Tools | Templates
@@ -43,6 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JMenu maskingSetMenuItem;
     private javax.swing.JMenuItem newMaskingSetMenuButton;
+    private JMenuItem runMaskingSetMenuButton;
     private javax.swing.JMenuItem newRuleMenuButton;
     private javax.swing.JMenuItem openMaskingSetMenuButton;
     private javax.swing.JMenu ruleMenuItem;
@@ -71,6 +71,8 @@ public class MainWindow extends javax.swing.JFrame {
         TestTree.setOpenIcon(null);
         TestTree.getTreeSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
+        setMaskingSetLogic(false);
+
         com.pearson.Interface.UIManager.setMainWindow(this);
     }
 
@@ -78,7 +80,7 @@ public class MainWindow extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -119,13 +121,13 @@ public class MainWindow extends javax.swing.JFrame {
         settings = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-       
+
         TestTree = new org.jdesktop.swingx.JXTreeTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         maskingSetMenuItem = new javax.swing.JMenu();
         newMaskingSetMenuButton = new javax.swing.JMenuItem();
         openMaskingSetMenuButton = new javax.swing.JMenuItem();
-        
+
         saveSetMenuButton = new javax.swing.JMenuItem();
         saveSetAsMenuButton = new javax.swing.JMenuItem();
         ruleMenuItem = new javax.swing.JMenu();
@@ -133,6 +135,7 @@ public class MainWindow extends javax.swing.JFrame {
         deleteRuleMenuButton = new javax.swing.JMenuItem();
         disableRuleMenuButton = new javax.swing.JMenuItem();
         rulesInSetRightClickMenu = new JPopupMenu();
+        runMaskingSetMenuButton = new JMenuItem();
 
         // initialise right click menu
         rightClickMenuItem = new JMenuItem("Create a new dependent rule");
@@ -168,8 +171,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         RulesInSetTree.setModel(rulesInSetTreeModel);
         jScrollPane1.setViewportView(RulesInSetTree);
-		jScrollPane1.setViewportView(TestTree);
-        RulesInSetPane.addTab("Rules in Set", jScrollPane1);
+        jScrollPane1.setViewportView(TestTree);
+        RulesInSetPane.addTab("Rules In Set", jScrollPane1);
 
         jCheckBox1.setText("New Disable FK Constraints Rule...");
 
@@ -197,7 +200,6 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         RulesInSetPane.addTab("Settings", settings);
-
 
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -236,8 +238,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         maskingSetMenuItem.add(openMaskingSetMenuButton);
 
-        
-        
 
         saveSetMenuButton.setText("Save Set...");
         saveSetMenuButton.addActionListener(new java.awt.event.ActionListener() {
@@ -250,10 +250,21 @@ public class MainWindow extends javax.swing.JFrame {
         saveSetAsMenuButton.setText("Save Set As...");
         saveSetAsMenuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveSetAsmenuButtonActionPerformed(evt);
+                saveSetAsMenuButtonActionPerformed(evt);
             }
         });
         maskingSetMenuItem.add(saveSetAsMenuButton);
+
+        maskingSetMenuItem.addSeparator();
+
+        runMaskingSetMenuButton.setText("Run Set");
+        runMaskingSetMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runMaskingSetMenuButtonActionPerformed(e);
+            }
+        });
+        maskingSetMenuItem.add(runMaskingSetMenuButton);
 
         jMenuBar1.add(maskingSetMenuItem);
 
@@ -267,9 +278,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         ruleMenuItem.add(newRuleMenuButton);
 
-        
-
-        
 
         jMenuBar1.add(ruleMenuItem);
 
@@ -292,12 +300,49 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
+    private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
 
+        SetReader setReader = new SetReader(XMLInterface.getSetDocument());
+        setReader.run();
     }
 
-    private void saveSetAsmenuButtonActionPerformed(ActionEvent evt) {
-        //To change body of created methods use File | Settings | File Templates.
+    private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
+
+        // if we have not chosen save directory yet
+        if (XMLInterface.getXmlFile() == null) {
+            saveAsFile();
+            return;
+        }
+
+        try {
+            XMLInterface.saveCurrentFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveSetAsMenuButtonActionPerformed(ActionEvent evt) {
+
+       saveAsFile();
+    }
+
+    private void saveAsFile() {
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
+
+
+        int returnOption = chooser.showSaveDialog(null);
+        if (returnOption == JFileChooser.APPROVE_OPTION){
+            XMLInterface.setXMLFile(chooser.getSelectedFile());
+            RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
+        }
+
+        try {
+            XMLInterface.saveCurrentFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void createNewDependentRuleRightClickMenuActionPerformed(ActionEvent evt) {
@@ -308,7 +353,7 @@ public class MainWindow extends javax.swing.JFrame {
         Rule newRule = XMLInterface.getRule(ruleID);
 
         if (!newRule.isSetDependencies()) {
-                XMLInterface.addDependencyToRule(newRule);
+            XMLInterface.addDependencyToRule(newRule);
         }
 
         com.pearson.Interface.UIManager.setParentRule(newRule);
@@ -330,7 +375,7 @@ public class MainWindow extends javax.swing.JFrame {
                     " Please choose one of the following", "Are you sure you want to delete this rule?",
                     JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 
-            if (userChoice != JOptionPane.YES_OPTION){
+            if (userChoice != JOptionPane.YES_OPTION) {
                 return;
             }
         }
@@ -350,34 +395,72 @@ public class MainWindow extends javax.swing.JFrame {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
-        XMLInterface.createNewFile();
-    }
+        if(XMLInterface.getSetDocument() != null){
+            Object[] options = {"Save", "Discard", "Cancel"};
+            int saveOption =  JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
+            if (saveOption == JOptionPane.YES_OPTION){
+                saveAsFile();
+            }
+            else if (saveOption == JOptionPane.NO_OPTION){
+                XMLInterface.createNewFile();
+                RulesInSetPane.setTitleAt(0, "New Masking Set");
+                updateTreeModel();
+            }
+        }
+        else {
+            XMLInterface.createNewFile();
+            TestTree.setTreeTableModel(new RulesTreeTableModel());
+
+            setMaskingSetLogic(true);
+
+            RulesInSetPane.setTitleAt(0, "New Masking Set");
+        }
+    }
+    // openmskset
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // create a file chooser
+
+        if(XMLInterface.getXmlFile() != null) {
+            Object[] options = {"Save", "Discard", "Cancel"};
+            int saveOption =  JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+
+            if (saveOption == JOptionPane.YES_OPTION){
+                saveAsFile();
+                return;
+            }
+            else if (saveOption == JOptionPane.CANCEL_OPTION) {
+                return;
+            }
+        }
+
         JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
-        File file = null;
+        File openFile = null;
 
         if (evt.getSource() == openMaskingSetMenuButton) {
             //handle open button action
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                file = fc.getSelectedFile();
+                openFile = fc.getSelectedFile();
 
+                XMLInterface.setXMLFile(openFile);
+
+                LinkedList<String> columnNames = new LinkedList<>();
+                columnNames.add("Rule ID");
+                columnNames.add("Rule Type");
+                columnNames.add("Target");
+                columnNames.add("Columns");
+
+                setMaskingSetLogic(true);
+
+                RulesInSetPane.setTitleAt(0, openFile.getName());
+                updateTreeModel();
+                TestTree.expandAll();
             }
         }
-
-        XMLInterface.setXMLFile(file);
-
-        LinkedList<String> columnNames = new LinkedList<>();
-        columnNames.add("Rule ID");
-        columnNames.add("Rule Type");
-        columnNames.add("Target");
-        columnNames.add("Columns");
-
-        updateTreeModel();
-        TestTree.expandAll();
 
     }
 
@@ -393,8 +476,13 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void setMaskingSetLogic(boolean isVisible){
+
+        RulesInSetPane.setVisible(isVisible);
+        ruleMenuItem.setEnabled(isVisible);
+        saveSetMenuButton.setEnabled(isVisible);
+        saveSetAsMenuButton.setEnabled(isVisible);
+        runMaskingSetMenuButton.setEnabled(isVisible);
     }
 
     /**
@@ -407,32 +495,10 @@ public class MainWindow extends javax.swing.JFrame {
         TestTree.expandAll();
     }
 
+    private void showWarningSaveDialog(){
+
+
+    }
+
 }
 
-class PopupListener extends MouseAdapter {
-    JPopupMenu popup;
-
-    PopupListener(JPopupMenu popupMenu) {
-        popup = popupMenu;
-    }
-
-    public void mousePressed(MouseEvent e) {
-        maybeShowPopup(e);
-    }
-
-    public void mouseReleased(MouseEvent e) {
-        maybeShowPopup(e);
-    }
-
-    public void mouseClicked(MouseEvent e) {
-        maybeShowPopup(e);
-    }
-
-    private void maybeShowPopup(MouseEvent e) {
-        if (e.isPopupTrigger()) {
-
-            popup.show(e.getComponent(),
-                    e.getX(), e.getY());
-        }
-    }
-}

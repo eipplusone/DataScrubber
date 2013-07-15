@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 
 import com.pearson.Interface.Windows.MainWindow;
 import com.pearson.Interface.RuleNode;
+import com.pearson.Readers.SetReader;
+import com.pearson.Rules.Substitution;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.Rule;
@@ -23,13 +25,15 @@ import org.apache.xmlbeans.XmlOptions;
 
 import org.apache.xmlbeans.XmlException;
 
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  * @author Ruslan Kiselev
  */
-public class XMLInterface {
+public class XMLInterface{
 
     public final static XmlOptions options = initialiseOptions();
-    private static File xmlFile = new File("temp_set.xml"); // todo several applications running
+    private static File xmlFile; // todo several applications running
     private static MaskingSetDocument setDocument;
 
     public static File getXmlFile() {
@@ -73,54 +77,11 @@ public class XMLInterface {
      */
     public static void createNewFile() {
 
-        MaskingSetDocument setDocument = MaskingSetDocument.Factory.newInstance();
+        setDocument = MaskingSetDocument.Factory.newInstance();
         MaskingSet maskingSet = setDocument.addNewMaskingSet();
 
         maskingSet.setDateCreated(new GregorianCalendar());
         maskingSet.addNewRules();
-    }
-
-    /**
-     * Returns a Tree composed of rules inside the rules set. The first level of rules are children of root
-     * the root itself is masking set object
-     */
-    public static RuleNode getRulesTree() {
-
-        MaskingSet maskingSet = setDocument.getMaskingSet();
-        RulesDocument.Rules rules = maskingSet.getRules();
-
-        Rule rootRule = RulesDocument.Factory.newInstance().addNewRules().addNewRule();
-
-        // a dummy root rule; it is not displayed inside main window
-        rootRule.setId("Masking set: " + xmlFile.getName());
-        rootRule.addNewShuffle();
-
-        // root is not displayed; it only creates number of columns TODO make it more generic
-        RuleNode root = new RuleNode(rootRule);
-
-        for (Rule rule : rules.getRuleArray()) {
-            appendNode(rule, root);
-        }
-        return root;
-    }
-
-    /**
-     * A recursive method-helpers that initialises tree with the information from masking set
-     *
-     * @param rule Rule from the first level of masking set
-     * @param root Pointer to the root of the tree
-     */
-    private static void appendNode(Rule rule, RuleNode root) {
-
-        RuleNode ruleNode = new RuleNode(rule);
-        root.add(ruleNode);
-
-        if (rule.getDependencies() == null) { // if root is leaf
-            return;
-        }
-        for (Rule childRule : rule.getDependencies().getRuleArray()) {
-            appendNode(childRule, ruleNode);
-        }
     }
 
     /**
@@ -244,6 +205,11 @@ public class XMLInterface {
 
         setDocument.getMaskingSet().setName(xmlFile.getName());
         setDocument.save(xmlFile, options);
+    }
+
+    public static RuleNode getRulesTree() {
+        SetReader setReader = new SetReader(setDocument);
+        return setReader.getRulesTree();
     }
 }
 

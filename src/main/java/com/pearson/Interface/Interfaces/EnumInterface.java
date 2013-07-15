@@ -17,20 +17,20 @@ public class EnumInterface {
 
     public static SubstitutionActionType.Enum getSubstitutionActionType(String substitutionType){
 
-        if(substitutionType.equals(StringSubstitutionTypes.SET_TO_NULL) ||
-                substitutionType.equals(DateSubstitutionTypes.SET_TO_NULL) ||
-                substitutionType.equals(NumericSubstitutionTypes.SET_TO_NULL)){
+        if(substitutionType.equals(StringSubstitutionTypes.SET_TO_NULL.toString()) ||
+                substitutionType.equals(DateSubstitutionTypes.SET_TO_NULL.toString()) ||
+                substitutionType.equals(NumericSubstitutionTypes.SET_TO_NULL.toString())){
             return SubstitutionActionType.SET_TO_NULL;
         }
         else if(substitutionType.equals(StringSubstitutionTypes.SET_TO_VALUE.toString())){
             return SubstitutionActionType.SET_TO_VALUE;
         }
-        else if(substitutionType.equals(StringSubstitutionTypes.RANDOM_STRING) ||
-                substitutionType.equals(DateSubstitutionTypes.RANDOM_DATE_WITHING_RANGE) ||
-                substitutionType.equals(NumericSubstitutionTypes.RANDOM_NUMBER)){
+        else if(substitutionType.equals(StringSubstitutionTypes.RANDOM_STRING.toString()) ||
+                substitutionType.equals(DateSubstitutionTypes.RANDOM_DATE_WITHING_RANGE.toString()) ||
+                substitutionType.equals(NumericSubstitutionTypes.RANDOM_NUMBER.toString())){
             return SubstitutionActionType.SET_TO_RANDOM;
         }
-        else if(substitutionType.equals(StringSubstitutionTypes.FROM_A_LIST)){
+        else if(substitutionType.equals(StringSubstitutionTypes.FROM_A_LIST.toString())){
             return SubstitutionActionType.SET_FROM_FILE;
         }
         else {

@@ -29,7 +29,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
     Database database;
     ArrayList<String> tableNames = new ArrayList<>();
-    ArrayList<String> columnNames = new ArrayList<>();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
 
@@ -39,12 +38,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JComboBox columnsComboBox;
     private javax.swing.JButton createShuffleRuleButton;
     private javax.swing.JButton deleteButton;
-   // private javax.swing.JCheckBox enableWhereClauseCheckbox;
-   // private javax.swing.JPanel errorMgrPane;
-    //private javax.swing.JScrollPane errorScrollPane;
-   // private javax.swing.JTextArea errorTextArea;
-    private javax.swing.JButton helpButton;
-    //private javax.swing.JCheckBox ignoreErrorsCheckbox;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel newShuffleRuleLabel;
     private javax.swing.JLabel pseudoCodeLabel;
@@ -57,9 +50,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JLabel tableSelected;
     private javax.swing.JTable tablesSelectedTable;
-    //private javax.swing.JPanel whereClausePane;
-   // private javax.swing.JScrollPane whereClauseScrollpane;
-   // private javax.swing.JTextArea whereClauseTextArea;
 
     /**
      * Default constructor; creates new form NewShuffleRule
@@ -148,20 +138,10 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ColumnsSelectedList = new javax.swing.JList();
-        //whereClausePane = new javax.swing.JPanel();
         pseudoCodeLabel = new javax.swing.JLabel();
         pseudoCodeTextfield = new javax.swing.JTextField();
-        //enableWhereClauseCheckbox = new javax.swing.JCheckBox();
-        //whereClauseScrollpane = new javax.swing.JScrollPane();
-        //whereClauseTextArea = new javax.swing.JTextArea();
-        //errorMgrPane = new javax.swing.JPanel();
-        //ignoreErrorsCheckbox = new javax.swing.JCheckBox();
-        //errorScrollPane = new javax.swing.JScrollPane();
-       // errorTextArea = new javax.swing.JTextArea();
-        skipCheckBox = new javax.swing.JCheckBox();
         cancelButton = new javax.swing.JButton();
         createShuffleRuleButton = new javax.swing.JButton();
-        helpButton = new javax.swing.JButton();
         columnsComboBox = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -367,11 +347,9 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
                                                                                 .addGap(60, 60, 60)
                                                                                 .addComponent(createShuffleRuleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                                 .addGap(45, 45, 45)
-                                                                                .addComponent(helpButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                                         .addComponent(shortDescriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addGap(117, 117, 117)))))
-                                .addContainerGap())
-        );
+                                                                .addGap(117, 117, 117))))
+        ))));
         layout.setVerticalGroup(
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -397,9 +375,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(cancelButton)
                                         .addComponent(createShuffleRuleButton)
-                                        .addComponent(helpButton))
-                                .addContainerGap(29, Short.MAX_VALUE))
-        );
+        )));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -419,7 +395,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         // we want to make sure not to update it
         if (!firstTimeSelected) {
             String column = (String) columnsComboBox.getSelectedItem();
-                listModel.addElement(column);
+                if(!listModel.contains(column)) listModel.addElement(column);
         }
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
