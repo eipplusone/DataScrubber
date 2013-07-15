@@ -5,21 +5,9 @@
 package com.pearson.DataScrubber;
 
 
-import com.pearson.Interface.MainWindow;
-import com.pearson.Rules.Shuffle;
-import com.pearson.Rules.StringSubstitution;
-import com.pearson.SQL.Database;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import com.pearson.Interface.Windows.MainWindow;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 /**
  *

@@ -7,5 +7,12 @@ package com.pearson.Rules.SubstitutionTypes;
  *         Project Name: DataScrubber
  */
 public enum StringSubstitutionTypes {
-    SET_TO_NULL, HARDCODED_VALUE, RANDOM_STRING, FROM_A_LIST
+    SET_TO_NULL, SET_TO_VALUE, RANDOM_STRING, FROM_A_LIST;
+
+    public String toString(){
+       if (this == SET_TO_NULL) return "Set To Null";
+       else if (this == SET_TO_VALUE) return "Set To Value";
+       else if (this == RANDOM_STRING) return "Set To Random String";
+       else return "Set From A List";
+    }
 }

@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pearson.Interface;
+package com.pearson.Interface.Windows;
 
+import com.pearson.Interface.UIManager;
 import com.pearson.SQL.Database;
-import java.awt.event.WindowEvent;
+
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
 
 /**
  *
@@ -17,7 +17,6 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
     //public void windowClosed(WindowEvent e){
     //    dispose();
     // }
-
     String username = null;
     String password = null;
     String url = null;
@@ -78,18 +77,45 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
         UserNameLabel.setText("User Name:");
 
+        UserNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                UserNameFieldKeyPressed(evt);
+            }
+        });
+
         PasswordLabel.setText("Password:");
+
+        PasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PasswordFieldKeyPressed(evt);
+            }
+        });
 
         HostNameLabel.setText("Host Name:");
 
+        HostNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                HostNameFieldKeyPressed(evt);
+            }
+        });
 
         PortField.setText("3306");
+        PortField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PortFieldKeyPressed(evt);
+            }
+        });
 
         PortLabel.setText("Port:");
 
         DefaultSchemaLabel.setText("Default Schema:");
 
         DefaultSchemaField.setEditable(true);
+        DefaultSchemaField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                DefaultSchemaFieldKeyPressed(evt);
+            }
+        });
 
         TestConnectionButton.setText("Test Connection");
         TestConnectionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -305,6 +331,185 @@ public class DatabaseConnectionInfoWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_OKButtonActionPerformed
 
+    private void DefaultSchemaFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DefaultSchemaFieldKeyPressed
+        // if enter key is pressed in DefaultSchemaField, and all inputs are not empty, 
+        //open the create new rule window
+            int kc = evt.getKeyCode();
+            if (kc == evt.VK_ENTER){
+            if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }//GEN-LAST:event_DefaultSchemaFieldKeyPressed
+    if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
+    }
+    private void HostNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HostNameFieldKeyPressed
+       // if enter key is pressed in HostnameField, and all inputs are not empty, 
+        //open the create new rule window
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    } 
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
+    }//GEN-LAST:event_HostNameFieldKeyPressed
+
+    private void PortFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PortFieldKeyPressed
+        // if enter key is pressed in PortField, and all inputs are not empty, 
+        //open the create new rule window
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }      
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
+    }//GEN-LAST:event_PortFieldKeyPressed
+
+    private void UserNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UserNameFieldKeyPressed
+        // if enter key is pressed in usernameFieldKey, and all inputs are not empty, 
+        //open the create new rule window
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }   
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
+    }//GEN-LAST:event_UserNameFieldKeyPressed
+
+    private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
+        // if enter key is pressed in PasswordField, and all inputs are not empty, 
+        //open the create new rule window
+        int kc = evt.getKeyCode();
+        if (kc == evt.VK_ENTER){
+        if (isInputNotEmpty()) {
+            fetch();
+            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+
+                // check so we don't annoy user with connection has been established multiple times
+                if(!UIManager.getUserEnteredLogInInformation()){
+                    JOptionPane.showMessageDialog(null, "Connection has been established");
+                }
+
+                UIManager.setUsername(username);
+                UIManager.setPassword(password);
+                UIManager.setUrl(url);
+                UIManager.setDefaultSchema(defaultSchema);
+                UIManager.setPort(port);
+                UIManager.setUserEnteredLogInInformation(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+            }
+        }
+        
+        
+
+        dispose();
+        CreateNewRuleWindow rw = new CreateNewRuleWindow();
+        rw.setVisible(true);
+        rw.setDefaultCloseOperation(NewSubstitutionRuleWindow.HIDE_ON_CLOSE); 
+    }    
+        
+        if (kc == evt.VK_ESCAPE){
+            dispose();
+        }
+    }//GEN-LAST:event_PasswordFieldKeyPressed
+      
+    
+   
     /**
      * @param args the command line arguments
      */

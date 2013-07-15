@@ -17,7 +17,7 @@ package noNamespace;
 public interface MaskingSetDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSetDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("maskingset7c00doctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSetDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("maskingset7c00doctype");
     
     /**
      * Gets the "masking_set" element
@@ -42,7 +42,7 @@ public interface MaskingSetDocument extends org.apache.xmlbeans.XmlObject
     public interface MaskingSet extends org.apache.xmlbeans.XmlObject
     {
         public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSet.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("maskingsetbdd5elemtype");
+            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSet.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("maskingsetbdd5elemtype");
         
         /**
          * Gets the "name" element

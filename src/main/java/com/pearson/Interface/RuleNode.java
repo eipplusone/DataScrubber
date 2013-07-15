@@ -36,6 +36,8 @@ public class RuleNode extends AbstractMutableTreeTableNode {
         switch (column) {
             case RulesTreeTableModel.RULE_ID_COLUMN:
                 return rule.getId();
+            case RulesTreeTableModel.RULE_TYPE:
+                return rule.getRuleType();
             case RulesTreeTableModel.TARGET_COLUMN:
                 return rule.getTarget();
             case RulesTreeTableModel.COLUMN_NAMES_COLUMN:

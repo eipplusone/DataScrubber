@@ -2,29 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pearson.Interface;
+package com.pearson.Interface.Interfaces;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.pearson.Interface.Models.RulesTreeTableModel;
+import com.pearson.Interface.Windows.MainWindow;
+import com.pearson.Interface.RuleNode;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.RulesDocument;
 import org.apache.xmlbeans.XmlOptions;
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -81,15 +76,8 @@ public class XMLInterface {
         MaskingSetDocument setDocument = MaskingSetDocument.Factory.newInstance();
         MaskingSet maskingSet = setDocument.addNewMaskingSet();
 
-        maskingSet.setName("New masking set");
         maskingSet.setDateCreated(new GregorianCalendar());
         maskingSet.addNewRules();
-
-        try {
-            setDocument.save(xmlFile, options);
-        } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -104,9 +92,7 @@ public class XMLInterface {
         Rule rootRule = RulesDocument.Factory.newInstance().addNewRules().addNewRule();
 
         // a dummy root rule; it is not displayed inside main window
-        rootRule.setId("Root");
-        rootRule.setTarget("Root");
-        rootRule.setRuleType(RuleType.SHUFFLE);
+        rootRule.setId("Masking set: " + xmlFile.getName());
         rootRule.addNewShuffle();
 
         // root is not displayed; it only creates number of columns TODO make it more generic
@@ -256,6 +242,7 @@ public class XMLInterface {
      */
     public static void saveCurrentFile() throws IOException {
 
+        setDocument.getMaskingSet().setName(xmlFile.getName());
         setDocument.save(xmlFile, options);
     }
 }

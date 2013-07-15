@@ -1,9 +1,8 @@
 package com.pearson.SQL;
 
 import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.DatabaseManager;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Ruslan Kiselev
@@ -16,7 +15,7 @@ public class Table {
     protected DatabaseInterface databaseInterface = null;
     protected boolean isConnectionValid = false;
 
-    public ArrayList<Column> columns = new ArrayList<>();
+    public HashMap<String, Column> columns = new HashMap<>();
     protected String tableName;
 
     public Table(String tableName) {
@@ -40,16 +39,16 @@ public class Table {
         this.tableName = tableName;
     }
 
-    public ArrayList<Column> getColumns() {
+    public HashMap<String, Column> getColumns() {
         return columns;
     }
 
-    public void setColumns(ArrayList<Column> columns) {
+    public void setColumns(HashMap<String, Column> columns) {
         this.columns = columns;
     }
 
     public void add(Column column) {
-        columns.add(column);
+        columns.put(column.getName(), column);
     }
 
 

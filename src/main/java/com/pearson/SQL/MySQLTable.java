@@ -1,13 +1,15 @@
 package com.pearson.SQL;
 
 import com.pearson.Database.DatabaseManager;
-import com.pearson.Rules.Rule;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
 
-import java.io.File;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created with IntelliJ IDEA.
@@ -228,7 +230,7 @@ public class MySQLTable extends Table {
 
     }
 
-    public ResultSet getColumn(String columnName) throws SQLException {
+    public ResultSet getColumnContents(String columnName) throws SQLException {
 
         ResultSet resultSet = databaseInterface.createStatement().executeQuery("SELECT " + columnName + " FROM " + tableName);
 
@@ -399,7 +401,7 @@ public class MySQLTable extends Table {
         // begin adding to app database
         Column autoIncrementColumn = new Column("datascrubber_rowid");
         autoIncrementColumn.nullable = false;
-        columns.add(autoIncrementColumn);
+        columns.put(autoIncrementColumn.name, autoIncrementColumn);
 
         databaseInterface.commit();
 
@@ -425,7 +427,7 @@ public class MySQLTable extends Table {
      */
     public Column getAutoIncrementColumn() {
 
-        Iterator<Column> it = columns.iterator();
+        Iterator<Column> it = columns.values().iterator();
         while (it.hasNext()) {
             Column column = it.next();
             if (column.autoIncrement) {

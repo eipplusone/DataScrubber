@@ -17,7 +17,7 @@ package noNamespace;
 public interface DateCreatedDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(DateCreatedDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("datecreateda250doctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(DateCreatedDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("datecreateda250doctype");
     
     /**
      * Gets the "date_created" element

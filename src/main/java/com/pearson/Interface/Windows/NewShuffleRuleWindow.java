@@ -1,5 +1,6 @@
-package com.pearson.Interface;
+package com.pearson.Interface.Windows;
 
+import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Models.ItemsSelectedTableModel;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.Column;
@@ -7,7 +8,6 @@ import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -33,18 +33,18 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JList ColumnsSelectedList;
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox columnsComboBox;
     private javax.swing.JButton createShuffleRuleButton;
     private javax.swing.JButton deleteButton;
-    private javax.swing.JCheckBox enableWhereClauseCheckbox;
-    private javax.swing.JPanel errorMgrPane;
-    private javax.swing.JScrollPane errorScrollPane;
-    private javax.swing.JTextArea errorTextArea;
+   // private javax.swing.JCheckBox enableWhereClauseCheckbox;
+   // private javax.swing.JPanel errorMgrPane;
+    //private javax.swing.JScrollPane errorScrollPane;
+   // private javax.swing.JTextArea errorTextArea;
     private javax.swing.JButton helpButton;
-    private javax.swing.JCheckBox ignoreErrorsCheckbox;
+    //private javax.swing.JCheckBox ignoreErrorsCheckbox;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel newShuffleRuleLabel;
     private javax.swing.JLabel pseudoCodeLabel;
@@ -57,9 +57,9 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JLabel tableSelected;
     private javax.swing.JTable tablesSelectedTable;
-    private javax.swing.JPanel whereClausePane;
-    private javax.swing.JScrollPane whereClauseScrollpane;
-    private javax.swing.JTextArea whereClauseTextArea;
+    //private javax.swing.JPanel whereClausePane;
+   // private javax.swing.JScrollPane whereClauseScrollpane;
+   // private javax.swing.JTextArea whereClauseTextArea;
 
     /**
      * Default constructor; creates new form NewShuffleRule
@@ -70,9 +70,9 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
      */
     public NewShuffleRuleWindow() throws SQLException {
 
-        database = new Database(UIManager.getDefaultSchema(), UIManager.getUsername(),
-                UIManager.getPassword(), "jdbc:mysql://" + UIManager.getUrl()
-                + ":" + UIManager.getPort());
+        database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(), com.pearson.Interface.UIManager.getUsername(),
+                com.pearson.Interface.UIManager.getPassword(), "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
+                + ":" + com.pearson.Interface.UIManager.getPort());
 
         // fill in table structure so we have access to it later
         database.fillTables();
@@ -148,16 +148,16 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         ColumnsSelectedList = new javax.swing.JList();
-        whereClausePane = new javax.swing.JPanel();
+        //whereClausePane = new javax.swing.JPanel();
         pseudoCodeLabel = new javax.swing.JLabel();
         pseudoCodeTextfield = new javax.swing.JTextField();
-        enableWhereClauseCheckbox = new javax.swing.JCheckBox();
-        whereClauseScrollpane = new javax.swing.JScrollPane();
-        whereClauseTextArea = new javax.swing.JTextArea();
-        errorMgrPane = new javax.swing.JPanel();
-        ignoreErrorsCheckbox = new javax.swing.JCheckBox();
-        errorScrollPane = new javax.swing.JScrollPane();
-        errorTextArea = new javax.swing.JTextArea();
+        //enableWhereClauseCheckbox = new javax.swing.JCheckBox();
+        //whereClauseScrollpane = new javax.swing.JScrollPane();
+        //whereClauseTextArea = new javax.swing.JTextArea();
+        //errorMgrPane = new javax.swing.JPanel();
+        //ignoreErrorsCheckbox = new javax.swing.JCheckBox();
+        //errorScrollPane = new javax.swing.JScrollPane();
+       // errorTextArea = new javax.swing.JTextArea();
         skipCheckBox = new javax.swing.JCheckBox();
         cancelButton = new javax.swing.JButton();
         createShuffleRuleButton = new javax.swing.JButton();
@@ -182,9 +182,6 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         tableScrollPane.setViewportView(tablesSelectedTable);
 
         newShuffleRuleLabel.setText("New Shuffle Rule");
-
-        tableSelected.setText("Table:");
-
         shortDescriptionLabel.setText("Select Columns");
 
         deleteButton.setText("Delete");
@@ -220,7 +217,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
 
         pseudoCodeLabel.setText("Pseudo code");
 
-        enableWhereClauseCheckbox.setText("Enable Where Clause");
+        /**enableWhereClauseCheckbox.setText("Enable Where Clause");
         enableWhereClauseCheckbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 enableWhereClauseCheckboxActionPerformed(evt);
@@ -311,7 +308,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
                                 .addContainerGap(139, Short.MAX_VALUE))
         );
 
-        shuffleTabbedPane.addTab("Error Mgr", errorMgrPane);
+        shuffleTabbedPane.addTab("Error Mgr", errorMgrPane); **/
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -327,7 +324,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
             }
         });
 
-        helpButton.setText("Help");
+//helpButton.setText("Help");
 
         columnsComboBox.setModel(new javax.swing.DefaultComboBoxModel(
 
@@ -407,14 +404,14 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed
+    //private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed
         // TODO add your handling code here:
-        whereClauseTextArea.setVisible(enableWhereClauseCheckbox.isSelected());
-    }//GEN-LAST:event_enableWhereClauseCheckboxActionPerformed
+        //whereClauseTextArea.setVisible(enableWhereClauseCheckbox.isSelected());
+   // }//GEN-LAST:event_enableWhereClauseCheckboxActionPerformed
 
-    private void errorTextAreaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_errorTextAreaAncestorAdded
+    //private void errorTextAreaAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_errorTextAreaAncestorAdded
         // TODO add your handling code here:
-    }//GEN-LAST:event_errorTextAreaAncestorAdded
+  //  }//GEN-LAST:event_errorTextAreaAncestorAdded
 
     private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
 
@@ -426,14 +423,14 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
-    private void ignoreErrorsCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreErrorsCheckboxActionPerformed
+    //private void ignoreErrorsCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ignoreErrorsCheckboxActionPerformed
         // TODO add your handling code here:
-        errorTextArea.setVisible(ignoreErrorsCheckbox.isSelected());
-    }//GEN-LAST:event_ignoreErrorsCheckboxActionPerformed
+      //  errorTextArea.setVisible(ignoreErrorsCheckbox.isSelected());
+   // }//GEN-LAST:event_ignoreErrorsCheckboxActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         // Exit
-        setVisible(false);
+        dispose();
 
     }//GEN-LAST:event_cancelButtonActionPerformed
 
@@ -452,7 +449,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
 
         String tableSelected = tableNames.get(row);
-        for (Column column : database.tables.get(tableSelected).columns) {
+        for (Column column : database.tables.get(tableSelected).columns.values()) {
             columnsComboBox.addItem(column.name);
         }
         firstTimeSelected = false;
@@ -476,14 +473,16 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
 
         // build the rule according to information from this window
-        Rule parentRule = UIManager.getParentRule();
+        Rule parentRule = com.pearson.Interface.UIManager.getParentRule();
         Rule newRule;
         // depending on whether is an independent rule or dependent
-        if (UIManager.getParentRule() == null) {
+        if (com.pearson.Interface.UIManager.getParentRule() == null) {
             newRule = rulesInSet.addNewRule();
+            newRule.setId(rulesInSet.getRuleArray().length + "");
         }
         else {
             newRule = parentRule.getDependencies().addNewRule();
+            newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         }
         ShuffleRule newRuleShuffle = newRule.addNewShuffle();
         // add new columns
@@ -493,12 +492,11 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
         newRule.setTarget(targetTable);
         // get the id of the parent rule and concat it with incremented number of rules inside parent rule dependency
-        newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         newRule.setRuleType(RuleType.SHUFFLE);
 
-        UIManager.update();
+        com.pearson.Interface.UIManager.update();
 
         dispose();
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration                   
 }

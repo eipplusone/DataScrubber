@@ -10,15 +10,35 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="substitution_action_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="setToValue"/>
+            <xs:enumeration value="setToNull"/>
+            <xs:enumeration value="setToRandom"/>
+            <xs:enumeration value="setFromFile"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="substitution_data_type">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="numeric"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="column" type="xs:string"/>
     <xs:element name="date_created" type="xs:date"/>
     <xs:element name="name" type="xs:string"/>
     <xs:element name="id" type="xs:string"/>
+    <xs:element name="file_path" type="xs:string"/>
 
     <!--attributes-->
     <xs:attribute name="target" type="xs:string"/>
     <xs:attribute name="set_id" type="xs:string"/>
     <xs:attribute name="rule_type" type="rule_type"/>
+    <xs:attribute name="substitution_data_type" type="substitution_data_type"/>
+    <xs:attribute name="substitution__action_type" type="substitution_action_type"/>
 
     <!--complex types-->
 
@@ -50,7 +70,10 @@
     <xs:complexType name="substitution_rule">
         <xs:sequence>
             <xs:element ref="column" minOccurs="1" maxOccurs="1"/>
+            <xs:element ref="file_path" minOccurs="0"/>
         </xs:sequence>
+        <xs:attribute ref="substitution_data_type" use="required"/>
+        <xs:attribute ref="substitution__action_type" use="required"/>
     </xs:complexType>
 
     <!--elements-->

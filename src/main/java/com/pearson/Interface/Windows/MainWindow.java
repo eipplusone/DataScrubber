@@ -1,5 +1,6 @@
-package com.pearson.Interface;
+package com.pearson.Interface.Windows;
 
+import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Models.RulesTreeTableModel;
 
 import java.awt.event.*;
@@ -70,7 +71,7 @@ public class MainWindow extends javax.swing.JFrame {
         TestTree.setOpenIcon(null);
         TestTree.getTreeSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        UIManager.setMainWindow(this);
+        com.pearson.Interface.UIManager.setMainWindow(this);
     }
 
     /**
@@ -118,13 +119,13 @@ public class MainWindow extends javax.swing.JFrame {
         settings = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-        jScrollPane2 = new javax.swing.JScrollPane();
+       
         TestTree = new org.jdesktop.swingx.JXTreeTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         maskingSetMenuItem = new javax.swing.JMenu();
         newMaskingSetMenuButton = new javax.swing.JMenuItem();
         openMaskingSetMenuButton = new javax.swing.JMenuItem();
-        clearMaskingSetMenuButton = new javax.swing.JMenuItem();
+        
         saveSetMenuButton = new javax.swing.JMenuItem();
         saveSetAsMenuButton = new javax.swing.JMenuItem();
         ruleMenuItem = new javax.swing.JMenu();
@@ -167,7 +168,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         RulesInSetTree.setModel(rulesInSetTreeModel);
         jScrollPane1.setViewportView(RulesInSetTree);
-
+		jScrollPane1.setViewportView(TestTree);
         RulesInSetPane.addTab("Rules in Set", jScrollPane1);
 
         jCheckBox1.setText("New Disable FK Constraints Rule...");
@@ -197,9 +198,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         RulesInSetPane.addTab("Settings", settings);
 
-        jScrollPane1.setViewportView(TestTree);
 
-        RulesInSetPane.addTab("TestPane", jScrollPane2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -237,8 +236,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
         maskingSetMenuItem.add(openMaskingSetMenuButton);
 
-        clearMaskingSetMenuButton.setText("Clear Masking Set...");
-        maskingSetMenuItem.add(clearMaskingSetMenuButton);
+        
+        
 
         saveSetMenuButton.setText("Save Set...");
         saveSetMenuButton.addActionListener(new java.awt.event.ActionListener() {
@@ -268,11 +267,9 @@ public class MainWindow extends javax.swing.JFrame {
         });
         ruleMenuItem.add(newRuleMenuButton);
 
-        deleteRuleMenuButton.setText("Delete Rule...");
-        ruleMenuItem.add(deleteRuleMenuButton);
+        
 
-        disableRuleMenuButton.setText("Disable Rule...");
-        ruleMenuItem.add(disableRuleMenuButton);
+        
 
         jMenuBar1.add(ruleMenuItem);
 
@@ -314,7 +311,7 @@ public class MainWindow extends javax.swing.JFrame {
                 XMLInterface.addDependencyToRule(newRule);
         }
 
-        UIManager.setParentRule(newRule);
+        com.pearson.Interface.UIManager.setParentRule(newRule);
         DatabaseConnectionInfoWindow newWindow = new DatabaseConnectionInfoWindow();
         newWindow.setVisible(true);
         newWindow.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
@@ -375,6 +372,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         LinkedList<String> columnNames = new LinkedList<>();
         columnNames.add("Rule ID");
+        columnNames.add("Rule Type");
         columnNames.add("Target");
         columnNames.add("Columns");
 
@@ -397,54 +395,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void close() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    /**
-     * Updates mainWindow with the new rule information
-     *
-     * @param newRule rule to add to mainWindow UI
-     */
-
-    /**
-     * Updates mainWIndow with maskingSet from a file TODO - do a validity check
-     * of the xml file
-     *
-     * @param updateFile file to update window with
-     */
-
-    /**
-     * Parses through masking set file and returns a hashmap of rules with their
-     * types
-     *
-     * @param xmlFile
-     * @return
-     */
-    private HashMap<String, Rule> getRuleHashMap(File xmlFile) {
-
-        MaskingSetDocument updateDocument = null;
-        HashMap<String, Rule> returnMap = null;
-
-        try {
-            updateDocument = MaskingSetDocument.Factory.parse(xmlFile);
-        } catch (XmlException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Rules rules = updateDocument.getMaskingSet().getRules();
-
-//        for (ShuffleRule rule: rules) {
-//            //Rule ruleToAdd = new Rule(database.rule.getTarget()) {
-//           // }
-//            //returnMap.put(null, null)
-//        }
-
-        return null;
-    }
-
-    public RulesTreeTableModel getRulesInSetTreeModel() {
-        return rulesInSetTreeModel;
     }
 
     /**

@@ -4,9 +4,7 @@
  */
 package com.pearson.Interface;
 
-import com.pearson.Interface.Models.RulesTreeTableModel;
-import noNamespace.DependenciesType;
-import noNamespace.MaskingSetDocument;
+import com.pearson.Interface.Windows.MainWindow;
 import noNamespace.Rule;
 
 /**

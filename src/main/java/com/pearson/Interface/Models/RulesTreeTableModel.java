@@ -11,10 +11,11 @@ import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
  */
 public class RulesTreeTableModel extends AbstractTreeTableModel {
 
-    public final static String[] COLUMN_NAMES = new String[]{"RuleID", "Target", "Column Names"};
+    public final static String[] COLUMN_NAMES = new String[]{"RuleID", "Rule Type", "Target", "Column Names"};
     public final static int RULE_ID_COLUMN = 0;
-    public final static int TARGET_COLUMN = 1;
-    public final static int COLUMN_NAMES_COLUMN = 2;
+    public final static int RULE_TYPE = 1;
+    public final static int TARGET_COLUMN = 2;
+    public final static int COLUMN_NAMES_COLUMN = 3;
 
     public RulesTreeTableModel(){
 

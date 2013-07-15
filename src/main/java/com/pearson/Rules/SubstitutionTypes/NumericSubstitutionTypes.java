@@ -7,5 +7,11 @@ package com.pearson.Rules.SubstitutionTypes;
  *         Project Name: DataScrubber
  */
 public enum NumericSubstitutionTypes {
-    RANDOM_NUMBER, SET_TO_NULL
+    RANDOM_NUMBER, SET_TO_NULL;
+
+   @Override
+   public String toString(){
+       if (this == RANDOM_NUMBER) return "Replace With Random Number";
+       else return "Set To Null";
+   }
 }

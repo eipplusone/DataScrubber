@@ -7,5 +7,10 @@ package com.pearson.Rules.SubstitutionTypes;
  *         Project Name: DataScrubber
  */
 public enum DateSubstitutionTypes {
-    RANDOM_DATE_WITHING_RANGE, SET_TO_NULL
+    RANDOM_DATE_WITHING_RANGE, SET_TO_NULL;
+
+    public String toString(){
+       if(this == RANDOM_DATE_WITHING_RANGE) return "Random Date Within Range";
+       else return "Set To Null";
+    }
 }

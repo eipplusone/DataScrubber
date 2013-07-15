@@ -1,9 +1,6 @@
 package com.pearson.SQL;
 
-import com.pearson.Database.MySQL.MySQLDataType;
-
 import java.sql.ResultSet;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.TreeMap;
 

@@ -1,14 +1,14 @@
 package com.pearson.SQL;
 
 import com.pearson.Database.DatabaseManager;
-import com.pearson.Utilities.SQLStatements;
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Utilities.SQLStatements;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA. User: UKISERU Date: 6/7/13 Time: 9:25 AM To
@@ -92,7 +92,7 @@ public class Database {
                             c.numeric_precision = columnsResult.getInt("numeric_precision");
                             c.numeric_scale = columnsResult.getInt("numeric_scale");
                             c.autoIncrement = columnsResult.getString("extra").equals("auto_increment");
-                            mySQLTable.columns.add(c);
+                            mySQLTable.columns.put(c.name, c);
                         }
                     }
                 }

@@ -16,7 +16,7 @@ package noNamespace;
 public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.sBE22DE8025FB5B8AD8ADFD9E0DB43144").resolveHandle("substitutionrule97b5type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("substitutionrule97b5type");
     
     /**
      * Gets the "column" element
@@ -37,6 +37,76 @@ public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
      * Sets (as xml) the "column" element
      */
     void xsetColumn(org.apache.xmlbeans.XmlString column);
+    
+    /**
+     * Gets the "file_path" element
+     */
+    java.lang.String getFilePath();
+    
+    /**
+     * Gets (as xml) the "file_path" element
+     */
+    org.apache.xmlbeans.XmlString xgetFilePath();
+    
+    /**
+     * True if has "file_path" element
+     */
+    boolean isSetFilePath();
+    
+    /**
+     * Sets the "file_path" element
+     */
+    void setFilePath(java.lang.String filePath);
+    
+    /**
+     * Sets (as xml) the "file_path" element
+     */
+    void xsetFilePath(org.apache.xmlbeans.XmlString filePath);
+    
+    /**
+     * Unsets the "file_path" element
+     */
+    void unsetFilePath();
+    
+    /**
+     * Gets the "substitution_data_type" attribute
+     */
+    noNamespace.SubstitutionDataType.Enum getSubstitutionDataType();
+    
+    /**
+     * Gets (as xml) the "substitution_data_type" attribute
+     */
+    noNamespace.SubstitutionDataType xgetSubstitutionDataType();
+    
+    /**
+     * Sets the "substitution_data_type" attribute
+     */
+    void setSubstitutionDataType(noNamespace.SubstitutionDataType.Enum substitutionDataType);
+    
+    /**
+     * Sets (as xml) the "substitution_data_type" attribute
+     */
+    void xsetSubstitutionDataType(noNamespace.SubstitutionDataType substitutionDataType);
+    
+    /**
+     * Gets the "substitution__action_type" attribute
+     */
+    noNamespace.SubstitutionActionType.Enum getSubstitutionActionType();
+    
+    /**
+     * Gets (as xml) the "substitution__action_type" attribute
+     */
+    noNamespace.SubstitutionActionType xgetSubstitutionActionType();
+    
+    /**
+     * Sets the "substitution__action_type" attribute
+     */
+    void setSubstitutionActionType(noNamespace.SubstitutionActionType.Enum substitutionActionType);
+    
+    /**
+     * Sets (as xml) the "substitution__action_type" attribute
+     */
+    void xsetSubstitutionActionType(noNamespace.SubstitutionActionType substitutionActionType);
     
     /**
      * A factory class with static methods for creating instances
