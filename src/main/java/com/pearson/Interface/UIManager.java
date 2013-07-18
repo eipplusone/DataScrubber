@@ -14,12 +14,12 @@ import noNamespace.Rule;
 public class UIManager {
 
     private static MainWindow mainWindow;
-    private static String username;
-    private static String password = null;
-    private static String url = null;
-    private static String defaultSchema;
+    private static String username = "dbadmin";
+    private static String password = "Pw123";
+    private static String url = "10.25.98.121";
+    private static String defaultSchema = "core";
     private static String port = null;
-    private static boolean userEnteredLogInInformation = false;
+    private static boolean userEnteredLogInInformation = true;
     private static Rule parentRule;
 
     static public MainWindow getMainWindow() {
@@ -86,7 +86,16 @@ public class UIManager {
         return userEnteredLogInInformation;
     }
 
+    /**
+     * Returns the parent rule if a dependent rule was specified.
+     * @return
+     */
     public static Rule getParentRule() {
+
+        // since we allow only one window to be open, there is only one rule in
+        // construction
+        parentRule = null;
+
         return parentRule;
     }
 

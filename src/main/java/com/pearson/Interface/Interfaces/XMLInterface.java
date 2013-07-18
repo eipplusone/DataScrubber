@@ -9,23 +9,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.pearson.Interface.Windows.MainWindow;
 import com.pearson.Interface.RuleNode;
 import com.pearson.Readers.SetReader;
-import com.pearson.Rules.Substitution;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.Rule;
-import noNamespace.RuleType;
 import noNamespace.RulesDocument;
 import org.apache.xmlbeans.XmlOptions;
-
 import org.apache.xmlbeans.XmlException;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * @author Ruslan Kiselev
@@ -35,6 +27,7 @@ public class XMLInterface{
     public final static XmlOptions options = initialiseOptions();
     private static File xmlFile; // todo several applications running
     private static MaskingSetDocument setDocument;
+    private static boolean isFileSaved = false;
 
     public static File getXmlFile() {
         return xmlFile;
@@ -203,13 +196,26 @@ public class XMLInterface{
      */
     public static void saveCurrentFile() throws IOException {
 
-        setDocument.getMaskingSet().setName(xmlFile.getName());
         setDocument.save(xmlFile, options);
     }
 
     public static RuleNode getRulesTree() {
-        SetReader setReader = new SetReader(setDocument);
-        return setReader.getRulesTree();
+        return SetReader.getRulesTree(setDocument);
+    }
+
+    public static boolean isFileSaved() {
+
+        if(setDocument == null || xmlFile == null) throw new IllegalArgumentException("File was not chosen");
+
+        try {
+            // compare the texts of xml files - if no changes were made, they should be the same
+            return setDocument.xmlText().equals(MaskingSetDocument.Factory.parse(xmlFile).xmlText());
+        } catch (XmlException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

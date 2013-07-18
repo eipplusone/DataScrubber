@@ -5,7 +5,6 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
@@ -17,6 +16,8 @@ import noNamespace.*;
 import com.pearson.SQL.MySQLTable;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -25,20 +26,19 @@ import java.util.logging.Logger;
 import noNamespace.RulesDocument.Rules;
 
 import javax.swing.*;
-import javax.swing.UIManager;
 
 
 /**
  * @author : Ruslan Kiselev
  */
-public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
+public class NewSubstitutionRuleWindow extends JDialog {
 
     /**
      * Creates new form NewSubstitutionRule
      */
     Database database;
     ArrayList<String> tableNames = new ArrayList<>();
-    boolean isFirstTimeSelected = true;
+    boolean isTriggersIsolated = true;
     boolean isTableSelected = false;
     String tableSelected;
     Column columnSelected;
@@ -92,8 +92,11 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         valueOrBrowseLabel.setVisible(false);
         valueTextField.setVisible(false);
         browseButton.setVisible(false);
+        typeOfSubstitutionComboBox.setEnabled(false);
+        columnsComboBox.setEnabled(false);
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        this.setModalityType(ModalityType.APPLICATION_MODAL);
 
     }
 
@@ -171,7 +174,7 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         selectedTypeOfSubstitutionLabel = new javax.swing.JLabel();
         selectedValueLabel = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         selectOptionsPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -370,8 +373,9 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
 
     private void tablesSelectedTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablesSelectedTableMouseClicked
         // select table from the window
-        isFirstTimeSelected = true;
+        isTriggersIsolated = true;
         isTableSelected = true;
+        typeOfSubstitutionComboBox.setEnabled(false);
 
         columnsComboBox.removeAllItems();
         typeOfSubstitutionComboBox.removeAllItems();
@@ -381,27 +385,24 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         for (Column column : database.tables.get(tableSelected).columns.values()) {
             columnsComboBox.addItem(column.name + "(" + column.getType() + ")");
         }
-        isFirstTimeSelected = false;
+        isTriggersIsolated = false;
+        columnsComboBox.setEnabled(true);
     }//GEN-LAST:event_tablesSelectedTableMouseClicked
 
     private void createSubstitutionRuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSubstitutionRuleActionPerformed
-        // create new substitution rule
-        ArrayList<String> columns = new ArrayList<>();
-
-        // get all column names user has entered
 
         Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
 
         // build the rule according to information from this window
+        // parentRule would be passed by the mainWindow in case it is a dependent rule
         Rule parentRule = com.pearson.Interface.UIManager.getParentRule();
         Rule newRule;
 
         // depending on whether is an independent rule or dependent
-        if (com.pearson.Interface.UIManager.getParentRule() == null) {
+        if (parentRule == null) {
             newRule = rulesInSet.addNewRule();
             newRule.setId(rulesInSet.getRuleArray().length + "");
-        }
-        else {
+        } else {
             newRule = parentRule.getDependencies().addNewRule();
             newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         }
@@ -416,9 +417,11 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
 
     private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
 
-        if (!isTableSelected || isFirstTimeSelected) return;
+        if (isTriggersIsolated) return;
 
+        isTriggersIsolated = true;
         String columnSelectedString = columnsComboBox.getSelectedItem().toString();
+        typeOfSubstitutionComboBox.removeAllItems();
 
         columnSelected = database.tables.get(tableSelected).columns.get(
                 columnSelectedString.substring(0, columnSelectedString.indexOf("(")));
@@ -429,27 +432,29 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
 
         // let the user know the selected column
         selectedColumnLabel.setText(columnSelectedString);
+        typeOfSubstitutionComboBox.setEnabled(true);
+        isTriggersIsolated = false;
     }//GEN-LAST:event_columnsComboBoxActionPerformed
 
-    private void addStringToSubstitutionType() {
+    private void addDateToSubstitutionType() {
 
         for (DateSubstitutionTypes type : DateSubstitutionTypes.values())
             typeOfSubstitutionComboBox.addItem(type.toString());
     }
 
-    private void addDateToSubstitutionType() {
+    private void addNumericToSubstitutionType() {
 
         for (NumericSubstitutionTypes type : NumericSubstitutionTypes.values())
             typeOfSubstitutionComboBox.addItem(type.toString());
     }
 
-    private void addNumericToSubstitutionType() {
+    private void addStringToSubstitutionType() {
 
         for (StringSubstitutionTypes type : StringSubstitutionTypes.values())
             typeOfSubstitutionComboBox.addItem(type.toString());
     }
 
-    private void addRuleInformation(Rule newRule){
+    private void addRuleInformation(Rule newRule) {
 
         SubstitutionRule newRuleSubstitution = newRule.addNewSubstitute();
         // add new column
@@ -462,13 +467,49 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
         String substitutionType = typeOfSubstitutionComboBox.getSelectedItem().toString();
         newRule.getSubstitute().setSubstitutionActionType(EnumInterface.getSubstitutionActionType(substitutionType));
         newRule.getSubstitute().setSubstitutionDataType(EnumInterface.getSubstitutionDataType(columnSelected.getType()));
+
+        setValueInformation(EnumInterface.getSubstitutionActionType(substitutionType), EnumInterface.getSubstitutionDataType(columnSelected.getType()), newRule);
+
+    }
+
+    private void setValueInformation(SubstitutionActionType.Enum actionType, SubstitutionDataType.Enum dateType, Rule newRule) {
+
+        String value = valueTextField.getText();
+
+        if (dateType == SubstitutionDataType.DATE) {
+            if (actionType == SubstitutionActionType.SET_TO_VALUE) {
+                newRule.getSubstitute().setDateValue1(BigInteger.valueOf(Integer.parseInt(value)));
+            } else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
+                newRule.getSubstitute().setDateValue1(BigInteger.valueOf(Integer.parseInt(value)));
+            }
+        } else if (dateType == SubstitutionDataType.NUMERIC) {
+            if (actionType == SubstitutionActionType.SET_TO_VALUE) {
+                newRule.getSubstitute().setNumericValue(BigDecimal.valueOf(Integer.parseInt(value)));
+            }
+        } else if (dateType == SubstitutionDataType.STRING) {
+            if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
+                newRule.getSubstitute().setNumericValue(BigDecimal.valueOf(Integer.parseInt(value)));
+            } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
+                newRule.getSubstitute().setStringValue1(value);
+            } else if (actionType == SubstitutionActionType.SET_FROM_FILE) {
+                // since we displayed the text inside the label we can use it
+                newRule.getSubstitute().setStringValue1(selectedValueLabel.getText());
+            }
+        }
     }
 
     private void typeOfSubstitutionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeOfSubstitutionComboBoxActionPerformed
 
+        if (isTriggersIsolated) return;
+
+        selectedValueLabel.setText("");
+
+        isTriggersIsolated = true;
         String selectedType = typeOfSubstitutionComboBox.getSelectedItem().toString();
-        if (selectedType.equals(StringSubstitutionTypes.SET_TO_VALUE.toString())) {
-            valueOrBrowseLabel.setText("Please Enter String Value You Want To Set To");
+        if (selectedType.equals(StringSubstitutionTypes.SET_TO_VALUE.toString()) ||
+                selectedType.equals(DateSubstitutionTypes.SET_TO_VALUE.toString()) ||
+                selectedType.equals(NumericSubstitutionTypes.SET_TO_VALUE.toString())) {
+            valueOrBrowseLabel.setText("Please Enter Value You Want To Set To");
             valueOrBrowseLabel.setVisible(true);
             valueTextField.setVisible(true);
         } else if (selectedType.equals(StringSubstitutionTypes.FROM_A_LIST.toString())) {
@@ -476,21 +517,25 @@ public class NewSubstitutionRuleWindow extends javax.swing.JFrame {
             valueOrBrowseLabel.setVisible(true);
             browseButton.setVisible(true);
         } else if (selectedType.equals(DateSubstitutionTypes.RANDOM_DATE_WITHING_RANGE.toString())) {
-            valueOrBrowseLabel.setText("Please Enter Range in Millis");
+            valueOrBrowseLabel.setText("Please Enter Range In Millis");
+            valueOrBrowseLabel.setVisible(true);
+            valueTextField.setVisible(true);
+        } else if (selectedType.equals(DateSubstitutionTypes.SET_TO_VALUE.toString())) {
+            valueOrBrowseLabel.setText("Please Enter Value In Millis since Jan 1 1970");
             valueOrBrowseLabel.setVisible(true);
             valueTextField.setVisible(true);
         } else if (selectedType.equals(StringSubstitutionTypes.RANDOM_STRING.toString())) {
             valueOrBrowseLabel.setText("Please Enter Max String Size");
             valueOrBrowseLabel.setVisible(true);
             valueTextField.setVisible(true);
-        }
-        else{
+        } else {
             valueTextField.setVisible(false);
             valueOrBrowseLabel.setVisible(false);
             browseButton.setVisible(false);
         }
 
         selectedTypeOfSubstitutionLabel.setText(selectedType);
+        isTriggersIsolated = false;
     }//GEN-LAST:event_typeOfSubstitutionComboBoxActionPerformed
 
     private void valueTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueTextFieldActionPerformed

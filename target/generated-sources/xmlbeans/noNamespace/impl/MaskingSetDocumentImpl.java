@@ -88,81 +88,11 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             super(sType);
         }
         
-        private static final javax.xml.namespace.QName NAME$0 = 
-            new javax.xml.namespace.QName("", "name");
-        private static final javax.xml.namespace.QName DATECREATED$2 = 
+        private static final javax.xml.namespace.QName DATECREATED$0 = 
             new javax.xml.namespace.QName("", "date_created");
-        private static final javax.xml.namespace.QName RULES$4 = 
+        private static final javax.xml.namespace.QName RULES$2 = 
             new javax.xml.namespace.QName("", "rules");
         
-        
-        /**
-         * Gets the "name" element
-         */
-        public java.lang.String getName()
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(NAME$0, 0);
-                if (target == null)
-                {
-                    return null;
-                }
-                return target.getStringValue();
-            }
-        }
-        
-        /**
-         * Gets (as xml) the "name" element
-         */
-        public org.apache.xmlbeans.XmlString xgetName()
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.XmlString target = null;
-                target = (org.apache.xmlbeans.XmlString)get_store().find_element_user(NAME$0, 0);
-                return target;
-            }
-        }
-        
-        /**
-         * Sets the "name" element
-         */
-        public void setName(java.lang.String name)
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(NAME$0, 0);
-                if (target == null)
-                {
-                    target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(NAME$0);
-                }
-                target.setStringValue(name);
-            }
-        }
-        
-        /**
-         * Sets (as xml) the "name" element
-         */
-        public void xsetName(org.apache.xmlbeans.XmlString name)
-        {
-            synchronized (monitor())
-            {
-                check_orphaned();
-                org.apache.xmlbeans.XmlString target = null;
-                target = (org.apache.xmlbeans.XmlString)get_store().find_element_user(NAME$0, 0);
-                if (target == null)
-                {
-                    target = (org.apache.xmlbeans.XmlString)get_store().add_element_user(NAME$0);
-                }
-                target.set(name);
-            }
-        }
         
         /**
          * Gets the "date_created" element
@@ -173,7 +103,7 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATECREATED$2, 0);
+                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATECREATED$0, 0);
                 if (target == null)
                 {
                     return null;
@@ -191,7 +121,7 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 org.apache.xmlbeans.XmlDate target = null;
-                target = (org.apache.xmlbeans.XmlDate)get_store().find_element_user(DATECREATED$2, 0);
+                target = (org.apache.xmlbeans.XmlDate)get_store().find_element_user(DATECREATED$0, 0);
                 return target;
             }
         }
@@ -205,10 +135,10 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 org.apache.xmlbeans.SimpleValue target = null;
-                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATECREATED$2, 0);
+                target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATECREATED$0, 0);
                 if (target == null)
                 {
-                    target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(DATECREATED$2);
+                    target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(DATECREATED$0);
                 }
                 target.setCalendarValue(dateCreated);
             }
@@ -223,10 +153,10 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 org.apache.xmlbeans.XmlDate target = null;
-                target = (org.apache.xmlbeans.XmlDate)get_store().find_element_user(DATECREATED$2, 0);
+                target = (org.apache.xmlbeans.XmlDate)get_store().find_element_user(DATECREATED$0, 0);
                 if (target == null)
                 {
-                    target = (org.apache.xmlbeans.XmlDate)get_store().add_element_user(DATECREATED$2);
+                    target = (org.apache.xmlbeans.XmlDate)get_store().add_element_user(DATECREATED$0);
                 }
                 target.set(dateCreated);
             }
@@ -241,7 +171,7 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 noNamespace.RulesDocument.Rules target = null;
-                target = (noNamespace.RulesDocument.Rules)get_store().find_element_user(RULES$4, 0);
+                target = (noNamespace.RulesDocument.Rules)get_store().find_element_user(RULES$2, 0);
                 if (target == null)
                 {
                     return null;
@@ -259,10 +189,10 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 noNamespace.RulesDocument.Rules target = null;
-                target = (noNamespace.RulesDocument.Rules)get_store().find_element_user(RULES$4, 0);
+                target = (noNamespace.RulesDocument.Rules)get_store().find_element_user(RULES$2, 0);
                 if (target == null)
                 {
-                    target = (noNamespace.RulesDocument.Rules)get_store().add_element_user(RULES$4);
+                    target = (noNamespace.RulesDocument.Rules)get_store().add_element_user(RULES$2);
                 }
                 target.set(rules);
             }
@@ -277,7 +207,7 @@ public class MaskingSetDocumentImpl extends org.apache.xmlbeans.impl.values.XmlC
             {
                 check_orphaned();
                 noNamespace.RulesDocument.Rules target = null;
-                target = (noNamespace.RulesDocument.Rules)get_store().add_element_user(RULES$4);
+                target = (noNamespace.RulesDocument.Rules)get_store().add_element_user(RULES$2);
                 return target;
             }
         }

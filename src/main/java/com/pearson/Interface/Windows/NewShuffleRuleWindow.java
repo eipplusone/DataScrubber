@@ -25,7 +25,7 @@ import noNamespace.RulesDocument.Rules;
 /**
  * @author UMA99J5
  */
-public class NewShuffleRuleWindow extends javax.swing.JFrame {
+public class NewShuffleRuleWindow extends JDialog {
 
     Database database;
     ArrayList<String> tableNames = new ArrayList<>();
@@ -74,6 +74,8 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         initComponents();
         // allow only one table to be selected inside table list
         tablesSelectedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        setModalityType(ModalityType.APPLICATION_MODAL);
     }
 
     /**
@@ -144,7 +146,7 @@ public class NewShuffleRuleWindow extends javax.swing.JFrame {
         createShuffleRuleButton = new javax.swing.JButton();
         columnsComboBox = new javax.swing.JComboBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         selectTableLabel.setText("Select Table");
 

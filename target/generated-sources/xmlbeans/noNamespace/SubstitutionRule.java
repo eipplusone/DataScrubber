@@ -16,7 +16,7 @@ package noNamespace;
 public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("substitutionrule97b5type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SubstitutionRule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("substitutionrule97b5type");
     
     /**
      * Gets the "column" element
@@ -67,6 +67,96 @@ public interface SubstitutionRule extends org.apache.xmlbeans.XmlObject
      * Unsets the "file_path" element
      */
     void unsetFilePath();
+    
+    /**
+     * Gets the "numeric_value" element
+     */
+    java.math.BigDecimal getNumericValue();
+    
+    /**
+     * Gets (as xml) the "numeric_value" element
+     */
+    org.apache.xmlbeans.XmlDecimal xgetNumericValue();
+    
+    /**
+     * True if has "numeric_value" element
+     */
+    boolean isSetNumericValue();
+    
+    /**
+     * Sets the "numeric_value" element
+     */
+    void setNumericValue(java.math.BigDecimal numericValue);
+    
+    /**
+     * Sets (as xml) the "numeric_value" element
+     */
+    void xsetNumericValue(org.apache.xmlbeans.XmlDecimal numericValue);
+    
+    /**
+     * Unsets the "numeric_value" element
+     */
+    void unsetNumericValue();
+    
+    /**
+     * Gets the "string_value" element
+     */
+    java.lang.String getStringValue1();
+    
+    /**
+     * Gets (as xml) the "string_value" element
+     */
+    org.apache.xmlbeans.XmlString xgetStringValue1();
+    
+    /**
+     * True if has "string_value" element
+     */
+    boolean isSetStringValue1();
+    
+    /**
+     * Sets the "string_value" element
+     */
+    void setStringValue1(java.lang.String stringValue1);
+    
+    /**
+     * Sets (as xml) the "string_value" element
+     */
+    void xsetStringValue1(org.apache.xmlbeans.XmlString stringValue1);
+    
+    /**
+     * Unsets the "string_value" element
+     */
+    void unsetStringValue1();
+    
+    /**
+     * Gets the "date_value" element
+     */
+    java.math.BigInteger getDateValue1();
+    
+    /**
+     * Gets (as xml) the "date_value" element
+     */
+    org.apache.xmlbeans.XmlInteger xgetDateValue1();
+    
+    /**
+     * True if has "date_value" element
+     */
+    boolean isSetDateValue1();
+    
+    /**
+     * Sets the "date_value" element
+     */
+    void setDateValue1(java.math.BigInteger dateValue1);
+    
+    /**
+     * Sets (as xml) the "date_value" element
+     */
+    void xsetDateValue1(org.apache.xmlbeans.XmlInteger dateValue1);
+    
+    /**
+     * Unsets the "date_value" element
+     */
+    void unsetDateValue1();
     
     /**
      * Gets the "substitution_data_type" attribute

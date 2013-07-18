@@ -311,12 +311,13 @@ public class MainWindow extends javax.swing.JFrame {
             database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(),
                     com.pearson.Interface.UIManager.getUsername(),
                     com.pearson.Interface.UIManager.getPassword(),
-                    com.pearson.Interface.UIManager.getUrl());
+                    "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
+                            + ":" + com.pearson.Interface.UIManager.getPort());
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
 
-        SetReader setReader = new SetReader(XMLInterface.getSetDocument());
+        SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database);
         setReader.run(database);
     }
 
@@ -337,7 +338,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void saveSetAsMenuButtonActionPerformed(ActionEvent evt) {
 
-       saveAsFile();
+        saveAsFile();
     }
 
     private void saveAsFile() {
@@ -347,7 +348,7 @@ public class MainWindow extends javax.swing.JFrame {
 
 
         int returnOption = chooser.showSaveDialog(null);
-        if (returnOption == JFileChooser.APPROVE_OPTION){
+        if (returnOption == JFileChooser.APPROVE_OPTION) {
             XMLInterface.setXMLFile(chooser.getSelectedFile());
             RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
         }
@@ -401,7 +402,6 @@ public class MainWindow extends javax.swing.JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         updateTreeModel();
     }
 
@@ -409,21 +409,19 @@ public class MainWindow extends javax.swing.JFrame {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
-        if(XMLInterface.getSetDocument() != null){
+        if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
             Object[] options = {"Save", "Discard", "Cancel"};
-            int saveOption =  JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
+            int saveOption = JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
-            if (saveOption == JOptionPane.YES_OPTION){
+            if (saveOption == JOptionPane.YES_OPTION) {
                 saveAsFile();
-            }
-            else if (saveOption == JOptionPane.NO_OPTION){
+            } else if (saveOption == JOptionPane.NO_OPTION) {
                 XMLInterface.createNewFile();
                 RulesInSetPane.setTitleAt(0, "New Masking Set");
                 updateTreeModel();
             }
-        }
-        else {
+        } else {
             XMLInterface.createNewFile();
             TestTree.setTreeTableModel(new RulesTreeTableModel());
 
@@ -432,20 +430,20 @@ public class MainWindow extends javax.swing.JFrame {
             RulesInSetPane.setTitleAt(0, "New Masking Set");
         }
     }
+
     // openmskset
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // create a file chooser
 
-        if(XMLInterface.getXmlFile() != null) {
+        if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
             Object[] options = {"Save", "Discard", "Cancel"};
-            int saveOption =  JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
+            int saveOption = JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
-            if (saveOption == JOptionPane.YES_OPTION){
+            if (saveOption == JOptionPane.YES_OPTION) {
                 saveAsFile();
                 return;
-            }
-            else if (saveOption == JOptionPane.CANCEL_OPTION) {
+            } else if (saveOption == JOptionPane.CANCEL_OPTION) {
                 return;
             }
         }
@@ -490,7 +488,7 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
-    private void setMaskingSetLogic(boolean isVisible){
+    private void setMaskingSetLogic(boolean isVisible) {
 
         RulesInSetPane.setVisible(isVisible);
         ruleMenuItem.setEnabled(isVisible);
@@ -507,11 +505,6 @@ public class MainWindow extends javax.swing.JFrame {
         rulesInSetTreeModel = new RulesTreeTableModel(XMLInterface.getRulesTree());
         TestTree.setTreeTableModel(rulesInSetTreeModel);
         TestTree.expandAll();
-    }
-
-    private void showWarningSaveDialog(){
-
-
     }
 
 }

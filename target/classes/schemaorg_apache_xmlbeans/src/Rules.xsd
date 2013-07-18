@@ -29,9 +29,11 @@
 
     <xs:element name="column" type="xs:string"/>
     <xs:element name="date_created" type="xs:date"/>
-    <xs:element name="name" type="xs:string"/>
     <xs:element name="id" type="xs:string"/>
     <xs:element name="file_path" type="xs:string"/>
+    <xs:element name="numeric_value" type="xs:decimal"/>
+    <xs:element name="string_value" type="xs:string"/>
+    <xs:element name="date_value" type="xs:integer"/>
 
     <!--attributes-->
     <xs:attribute name="target" type="xs:string"/>
@@ -71,6 +73,11 @@
         <xs:sequence>
             <xs:element ref="column" minOccurs="1" maxOccurs="1"/>
             <xs:element ref="file_path" minOccurs="0"/>
+            <xs:choice minOccurs="1" maxOccurs="1">
+                <xs:element ref="numeric_value" minOccurs="0"/>
+                <xs:element ref="string_value" minOccurs="0"/>
+                <xs:element ref="date_value" minOccurs="0"/>
+            </xs:choice>
         </xs:sequence>
         <xs:attribute ref="substitution_data_type" use="required"/>
         <xs:attribute ref="substitution__action_type" use="required"/>
@@ -81,8 +88,6 @@
     <xs:element name="masking_set">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="name"/>
-
                 <xs:element ref="date_created"/>
 
                 <xs:element ref="rules" maxOccurs="1" minOccurs="1"/>

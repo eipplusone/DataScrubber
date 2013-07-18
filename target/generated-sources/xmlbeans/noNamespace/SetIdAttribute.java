@@ -17,7 +17,7 @@ package noNamespace;
 public interface SetIdAttribute extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SetIdAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("setid4003attrtypetype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(SetIdAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("setid4003attrtypetype");
     
     /**
      * Gets the "set_id" attribute

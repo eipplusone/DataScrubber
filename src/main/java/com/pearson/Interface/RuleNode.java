@@ -8,6 +8,7 @@ import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 /**
  * @author Ruslan Kiselev
@@ -16,6 +17,7 @@ import java.util.Arrays;
  *         Project Name: DataScrubber
  */
 public class RuleNode extends AbstractMutableTreeTableNode {
+
 
     public RuleNode(Rule rule){
 

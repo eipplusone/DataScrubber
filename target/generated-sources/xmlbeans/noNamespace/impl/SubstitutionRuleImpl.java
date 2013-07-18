@@ -24,9 +24,15 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         new javax.xml.namespace.QName("", "column");
     private static final javax.xml.namespace.QName FILEPATH$2 = 
         new javax.xml.namespace.QName("", "file_path");
-    private static final javax.xml.namespace.QName SUBSTITUTIONDATATYPE$4 = 
+    private static final javax.xml.namespace.QName NUMERICVALUE$4 = 
+        new javax.xml.namespace.QName("", "numeric_value");
+    private static final javax.xml.namespace.QName STRINGVALUE1$6 = 
+        new javax.xml.namespace.QName("", "string_value");
+    private static final javax.xml.namespace.QName DATEVALUE1$8 = 
+        new javax.xml.namespace.QName("", "date_value");
+    private static final javax.xml.namespace.QName SUBSTITUTIONDATATYPE$10 = 
         new javax.xml.namespace.QName("", "substitution_data_type");
-    private static final javax.xml.namespace.QName SUBSTITUTIONACTIONTYPE$6 = 
+    private static final javax.xml.namespace.QName SUBSTITUTIONACTIONTYPE$12 = 
         new javax.xml.namespace.QName("", "substitution__action_type");
     
     
@@ -191,6 +197,282 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
     }
     
     /**
+     * Gets the "numeric_value" element
+     */
+    public java.math.BigDecimal getNumericValue()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(NUMERICVALUE$4, 0);
+            if (target == null)
+            {
+                return null;
+            }
+            return target.getBigDecimalValue();
+        }
+    }
+    
+    /**
+     * Gets (as xml) the "numeric_value" element
+     */
+    public org.apache.xmlbeans.XmlDecimal xgetNumericValue()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlDecimal target = null;
+            target = (org.apache.xmlbeans.XmlDecimal)get_store().find_element_user(NUMERICVALUE$4, 0);
+            return target;
+        }
+    }
+    
+    /**
+     * True if has "numeric_value" element
+     */
+    public boolean isSetNumericValue()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            return get_store().count_elements(NUMERICVALUE$4) != 0;
+        }
+    }
+    
+    /**
+     * Sets the "numeric_value" element
+     */
+    public void setNumericValue(java.math.BigDecimal numericValue)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(NUMERICVALUE$4, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(NUMERICVALUE$4);
+            }
+            target.setBigDecimalValue(numericValue);
+        }
+    }
+    
+    /**
+     * Sets (as xml) the "numeric_value" element
+     */
+    public void xsetNumericValue(org.apache.xmlbeans.XmlDecimal numericValue)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlDecimal target = null;
+            target = (org.apache.xmlbeans.XmlDecimal)get_store().find_element_user(NUMERICVALUE$4, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.XmlDecimal)get_store().add_element_user(NUMERICVALUE$4);
+            }
+            target.set(numericValue);
+        }
+    }
+    
+    /**
+     * Unsets the "numeric_value" element
+     */
+    public void unsetNumericValue()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            get_store().remove_element(NUMERICVALUE$4, 0);
+        }
+    }
+    
+    /**
+     * Gets the "string_value" element
+     */
+    public java.lang.String getStringValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(STRINGVALUE1$6, 0);
+            if (target == null)
+            {
+                return null;
+            }
+            return target.getStringValue();
+        }
+    }
+    
+    /**
+     * Gets (as xml) the "string_value" element
+     */
+    public org.apache.xmlbeans.XmlString xgetStringValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlString target = null;
+            target = (org.apache.xmlbeans.XmlString)get_store().find_element_user(STRINGVALUE1$6, 0);
+            return target;
+        }
+    }
+    
+    /**
+     * True if has "string_value" element
+     */
+    public boolean isSetStringValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            return get_store().count_elements(STRINGVALUE1$6) != 0;
+        }
+    }
+    
+    /**
+     * Sets the "string_value" element
+     */
+    public void setStringValue1(java.lang.String stringValue1)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(STRINGVALUE1$6, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(STRINGVALUE1$6);
+            }
+            target.setStringValue(stringValue1);
+        }
+    }
+    
+    /**
+     * Sets (as xml) the "string_value" element
+     */
+    public void xsetStringValue1(org.apache.xmlbeans.XmlString stringValue1)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlString target = null;
+            target = (org.apache.xmlbeans.XmlString)get_store().find_element_user(STRINGVALUE1$6, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.XmlString)get_store().add_element_user(STRINGVALUE1$6);
+            }
+            target.set(stringValue1);
+        }
+    }
+    
+    /**
+     * Unsets the "string_value" element
+     */
+    public void unsetStringValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            get_store().remove_element(STRINGVALUE1$6, 0);
+        }
+    }
+    
+    /**
+     * Gets the "date_value" element
+     */
+    public java.math.BigInteger getDateValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATEVALUE1$8, 0);
+            if (target == null)
+            {
+                return null;
+            }
+            return target.getBigIntegerValue();
+        }
+    }
+    
+    /**
+     * Gets (as xml) the "date_value" element
+     */
+    public org.apache.xmlbeans.XmlInteger xgetDateValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlInteger target = null;
+            target = (org.apache.xmlbeans.XmlInteger)get_store().find_element_user(DATEVALUE1$8, 0);
+            return target;
+        }
+    }
+    
+    /**
+     * True if has "date_value" element
+     */
+    public boolean isSetDateValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            return get_store().count_elements(DATEVALUE1$8) != 0;
+        }
+    }
+    
+    /**
+     * Sets the "date_value" element
+     */
+    public void setDateValue1(java.math.BigInteger dateValue1)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_element_user(DATEVALUE1$8, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_element_user(DATEVALUE1$8);
+            }
+            target.setBigIntegerValue(dateValue1);
+        }
+    }
+    
+    /**
+     * Sets (as xml) the "date_value" element
+     */
+    public void xsetDateValue1(org.apache.xmlbeans.XmlInteger dateValue1)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlInteger target = null;
+            target = (org.apache.xmlbeans.XmlInteger)get_store().find_element_user(DATEVALUE1$8, 0);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.XmlInteger)get_store().add_element_user(DATEVALUE1$8);
+            }
+            target.set(dateValue1);
+        }
+    }
+    
+    /**
+     * Unsets the "date_value" element
+     */
+    public void unsetDateValue1()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            get_store().remove_element(DATEVALUE1$8, 0);
+        }
+    }
+    
+    /**
      * Gets the "substitution_data_type" attribute
      */
     public noNamespace.SubstitutionDataType.Enum getSubstitutionDataType()
@@ -199,7 +481,7 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$4);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$10);
             if (target == null)
             {
                 return null;
@@ -217,7 +499,7 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             noNamespace.SubstitutionDataType target = null;
-            target = (noNamespace.SubstitutionDataType)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$4);
+            target = (noNamespace.SubstitutionDataType)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$10);
             return target;
         }
     }
@@ -231,10 +513,10 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$4);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$10);
             if (target == null)
             {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(SUBSTITUTIONDATATYPE$4);
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(SUBSTITUTIONDATATYPE$10);
             }
             target.setEnumValue(substitutionDataType);
         }
@@ -249,10 +531,10 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             noNamespace.SubstitutionDataType target = null;
-            target = (noNamespace.SubstitutionDataType)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$4);
+            target = (noNamespace.SubstitutionDataType)get_store().find_attribute_user(SUBSTITUTIONDATATYPE$10);
             if (target == null)
             {
-                target = (noNamespace.SubstitutionDataType)get_store().add_attribute_user(SUBSTITUTIONDATATYPE$4);
+                target = (noNamespace.SubstitutionDataType)get_store().add_attribute_user(SUBSTITUTIONDATATYPE$10);
             }
             target.set(substitutionDataType);
         }
@@ -267,7 +549,7 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             if (target == null)
             {
                 return null;
@@ -285,7 +567,7 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             noNamespace.SubstitutionActionType target = null;
-            target = (noNamespace.SubstitutionActionType)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+            target = (noNamespace.SubstitutionActionType)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             return target;
         }
     }
@@ -299,10 +581,10 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             org.apache.xmlbeans.SimpleValue target = null;
-            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             if (target == null)
             {
-                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             }
             target.setEnumValue(substitutionActionType);
         }
@@ -317,10 +599,10 @@ public class SubstitutionRuleImpl extends org.apache.xmlbeans.impl.values.XmlCom
         {
             check_orphaned();
             noNamespace.SubstitutionActionType target = null;
-            target = (noNamespace.SubstitutionActionType)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+            target = (noNamespace.SubstitutionActionType)get_store().find_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             if (target == null)
             {
-                target = (noNamespace.SubstitutionActionType)get_store().add_attribute_user(SUBSTITUTIONACTIONTYPE$6);
+                target = (noNamespace.SubstitutionActionType)get_store().add_attribute_user(SUBSTITUTIONACTIONTYPE$12);
             }
             target.set(substitutionActionType);
         }

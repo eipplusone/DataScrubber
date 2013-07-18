@@ -17,7 +17,7 @@ package noNamespace;
 public interface MaskingSetDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSetDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("maskingset7c00doctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSetDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("maskingset7c00doctype");
     
     /**
      * Gets the "masking_set" element
@@ -42,27 +42,7 @@ public interface MaskingSetDocument extends org.apache.xmlbeans.XmlObject
     public interface MaskingSet extends org.apache.xmlbeans.XmlObject
     {
         public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSet.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s9FDE46009D76800FADA046C0679A4FDD").resolveHandle("maskingsetbdd5elemtype");
-        
-        /**
-         * Gets the "name" element
-         */
-        java.lang.String getName();
-        
-        /**
-         * Gets (as xml) the "name" element
-         */
-        org.apache.xmlbeans.XmlString xgetName();
-        
-        /**
-         * Sets the "name" element
-         */
-        void setName(java.lang.String name);
-        
-        /**
-         * Sets (as xml) the "name" element
-         */
-        void xsetName(org.apache.xmlbeans.XmlString name);
+            org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(MaskingSet.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("maskingsetbdd5elemtype");
         
         /**
          * Gets the "date_created" element
