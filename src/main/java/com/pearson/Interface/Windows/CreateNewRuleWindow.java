@@ -4,6 +4,7 @@
  */
 package com.pearson.Interface.Windows;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,13 +14,14 @@ import java.util.logging.Logger;
  *
  * @author UMA99J5
  */
-public class CreateNewRuleWindow extends javax.swing.JFrame {
+public class CreateNewRuleWindow extends JDialog {
 
     /**
      * Creates new form CreateNewRuleWindow
      */
     public CreateNewRuleWindow() {
         initComponents();
+        setModalityType(ModalityType.APPLICATION_MODAL);
     }
 
     /**
@@ -38,7 +40,7 @@ public class CreateNewRuleWindow extends javax.swing.JFrame {
         newShuffleRuleButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         createLable.setText("Create a New Masking Rule");
 

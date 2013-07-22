@@ -1,5 +1,6 @@
 package com.pearson.SQL;
 
+import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
@@ -20,8 +21,12 @@ import java.util.Random;
  */
 public class MySQLTable extends Table {
 
+    ConnectionConfig connectionConfig;
+    DatabaseInterface databaseInterface;
+
     public MySQLTable(String tableName) {
         super(tableName);
+        connectionConfig = new ConnectionConfig(databaseInterface);
     }
 
     /**
@@ -31,9 +36,11 @@ public class MySQLTable extends Table {
      */
     public int getNumberOfRows() throws SQLException {
 
+        establishConnection();
+
         String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
 
-        if (!isConnectionValid) {
+        if (!databaseInterface.isConnectionValid()) {
             return -1;
         }
 
@@ -47,6 +54,7 @@ public class MySQLTable extends Table {
 
     }
 
+
     /**
      * Returns number of rows in a specified column
      *
@@ -56,9 +64,11 @@ public class MySQLTable extends Table {
      */
     public int getNumberOfRows(String columnName) throws SQLException {
 
+        establishConnection();
+
         String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
 
-        if (isConnectionValid) {
+        if (databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
 
@@ -74,164 +84,12 @@ public class MySQLTable extends Table {
 
     }
 
-    // disable different keys checks
 
-    public void disableSafeUpdate() throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        databaseInterface.createStatement().executeUpdate("SET SQL_SAFE_UPDATES=0; ");
-
-        databaseInterface.commit();
-    }
-
-    public void enableSafeUpdate() throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        databaseInterface.createStatement().executeUpdate("SET SQL_SAFE_UPDATES=1; ");
-
-        databaseInterface.commit();
-    }
-
-    public void disableForeignKeyConstraints() throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        databaseInterface.createStatement().executeUpdate("SET foreign_key_checks = 0");
-
-        databaseInterface.commit();
-
-    }
-
-    public void setCharacterSetClient(String characterSet) throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        databaseInterface.createPreparedStatement(SQLStatements.SET_CHARACTER_SET_CLIENT);
-        databaseInterface.addPreparedStatementParameters(characterSet);
-        databaseInterface.executePreparedStatement();
-
-        databaseInterface.commit();
-
-    }
-
-    public void setSessionProperties(String properties) throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String sql = "SET SESSION SQL_MODE = ?";
-        databaseInterface.createPreparedStatement(SQLStatements.SET_CHARACTER_SET_CLIENT);
-        databaseInterface.addPreparedStatementParameters(sql);
-        databaseInterface.executePreparedStatement();
-
-        databaseInterface.commit();
-
-    }
-
-    public void copyTable(String tableToCopyFrom, String newTable) throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String query = "create table " + newTable + " LIKE " + tableToCopyFrom;
-
-        databaseInterface.createStatement().executeUpdate(query);
-
-        query = "insert " + newTable + " SELECT * " + " FROM " + tableToCopyFrom;
-
-        databaseInterface.createStatement().executeUpdate(query);
-
-        databaseInterface.commit();
-
-    }
-
-    private void deleteTriggers() throws SQLException {
-
-        if (isConnectionValid) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        ResultSet resultSet = getTriggers();
-
-        while (resultSet.next()) {
-            databaseInterface.createStatement().executeUpdate("DROP TRIGGER " + resultSet.getString("TRIGGER_NAME"));
-        }
-
-        databaseInterface.commit();
-
-    }
-
-    public ResultSet getTriggers() throws SQLException {
-
-        String query = "SELECT * FROM " + "information_schema.triggers";
-
-        return databaseInterface.createStatement().executeQuery(query);
-    }
-
-    public void disableTriggers() throws SQLException {
-
-        copyTable("information_schema.triggers", "datascrubber_triggers_copy");
-        deleteTriggers();
-
-    }
-
-    public void enableTriggers() throws SQLException {
-
-        String query = "SELECT * FROM " + "datascrubber_triggers_copy";
-
-        ResultSet resultSet = databaseInterface.createStatement().executeQuery(query);
-
-        while (resultSet.next()) createTrigger(resultSet);
-
-        databaseInterface.createStatement().executeUpdate("DROP TABLE datascrubber_triggers_copy");
-
-        databaseInterface.commit();
-
-    }
-
-    /**
-     * method that creates a trigger. The result set must include all of the triggers for the
-     * database.
-     *
-     * @param resultSet
-     */
-    private void createTrigger(ResultSet resultSet) throws SQLException {
-
-        Connection connection = DatabaseManager.getConnection();
-
-//        String sessionProperties = resultSet.getString("SQL_MODE");
-//
-//        setSessionProperties(sessionProperties);
-//
-//        String character_set = "utf8";
-//
-//        setCharacterSetClient(character_set);
-
-        String createTriggerQuery = "CREATE TRIGGER " + resultSet.getString("trigger_name") +
-                " " + resultSet.getString("action_timing") + " " + resultSet.getString("event_manipulation") +
-                " ON " + resultSet.getString("event_object_table") + " FOR EACH ROW " +
-                resultSet.getString("action_statement");
-
-        databaseInterface.createStatement().executeUpdate(createTriggerQuery);
-
-        databaseInterface.commit();
-
-    }
 
     public ResultSet getColumnContents(String columnName) throws SQLException {
 
+        establishConnection();
+        databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
         ResultSet resultSet = databaseInterface.createStatement().executeQuery("SELECT " + columnName + " FROM " + tableName);
 
         return resultSet;
@@ -246,6 +104,7 @@ public class MySQLTable extends Table {
      */
     public void updateRow(Object object, String columnName, int id) {
 
+        establishConnection();
         Query query = new Query();
         query.update(tableName).set(columnName).where(getAutoIncrementColumn().name);
 
@@ -257,46 +116,9 @@ public class MySQLTable extends Table {
         databaseInterface.commit();
     }
 
-    public void enableForeignKeyConstraints() throws SQLException {
-
-        databaseInterface.createStatement().executeUpdate("SET foreign_key_checks = 1");
-
-        databaseInterface.commit();
-
-    }
-
-    public void disableUniqueChecks() throws SQLException {
-
-        databaseInterface.createStatement().executeUpdate("SET unique_checks = 0");
-
-        databaseInterface.commit();
-
-    }
-
-    public void enableUniqueChecks() throws SQLException {
-
-        databaseInterface.createStatement().executeUpdate("SET unique_checks = 1");
-
-        databaseInterface.commit();
-    }
-
-    public void disablePrimaryKey(String primaryKeyColumn) throws SQLException {
-
-        databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP PRIMARY KEY");
-
-        databaseInterface.commit();
-
-    }
-
-    public void enablePrimaryKey(String primaryKeyColumn) throws SQLException {
-
-        databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY");
-
-        databaseInterface.commit();
-    }
-
     public void setColumnToNull(String columnName) throws SQLException {
 
+        establishConnection();
         databaseInterface.createStatement().executeUpdate("UPDATE " + tableName + " SET " + columnName + " = NULL");
 
         databaseInterface.commit();
@@ -341,8 +163,8 @@ public class MySQLTable extends Table {
      */
     public void swap(ResultSet row1, ResultSet row2, ArrayList<String> columnNames) throws SQLException {
 
+        establishConnection();
 
-        Connection connection = DatabaseManager.getConnection();
         String query = null;
 
         String idColumn = getAutoIncrementColumn().name;
@@ -382,6 +204,7 @@ public class MySQLTable extends Table {
 
     public Column addAutoIncrementColumn() throws SQLException {
 
+        establishConnection();
         int numberOfRows = getNumberOfRows();
 
         String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL";
@@ -415,6 +238,7 @@ public class MySQLTable extends Table {
      */
     public void deleteAutoIncrementColumn() throws Exception {
 
+        establishConnection();
         databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name);
         databaseInterface.commit();
     }
@@ -440,6 +264,8 @@ public class MySQLTable extends Table {
 
     public void setColumnToValue(String columnName, Object value) {
 
+        establishConnection();
+
         Query query = new Query();
         query = query.update(tableName).set(columnName);
 
@@ -449,6 +275,39 @@ public class MySQLTable extends Table {
 
         databaseInterface.commit();
 
+    }
+
+    /**
+     * clearResourses should be called in case any of the operations on
+     * table were interrupted by an exception to make sure
+     * all the connections are closed
+     */
+    public void cleanResourses(){
+
+        if (databaseInterface == null || !databaseInterface.isConnectionValid()) throw new NullPointerException("Database Interface is null - cannot clean resources");
+        databaseInterface.cleanupAutomatic();
+    }
+
+    public ConnectionConfig getConnectionConfig(){
+        // make sure this table connection to the database
+        establishConnection();
+        // make sure that both classes work on the same connection
+        connectionConfig.setDatabaseInterface(databaseInterface);
+        return connectionConfig;
+    }
+
+    /**
+     *
+     * ATTENTION: the reason why we have establishConnection at every method is because if any of the methods inside loop
+     * they will trigger getConnection() every turn. This way we don't idle a connection on creation of the object
+     * and allow to reuse one connection for the entire mySQL table purposes
+     *
+     */
+    private void establishConnection() {
+        if(databaseInterface == null || !databaseInterface.isConnectionValid()){
+            databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
+        }
+        assert databaseInterface.isConnectionValid();
     }
 
 }

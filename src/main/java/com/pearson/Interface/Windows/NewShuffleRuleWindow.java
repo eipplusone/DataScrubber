@@ -64,8 +64,6 @@ public class NewShuffleRuleWindow extends JDialog {
                 com.pearson.Interface.UIManager.getPassword(), "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
                 + ":" + com.pearson.Interface.UIManager.getPort());
 
-        // fill in table structure so we have access to it later
-        database.fillTables();
         for (MySQLTable table : database.tables.values()) {
             tableNames.add(table.getTableName());
         }

@@ -102,12 +102,23 @@ public class MainWindow extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
+        final MainWindow window = new MainWindow();
+
+        // not allow user to close the window untill saved or explicitly discarded
+        window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        window.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if(XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()){
+                    Object[] options = {"Discard", "Cancel"};
+                    int userChoice = JOptionPane.showOptionDialog(null, "Please Save Or Discard New Changes", "Are you sure you want to exit?",
+                            JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+                    if (userChoice == JOptionPane.YES_OPTION) window.dispose();
+                }
+                else window.dispose();
             }
         });
+        window.setVisible(true);
     }
 
     /**
@@ -306,6 +317,12 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
 
+        DatabaseConnectionInfoWindow connectionInfoWindow = new DatabaseConnectionInfoWindow();
+        connectionInfoWindow.setVisible(true);
+
+        // if the window was just closed
+        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
+
         Database database = null;
         try {
             database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(),
@@ -374,7 +391,8 @@ public class MainWindow extends javax.swing.JFrame {
         com.pearson.Interface.UIManager.setParentRule(newRule);
         DatabaseConnectionInfoWindow newWindow = new DatabaseConnectionInfoWindow();
         newWindow.setVisible(true);
-        newWindow.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
+        newRuleWindow.setVisible(true);
     }
 
     private void deleteRightClickMenuActionPerformed(ActionEvent evt) {

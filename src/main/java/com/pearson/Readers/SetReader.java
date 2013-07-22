@@ -2,6 +2,7 @@ package com.pearson.Readers;
 
 import com.pearson.Interface.RuleNode;
 import com.pearson.SQL.Database;
+import com.pearson.Utilities.ThreadExectutor;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -74,67 +75,36 @@ public class SetReader implements Runnable {
         }
     }
 
-    public static void executeThreads(LinkedList<Rule> threads, int threadPoolSize) {
+    private void executeThreads(LinkedList<Rule> firstLevelRules, int threadPoolSize) {
 
-        HashSet<String> tablesOccupied = new HashSet<>();
+        ThreadExectutor.initialise(threadPoolSize);
 
-        if ((threads == null) || threads.isEmpty() || (threadPoolSize <= 0)) return;
-
-        try {
-            ExecutorService threadExecutor = Executors.newFixedThreadPool(threadPoolSize);
-            while (!threads.isEmpty()) {
-                if(!tablesOccupied.contains(threads.getFirst().getTarget())) {
-                    Rule ruleToRun = threads.remove();
-                    tablesOccupied.add(ruleToRun.getTarget());
-                    threadExecutor.execute(new RuleReader(ruleToRun));
-                }
-            }
-
-            threadExecutor.shutdown();
-        } catch (Exception e) {
-            e.printStackTrace();
+        for(Rule rule: firstLevelRules){
+            ThreadExectutor.execute(new RuleReader(rule, database));
         }
-
     }
 
-    // Multithreading logic
     public void run(Database database) {
 
         RuleNode root = getRulesTree(this.setDocument);
 
         // get the list of all rules that yet to be run in the order they suppose to run
-        LinkedList<Rule> rulesToRun = getRulesAsList(root);
+        LinkedList<Rule> rulesToRun = getChildren(root);
 
         executeThreads(rulesToRun, numberOfThreadsAllowed);
     }
 
-    private LinkedList<Rule> getRulesAsList(RuleNode root) {
+    private LinkedList<Rule> getChildren(RuleNode root) {
 
         LinkedList<Rule> rulesToReturn = new LinkedList<>();
 
         // Breadth-first search
-        Queue queue = new LinkedList();
         Enumeration it  = root.children();
 
         while(it.hasMoreElements()){
             // add all first level rules
             RuleNode firstLevelRule = (RuleNode) it.nextElement();
             rulesToReturn.add(firstLevelRule.getRule());
-            queue.add(firstLevelRule.getRule());
-        }
-
-        while(!queue.isEmpty()) {
-            RuleNode parentNode = (RuleNode) queue.remove();
-            RuleNode childNode = null;
-
-            it = parentNode.children();
-
-            while(it.hasMoreElements()) {
-                childNode = (RuleNode) it.nextElement();
-                rulesToReturn.add(childNode.getRule());
-                queue.add(childNode);
-                rulesToReturn.add(childNode.getRule());
-            }
         }
 
         return rulesToReturn;

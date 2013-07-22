@@ -1,8 +1,10 @@
 package com.pearson.Readers;
 
+import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
+import com.pearson.Utilities.ThreadExectutor;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionActionType;
@@ -25,7 +27,7 @@ public class RuleReader implements Runnable {
     private Rule rule;
     private Database database;
 
-    public RuleReader(Rule rule) {
+    public RuleReader(Rule rule, Database database) {
         this.rule = rule;
         this.database = database;
     }
@@ -39,8 +41,8 @@ public class RuleReader implements Runnable {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
-        mySQLTable.disableForeignKeyConstraints();
-        mySQLTable.disableUniqueChecks();
+        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().disableUniqueChecks();
 
         // create an unique key column if there is no such column
         Column autoIncrementColumn = mySQLTable.getAutoIncrementColumn();
@@ -59,8 +61,8 @@ public class RuleReader implements Runnable {
         }
         // get the result set that has already been shuffled
 
-        mySQLTable.enableForeignKeyConstraints();
-        mySQLTable.enableUniqueChecks();
+        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().enableUniqueChecks();
 
         // clean all the resources
         mySQLTable.cleanResourses();
@@ -75,20 +77,32 @@ public class RuleReader implements Runnable {
         else if (dataType == SubstitutionDataType.STRING) new StringSubstitutionRuleReader(rule, database).run();
     }
 
-    public Rule getRule() {
-        return rule;
-    }
-
-    public void setRule(Rule rule) {
-        this.rule = rule;
-    }
-
     @Override
     public void run() {
-        try {
-            run(database);
-        } catch (SQLException e) {
-            e.printStackTrace();
+
+        while(true){
+
+            if(!ThreadExectutor.isTableOccupied(rule.getTarget())){
+                try {
+                    run(database);
+                    break;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if(!XMLInterface.isLeaf(rule)){
+            for(Rule childRule: rule.getDependencies().getRuleArray()){
+                ThreadExectutor.execute(new RuleReader(childRule, database));
+            }
         }
     }
 }

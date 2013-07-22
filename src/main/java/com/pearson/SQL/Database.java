@@ -26,12 +26,13 @@ public class Database {
         }
     }
     public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
-    private String name;
+    private String databaseName;
 
     public Database(String schema_name, String username, String password, String JDBCURL) throws SQLException {
 
-        name = schema_name;
+        databaseName = schema_name;
         connect(username, password, JDBCURL);
+        fillTables();
 
     }
 
@@ -43,8 +44,8 @@ public class Database {
      * @param password password that is used to log in on MySQL server
      * @param JDBCURL url that is used to log in on MySQL server
      */
-    public void connect(String username, String password, String JDBCURL) throws SQLException {
-        DatabaseManager.createConnectionPool(username, password, JDBCURL + "/" + name);
+    private void connect(String username, String password, String JDBCURL) throws SQLException {
+        DatabaseManager.createConnectionPool(username, password, JDBCURL + "/" + databaseName);
         assert DatabaseManager.connectionPool != null;
     }
 
@@ -56,14 +57,13 @@ public class Database {
     /**
      * fillTables populates database with information(tables and columns).
      */
-    public void fillTables() {
+    private void fillTables() {
         Connection conn = DatabaseManager.getConnection();
         try {
             try (PreparedStatement tablesStmt = conn.prepareStatement(SQLStatements.GET_TABLES)) {
                 try (ResultSet tablesResult = tablesStmt.executeQuery()) {
                     while (tablesResult.next()) {
-
-                        add(new MySQLTable(tablesResult.getString("Tables_in_" + name)));
+                        add(new MySQLTable(tablesResult.getString("Tables_in_" + databaseName)));
                     }
                 }
             }
@@ -117,10 +117,8 @@ public class Database {
     }
 
     public MySQLTable getTable(String tableName) {
-        return tables.get(tableName);
-    }
 
-    public void getMetaData() {
-        Connection connection = DatabaseManager.getConnection();
+        if (!tables.containsKey(tableName)) throw new IllegalArgumentException("Table " + tableName + " does not exist in the database " + databaseName);
+        return tables.get(tableName);
     }
 }

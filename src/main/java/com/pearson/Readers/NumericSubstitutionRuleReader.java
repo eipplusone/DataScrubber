@@ -32,20 +32,32 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
             MySQLDataType dataType = database.getTable(mySQLTable.getTableName()).columns.get(columnName).getType();
 
             try {
+                disableConstraints();
                 setToRandom(dataType);
+                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
 
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
             try {
+                disableConstraints();
                 setToNull();
+                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
-            mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), rule.getSubstitute().getNumericValue());
+            try {
+                disableConstraints();
+                mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), rule.getSubstitute().getNumericValue());
+                enableConstraints();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+
+        mySQLTable.cleanResourses();
 
     }
 
@@ -63,5 +75,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
         else if (dataType == MySQLDataType.DOUBLE)
             mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), new Random().nextDouble());
 
+        mySQLTable.cleanResourses();
     }
 }

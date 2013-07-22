@@ -7,6 +7,9 @@ import noNamespace.Rule;
 import java.sql.SQLException;
 
 /**
+ * This is an abstract class for three types of substitution readers(sorted by type). SetToNull,
+ * enablsing and disabling constraints are shared by different types of substitutions
+ *
  * @author Ruslan Kiselev
  *         Date: 7/18/13
  *         Time: 9:22 AM
@@ -35,19 +38,19 @@ public abstract class SubstitutionReader implements Runnable {
 
     }
 
-    private void disableConstraints() throws SQLException {
+    protected void disableConstraints() throws SQLException {
 
-        mySQLTable.disableUniqueChecks();
-        mySQLTable.disableForeignKeyConstraints();
-        mySQLTable.disableTriggers();
+        mySQLTable.getConnectionConfig().disableUniqueChecks();
+        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().disableTriggers();
 
     }
 
-    private void enableConstraints() throws SQLException {
+    protected void enableConstraints() throws SQLException {
 
-        mySQLTable.enableTriggers();
-        mySQLTable.enableForeignKeyConstraints();
-        mySQLTable.enableUniqueChecks();
+        mySQLTable.getConnectionConfig().enableTriggers();
+        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().enableUniqueChecks();
 
     }
 

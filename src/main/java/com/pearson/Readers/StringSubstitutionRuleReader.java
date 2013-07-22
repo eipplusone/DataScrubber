@@ -47,28 +47,28 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     public void setToValue(String value) throws SQLException {
 
-        mySQLTable.disableUniqueChecks();
-        mySQLTable.disableForeignKeyConstraints();
-        mySQLTable.disableTriggers();
+        mySQLTable.getConnectionConfig().disableUniqueChecks();
+        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().disableTriggers();
 
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
 
-        mySQLTable.enableTriggers();
-        mySQLTable.enableForeignKeyConstraints();
-        mySQLTable.enableUniqueChecks();
+        mySQLTable.getConnectionConfig().enableTriggers();
+        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().enableUniqueChecks();
     }
 
     public void setToRandom(int count) throws SQLException {
 
-        mySQLTable.disableUniqueChecks();
-        mySQLTable.disableForeignKeyConstraints();
-        mySQLTable.disableTriggers();
+        mySQLTable.getConnectionConfig().disableUniqueChecks();
+        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().disableTriggers();
 
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), RandomStringUtils.random(count));
 
-        mySQLTable.enableTriggers();
-        mySQLTable.enableForeignKeyConstraints();
-        mySQLTable.enableUniqueChecks();
+        mySQLTable.getConnectionConfig().enableTriggers();
+        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().enableUniqueChecks();
     }
 
     /**

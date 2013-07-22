@@ -13,6 +13,7 @@ import noNamespace.Rule;
  */
 public class UIManager {
 
+    public static final int CLOSED = -1;
     private static MainWindow mainWindow;
     private static String username = "dbadmin";
     private static String password = "Pw123";

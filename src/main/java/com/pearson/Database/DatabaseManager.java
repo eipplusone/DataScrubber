@@ -1,11 +1,9 @@
 package com.pearson.Database;
 
-import com.pearson.SQL.Database;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashSet;
 
 /**
  * com.pearson.Database manager is class that encapsulates giving and closing
@@ -39,7 +37,7 @@ public class DatabaseManager {
         Connection connection = null;
 
         if (!connectionEstablished) {
-            return null;
+            throw new NullPointerException("DatabaseManager - connection pool has not been initialised");
         }
 
         try {
@@ -68,29 +66,6 @@ public class DatabaseManager {
             connection = null;
             System.out.println("Error: disconnect - couldn't close the connection");
             return false;
-        }
-    }
-
-    public static boolean disconnectAndShutdown(Connection connection) {
-        try {
-            if ((connection != null) && !connection.isClosed()) {
-                connection.close();
-            }
-
-            return true;
-        } catch (Exception e) {
-            connection = null;
-            System.out.println("Error: disconnectAndShutDown - couldn't close the connection");
-            return false;
-        } finally {
-            try {
-                if (connectionPool != null) {
-                    connectionPool.close();
-                }
-            } catch (Exception e) {
-                System.out.println("Error: disconnectAndShutDown - couldn't close the connection pool");
-            }
-
         }
     }
 
