@@ -378,6 +378,7 @@ public class NewShuffleRuleWindow extends JDialog {
         )));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     //private void enableWhereClauseCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableWhereClauseCheckboxActionPerformed

@@ -358,6 +358,7 @@ public class NewSubstitutionRuleWindow extends JDialog {
         valueTextField.setVisible(true);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
@@ -515,10 +516,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
             valueOrBrowseLabel.setText("Please Select A File");
             valueOrBrowseLabel.setVisible(true);
             browseButton.setVisible(true);
-        } else if (selectedType.equals(DateSubstitutionTypes.RANDOM_DATE_WITHING_RANGE.toString())) {
-            valueOrBrowseLabel.setText("Please Enter Range In Millis");
-            valueOrBrowseLabel.setVisible(true);
-            valueTextField.setVisible(true);
         } else if (selectedType.equals(DateSubstitutionTypes.SET_TO_VALUE.toString())) {
             valueOrBrowseLabel.setText("Please Enter Value In Millis since Jan 1 1970");
             valueOrBrowseLabel.setVisible(true);
@@ -535,6 +532,8 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         selectedTypeOfSubstitutionLabel.setText(selectedType);
         isTriggersIsolated = false;
+
+        // todo version 2.0: add random within range specified by the user
     }//GEN-LAST:event_typeOfSubstitutionComboBoxActionPerformed
 
     private void valueTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueTextFieldActionPerformed

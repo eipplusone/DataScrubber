@@ -28,83 +28,112 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     @Override
     public void run() {
+
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
 
-        if(actionType == SubstitutionActionType.SET_FROM_FILE) {
-
+        try {
+            disableConstraints();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
 
+        if (actionType == SubstitutionActionType.SET_FROM_FILE) {
+            File selectedFile = new File(rule.getSubstitute().getFilePath());
+
+            try {
+                setFromFile(selectedFile);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
+            int stringLength = rule.getSubstitute().getNumericValue().intValue();
+
+            try {
+                setToRandom(stringLength);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
+            String setToString = rule.getSubstitute().getStringValue1();
+
+            try {
+                setToValue(setToString);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
+
+            try {
+                setToNull();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
 
-        }
-        else if (actionType == SubstitutionActionType.SET_TO_NULL) {
-
+        try {
+            enableConstraints();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
     }
 
     public void setToValue(String value) throws SQLException {
 
-        mySQLTable.getConnectionConfig().disableUniqueChecks();
-        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().disableTriggers();
-
+        enableConstraints();
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
-
-        mySQLTable.getConnectionConfig().enableTriggers();
-        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().enableUniqueChecks();
+        disableConstraints();
     }
 
     public void setToRandom(int count) throws SQLException {
 
-        mySQLTable.getConnectionConfig().disableUniqueChecks();
-        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().disableTriggers();
-
+        disableConstraints();
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), RandomStringUtils.random(count));
-
-        mySQLTable.getConnectionConfig().enableTriggers();
-        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().enableUniqueChecks();
+        enableConstraints();
     }
 
     /**
      * Updates the column with random values within the file
      */
     public void setFromFile(File file) throws SQLException {
+
         HashMap<Integer, String> words = new HashMap<>();
         Scanner scanner = null;
+
+        //build a hashmap of words to replace
         try {
             scanner = new Scanner(file);
 
             for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
+                // if there are still words inside the scanner
                 if (scanner.hasNext()) {
                     String stringToUpdate = scanner.next();
                     // if we reached the end of file make sure that no newline character is inside
                     if (stringToUpdate.contains("\n")) {
                         stringToUpdate.replaceAll("\n", "");
-                        words.put(i, stringToUpdate);
                     }
-                    assert (stringToUpdate != null);
 
+                    words.put(i, stringToUpdate);
+                    assert (stringToUpdate != null);
+                    // if there are no more words inside scanner just start from the beginning of file
                 } else {
                     scanner = new Scanner(file);
                 }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             scanner.close();
         }
+
         Random random = new Random();
-        for (int i = 0; i < mySQLTable.getNumberOfRows(); i++){
+        // get a random word from the list and update with it next row inside column
+        for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
             mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), i);
         }
+
+        mySQLTable.cleanResourses();
 
     }
 }

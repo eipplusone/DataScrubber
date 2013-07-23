@@ -1,5 +1,6 @@
 package com.pearson.Interface.Windows;
 
+import com.pearson.Database.DatabaseManager;
 import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Models.RulesTreeTableModel;
@@ -313,6 +314,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
@@ -498,7 +500,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
         iw.setVisible(true);
-        iw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
+        CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
+        newRuleWindow.setVisible(true);
 
     }
 

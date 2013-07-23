@@ -1,6 +1,8 @@
 package com.pearson.Readers;
 
+import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
+import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
 import com.pearson.Utilities.Constants;
@@ -29,73 +31,67 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
     public void run() {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
+        Column selectedColumn = mySQLTable.columns.get(rule.getSubstitute().getColumn());
 
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
+            try {
+                disableConstraints();
+                if (selectedColumn.getType() == MySQLDataType.TIME){
+                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomTime());
+                }
+                else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP){
+                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomTimeStamp());
+                }
+                // in case of Date, DateTime, Year
+                else {
+                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomDate());
+                }
+                enableConstraints();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
+            try {
+                disableConstraints();
+                setToNull();
+                enableConstraints();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
 
+            try {
+                disableConstraints();
+                if (selectedColumn.getType() == MySQLDataType.TIME){
+                    mySQLTable.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
+                }
+                else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP){
+                    mySQLTable.setColumnToValue(selectedColumn.name, new Timestamp(rule.getSubstitute().getDateValue1().longValue()));
+                }
+                // in case of Date, DateTime, Year
+                else {
+                    mySQLTable.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
+                }
+                enableConstraints();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        else if (actionType == SubstitutionActionType.SET_TO_NULL) {
-
-        }
-        else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
-
-        }
     }
 
-    public void setDateTo(Date date) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), date);
+    private Time getRandomTime(){
+        return new Time(getRandomMillis());
     }
 
-    public void setDateTo(Timestamp timestamp) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), timestamp);
+    private Date getRandomDate(){
+        return new Date(getRandomMillis());
     }
 
-    public void setDateTo(Time time) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), time);
+    private Timestamp getRandomTimeStamp(){
+        return new Timestamp(getRandomMillis());
     }
 
-    public void setRandomDate(int yearPeriod, Date date) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), getRandomDate(yearPeriod, date));
-    }
-
-    public void setRandomDate(int yearPeriod, Timestamp timestamp) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), getRandomTimeStamp(yearPeriod, timestamp));
-    }
-
-    public void setDateWithinPeriod(int yearPeriod, Time time) throws SQLException {
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), getRandomTime(yearPeriod, time));
-    }
-
-    private Date getRandomDate(int yearPeriod, Date date){
-
-        double randomYear = Math.random() * yearPeriod;
-
-        long offset = (long)(randomYear * Constants.MILLISECONDS_IN_A_YEAR);
-
-        Random random = new Random();
-
-        long randomMillisFromEpoch = date.getTime() + (random.nextBoolean() ? offset : offset * (-1));
-
-        return new Date(randomMillisFromEpoch);
-
-    }
-
-    private Timestamp getRandomTimeStamp(int yearPeriod, Timestamp timestamp){
-
-        double randomYear = Math.random() * yearPeriod;
-
-        long offset = (long)(randomYear * Constants.MILLISECONDS_IN_A_YEAR);
-
-        Random random = new Random();
-
-        long randomMillisFromEpoch = timestamp.getTime() + (random.nextBoolean() ? offset : offset * (-1));
-
-        return new Timestamp(randomMillisFromEpoch);
-
-    }
-
-    private Time getRandomTime(int yearPeriod, Time time){
-
-        return new Time(System.currentTimeMillis() - new Random().nextLong());
-
+    private long getRandomMillis() {
+        return System.currentTimeMillis() - new Random().nextLong();
     }
 }

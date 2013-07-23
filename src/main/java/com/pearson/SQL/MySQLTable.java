@@ -303,6 +303,7 @@ public class MySQLTable extends Table {
      * and allow to reuse one connection for the entire mySQL table purposes
      *
      */
+    // todo test if this method can still be valid after cleanupAutomatic
     private void establishConnection() {
         if(databaseInterface == null || !databaseInterface.isConnectionValid()){
             databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());

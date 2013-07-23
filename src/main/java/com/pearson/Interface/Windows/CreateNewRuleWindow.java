@@ -132,6 +132,7 @@ public class CreateNewRuleWindow extends JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void newSubstitutionRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonActionPerformed

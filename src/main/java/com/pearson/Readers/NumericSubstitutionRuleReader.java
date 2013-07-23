@@ -29,7 +29,7 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
 
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             String columnName = rule.getSubstitute().getColumn();
-            MySQLDataType dataType = database.getTable(mySQLTable.getTableName()).columns.get(columnName).getType();
+            MySQLDataType dataType = database.getTable(rule.getTarget()).columns.get(columnName).getType();
 
             try {
                 disableConstraints();

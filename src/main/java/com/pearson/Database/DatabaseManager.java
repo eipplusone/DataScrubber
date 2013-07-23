@@ -43,8 +43,7 @@ public class DatabaseManager {
         try {
             connection = connectionPool.getConnection();
         } catch (Exception e) {
-            connection = null;
-            System.out.println("Error: getConnection - couldn't get connection");
+            e.printStackTrace();
         } finally {
             return connection;
         }
@@ -63,8 +62,7 @@ public class DatabaseManager {
 
             return true;
         } catch (Exception e) {
-            connection = null;
-            System.out.println("Error: disconnect - couldn't close the connection");
+            e.printStackTrace();
             return false;
         }
     }
@@ -74,8 +72,8 @@ public class DatabaseManager {
             if (connectionPool != null) {
                 connectionPool.close();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
