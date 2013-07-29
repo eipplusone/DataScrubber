@@ -453,7 +453,7 @@ public class NewShuffleRuleWindow extends JDialog {
         Rule parentRule = com.pearson.Interface.UIManager.getParentRule();
         Rule newRule;
         // depending on whether is an independent rule or dependent
-        if (com.pearson.Interface.UIManager.getParentRule() == null) {
+        if (parentRule == null) {
             newRule = rulesInSet.addNewRule();
             newRule.setId(rulesInSet.getRuleArray().length + "");
         }
