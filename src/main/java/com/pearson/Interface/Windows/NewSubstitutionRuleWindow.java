@@ -480,8 +480,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
         if (dateType == SubstitutionDataType.DATE) {
             if (actionType == SubstitutionActionType.SET_TO_VALUE) {
                 newRule.getSubstitute().setDateValue1(BigInteger.valueOf(Integer.parseInt(value)));
-            } else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
-                newRule.getSubstitute().setDateValue1(BigInteger.valueOf(Integer.parseInt(value)));
             }
         } else if (dateType == SubstitutionDataType.NUMERIC) {
             if (actionType == SubstitutionActionType.SET_TO_VALUE) {
