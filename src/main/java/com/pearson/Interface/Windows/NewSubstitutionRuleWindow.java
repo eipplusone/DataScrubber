@@ -458,7 +458,8 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         SubstitutionRule newRuleSubstitution = newRule.addNewSubstitute();
         // add new column
-        newRuleSubstitution.setColumn(columnsComboBox.getSelectedItem().toString());
+        String columnString = columnsComboBox.getSelectedItem().toString().substring(0, columnsComboBox.getSelectedItem().toString().indexOf("("));
+        newRuleSubstitution.setColumn(columnString);
 
         String targetTable = tableNames.get(tablesSelectedTable.getSelectedRow());
         newRule.setTarget(targetTable);

@@ -105,110 +105,7 @@ public class ConnectionConfig {
 
     }
 
-    private void copyTable(String tableToCopyFrom, String newTable) throws SQLException {
 
-        
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String query = "create table " + newTable + " LIKE " + tableToCopyFrom;
-
-        databaseInterface.createStatement().executeUpdate(query);
-
-        query = "insert " + newTable + " SELECT * " + " FROM " + tableToCopyFrom;
-
-        databaseInterface.createStatement().executeUpdate(query);
-
-        databaseInterface.commit();
-
-    }
-
-    private void deleteTriggers() throws SQLException {
-
-        
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        ResultSet resultSet = getTriggers();
-
-        while (resultSet.next()) {
-            databaseInterface.createStatement().executeUpdate("DROP TRIGGER " + resultSet.getString("TRIGGER_NAME"));
-        }
-
-        databaseInterface.commit();
-
-    }
-
-    private ResultSet getTriggers() throws SQLException {
-
-
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String query = "SELECT * FROM " + "information_schema.triggers";
-
-        return databaseInterface.createStatement().executeQuery(query);
-    }
-
-    public void disableTriggers() throws SQLException {
-
-        copyTable("information_schema.triggers", "datascrubber_triggers_copy");
-        deleteTriggers();
-
-    }
-
-    public void enableTriggers() throws SQLException {
-
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String query = "SELECT * FROM " + "datascrubber_triggers_copy";
-
-        ResultSet resultSet = databaseInterface.createStatement().executeQuery(query);
-
-        while (resultSet.next()) createTrigger(resultSet);
-
-        databaseInterface.createStatement().executeUpdate("DROP TABLE datascrubber_triggers_copy");
-
-        databaseInterface.commit();
-
-    }
-
-    /**
-     * method that creates a trigger. The result set must include all of the triggers for the
-     * database.
-     *
-     * @param resultSet
-     */
-    private void createTrigger(ResultSet resultSet) throws SQLException {
-
-// creating triggers result in modifying the trigger table settting: todo version 2.0 set sql_mode and character_set when changing triggers
-//        String sessionProperties = resultSet.getString("SQL_MODE");
-//
-//        setSessionProperties(sessionProperties);
-//
-//        String character_set = "utf8";
-//
-//        setCharacterSetClient(character_set);
-
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
-        String createTriggerQuery = "CREATE TRIGGER " + resultSet.getString("trigger_name") +
-                " " + resultSet.getString("action_timing") + " " + resultSet.getString("event_manipulation") +
-                " ON " + resultSet.getString("event_object_table") + " FOR EACH ROW " +
-                resultSet.getString("action_statement");
-
-        databaseInterface.createStatement().executeUpdate(createTriggerQuery);
-
-        databaseInterface.commit();
-
-    }
 
     public void disableUniqueChecks() throws SQLException {
 
@@ -237,5 +134,14 @@ public class ConnectionConfig {
 
     public void setDatabaseInterface(DatabaseInterface databaseInterface) {
         this.databaseInterface = databaseInterface;
+    }
+
+    public void setDefaultDatabase(Database database) throws SQLException {
+
+        if(!databaseInterface.isConnectionValid()){
+            throw new SQLException("ConnectionConfig - Connection isn't valid");
+        }
+
+        databaseInterface.createStatement().executeUpdate("USE " + database.getDatabaseName());
     }
 }

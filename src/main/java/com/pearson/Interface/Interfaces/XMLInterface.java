@@ -73,6 +73,8 @@ public class XMLInterface{
         setDocument = MaskingSetDocument.Factory.newInstance();
         MaskingSet maskingSet = setDocument.addNewMaskingSet();
 
+        xmlFile = null;
+
         maskingSet.setDateCreated(new GregorianCalendar());
         maskingSet.addNewRules();
     }

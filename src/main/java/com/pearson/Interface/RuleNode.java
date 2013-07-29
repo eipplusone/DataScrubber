@@ -4,9 +4,11 @@ import com.pearson.Interface.Models.RulesTreeTableModel;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
+import noNamespace.SubstitutionRule;
 import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Enumeration;
 
@@ -49,6 +51,26 @@ public class RuleNode extends AbstractMutableTreeTableNode {
                     return returnString;
                 } else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
                     return rule.getSubstitute().getColumn();
+                }
+            case RulesTreeTableModel.ACTION_TYPE:
+            if (rule.getRuleType() == RuleType.SHUFFLE) {
+                return "";
+            } else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
+                return rule.getSubstitute().getSubstitutionActionType().toString();
+            }
+            case RulesTreeTableModel.VALUE:
+                if (rule.getRuleType() == RuleType.SHUFFLE) {
+                    return "";
+                } else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
+                    SubstitutionRule substitutionRule = rule.getSubstitute();
+                    if (substitutionRule.isSetDateValue1()) return substitutionRule.getDateValue1();
+                    else if (substitutionRule.isSetNumericValue()) return substitutionRule.getNumericValue();
+                    else if (substitutionRule.isSetStringValue1()) return substitutionRule.getStringValue1();
+                    else if (substitutionRule.isSetFilePath()){
+                        File file = new File(substitutionRule.getFilePath());
+                        return file.getName();
+                    }
+                    else return "";
                 }
         }
         throw new IllegalArgumentException("Column out of range");

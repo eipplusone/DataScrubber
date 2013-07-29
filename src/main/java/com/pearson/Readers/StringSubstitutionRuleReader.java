@@ -24,24 +24,19 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         super(rule, database);
     }
 
-    Rule rule;
-
     @Override
     public void run() {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
 
-        try {
-            disableConstraints();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         if (actionType == SubstitutionActionType.SET_FROM_FILE) {
             File selectedFile = new File(rule.getSubstitute().getFilePath());
 
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+                disableConstraints();
                 setFromFile(selectedFile);
+                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -49,6 +44,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
             int stringLength = rule.getSubstitute().getNumericValue().intValue();
 
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 setToRandom(stringLength);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -57,6 +53,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
             String setToString = rule.getSubstitute().getStringValue1();
 
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 setToValue(setToString);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -64,25 +61,21 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
 
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 setToNull();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        try {
-            enableConstraints();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        mySQLTable.cleanResourses();
     }
 
     public void setToValue(String value) throws SQLException {
 
-        enableConstraints();
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
         disableConstraints();
+        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
+        enableConstraints();
     }
 
     public void setToRandom(int count) throws SQLException {
@@ -132,8 +125,6 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
             mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), i);
         }
-
-        mySQLTable.cleanResourses();
 
     }
 }

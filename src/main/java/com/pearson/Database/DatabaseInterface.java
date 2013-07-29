@@ -241,16 +241,9 @@ public class DatabaseInterface {
     public ResultSet executePreparedStatement() {
         try {
             if ((connection_ == null) || (preparedStatement_ == null)) {
-                return null;
+                throw new NullPointerException("DatabaseInterface - connection or preparedStatement is null");
             }
    
-            if (results_ != null) {
-                if (!results_.isClosed()) {
-                    logger.error("Cannot execute PreparedStatement - DatabaseInterface already has an open ResultSet");
-                    return null;
-                }
-            }
-            
             setPreparedStatementParameters();
             
             boolean result = preparedStatement_.execute();
@@ -275,7 +268,7 @@ public class DatabaseInterface {
    
             if (results_ != null) {
                 if (!results_.isClosed()) {
-                    logger.error("Cannot execute PreparedStatement - DatabaseInterface already has an open ResultSet");
+                    logger.error("Cannot submit PreparedStatement - DatabaseInterface already has an open ResultSet");
                     return false;
                 }
             }

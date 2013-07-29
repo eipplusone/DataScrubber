@@ -41,19 +41,16 @@ public class MySQLTable extends Table {
         String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
 
         if (!databaseInterface.isConnectionValid()) {
-            return -1;
+            throw new NullPointerException("getNumberOfRows - Table has no columns");
         }
 
 
         ResultSet results = databaseInterface.createStatement().executeQuery(numberOfRowsQuery);
 
-        if (databaseInterface.isResultSetValid()) {
             results.next();
             return results.getInt(1);
-        } else return -1;
 
     }
-
 
     /**
      * Returns number of rows in a specified column
@@ -68,10 +65,6 @@ public class MySQLTable extends Table {
 
         String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
 
-        if (databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
-
         databaseInterface.createPreparedStatement(numberOfRowsQuery);
         databaseInterface.addPreparedStatementParameters(columnName);
 
@@ -80,11 +73,9 @@ public class MySQLTable extends Table {
         if (databaseInterface.isResultSetValid()) {
             resultSet.next();
             return resultSet.getInt(1);
-        } else return -1;
+        } else throw new IllegalArgumentException("MySQLTable - couldn't return number of rows");
 
     }
-
-
 
     public ResultSet getColumnContents(String columnName) throws SQLException {
 
@@ -105,6 +96,9 @@ public class MySQLTable extends Table {
     public void updateRow(Object object, String columnName, int id) {
 
         establishConnection();
+
+        if(getAutoIncrementColumn() == null) throw new NullPointerException("Auto increment column is null");
+
         Query query = new Query();
         query.update(tableName).set(columnName).where(getAutoIncrementColumn().name);
 
@@ -135,7 +129,7 @@ public class MySQLTable extends Table {
 
         int numberOfRows = getNumberOfRows();
 
-        String autoIncrementColumn = addAutoIncrementColumn().name;
+        String autoIncrementColumn = getAutoIncrementColumn().name;
 
         int randomNumber = new Random().nextInt(numberOfRows - 1);
 
@@ -179,15 +173,16 @@ public class MySQLTable extends Table {
 
             if (row1.next() && row2.next()) {
                 //query = "UPDATE " + tableName + " SET " + columnName + " = " + "?" + " WHERE " + idColumn + " = " + "?";
+                Object row1Object = row1.getObject(columnName);
+                Object row2Object = row2.getObject(columnName);
                 Query queryObject = new Query();
                 queryObject.update(tableName).set(columnName).where(idColumn);
-
                 databaseInterface.createPreparedStatement(queryObject.toString());
-                databaseInterface.addPreparedStatementParameters(row1.getObject(columnName), row2.getObject(idColumn));
+                databaseInterface.addPreparedStatementParameters(row1Object, row2.getInt(idColumn));
                 databaseInterface.executePreparedStatement();
 
                 databaseInterface.createPreparedStatement(queryObject.toString());
-                databaseInterface.addPreparedStatementParameters(row2.getObject(columnName), row1.getInt(idColumn));
+                databaseInterface.addPreparedStatementParameters(row2Object, row1.getInt(idColumn));
                 databaseInterface.executePreparedStatement();
             }
         }
@@ -207,23 +202,16 @@ public class MySQLTable extends Table {
         establishConnection();
         int numberOfRows = getNumberOfRows();
 
-        String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL";
+        String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL AUTO_INCREMENT UNIQUE";
 
         databaseInterface.createStatement().executeUpdate(createColumnQuery);
 
         // end creating index column
 
-        // populate the index column
-        for (int i = 0; i < numberOfRows; i++) {
-
-            String updateIndexColumnQuery = "INSERT INTO " + tableName + " VALUES (" + i + ")";
-            databaseInterface.createStatement().executeUpdate(updateIndexColumnQuery);
-        }
-        // end updating the database
-
         // begin adding to app database
         Column autoIncrementColumn = new Column("datascrubber_rowid");
         autoIncrementColumn.nullable = false;
+        autoIncrementColumn.autoIncrement = true;
         columns.put(autoIncrementColumn.name, autoIncrementColumn);
 
         databaseInterface.commit();
@@ -252,6 +240,7 @@ public class MySQLTable extends Table {
     public Column getAutoIncrementColumn() {
 
         Iterator<Column> it = columns.values().iterator();
+
         while (it.hasNext()) {
             Column column = it.next();
             if (column.autoIncrement) {
@@ -282,13 +271,14 @@ public class MySQLTable extends Table {
      * table were interrupted by an exception to make sure
      * all the connections are closed
      */
-    public void cleanResourses(){
+    public void cleanResourses() {
 
-        if (databaseInterface == null || !databaseInterface.isConnectionValid()) throw new NullPointerException("Database Interface is null - cannot clean resources");
+        if (databaseInterface == null || !databaseInterface.isConnectionValid())
+            throw new NullPointerException("Database Interface is null - cannot clean resources");
         databaseInterface.cleanupAutomatic();
     }
 
-    public ConnectionConfig getConnectionConfig(){
+    public ConnectionConfig getConnectionConfig() {
         // make sure this table connection to the database
         establishConnection();
         // make sure that both classes work on the same connection
@@ -297,15 +287,13 @@ public class MySQLTable extends Table {
     }
 
     /**
-     *
      * ATTENTION: the reason why we have establishConnection at every method is because if any of the methods inside loop
      * they will trigger getConnection() every turn. This way we don't idle a connection on creation of the object
      * and allow to reuse one connection for the entire mySQL table purposes
-     *
      */
     // todo test if this method can still be valid after cleanupAutomatic
     private void establishConnection() {
-        if(databaseInterface == null || !databaseInterface.isConnectionValid()){
+        if (databaseInterface == null || !databaseInterface.isConnectionValid()) {
             databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
         }
         assert databaseInterface.isConnectionValid();

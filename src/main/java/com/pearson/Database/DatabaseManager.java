@@ -42,6 +42,7 @@ public class DatabaseManager {
 
         try {
             connection = connectionPool.getConnection();
+            if(connection.isClosed()) throw new IllegalArgumentException("For some reason connection returned from BoneCP was already closed");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

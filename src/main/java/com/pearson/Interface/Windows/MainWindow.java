@@ -337,7 +337,7 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database);
-        setReader.run(database);
+        setReader.run();
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
@@ -368,7 +368,15 @@ public class MainWindow extends javax.swing.JFrame {
 
         int returnOption = chooser.showSaveDialog(null);
         if (returnOption == JFileChooser.APPROVE_OPTION) {
-            XMLInterface.setXMLFile(chooser.getSelectedFile());
+            File newFile = chooser.getSelectedFile();
+            if (!newFile.exists()){
+                try {
+                    newFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            XMLInterface.setXMLFile(newFile);
             RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
         }
 

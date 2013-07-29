@@ -42,13 +42,11 @@ public abstract class SubstitutionReader implements Runnable {
 
         mySQLTable.getConnectionConfig().disableUniqueChecks();
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().disableTriggers();
 
     }
 
     protected void enableConstraints() throws SQLException {
 
-        mySQLTable.getConnectionConfig().enableTriggers();
         mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().enableUniqueChecks();
 

@@ -95,9 +95,10 @@ public class UIManager {
 
         // since we allow only one window to be open, there is only one rule in
         // construction
+        Rule ruleToReturn = parentRule;
         parentRule = null;
 
-        return parentRule;
+        return ruleToReturn;
     }
 
     public static void setParentRule(Rule parentRule_){

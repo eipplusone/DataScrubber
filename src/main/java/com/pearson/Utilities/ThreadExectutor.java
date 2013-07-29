@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Ruslan Kiselev
@@ -23,17 +24,18 @@ public class ThreadExectutor {
 
     public static void initialise(int numberOfThreadsAllowed_) {
 
-        numberOfThreadsAllowed = numberOfThreadsAllowed_;
-        executor = Executors.newFixedThreadPool(numberOfThreadsAllowed);
-        tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
     }
 
-    public static void execute(RuleReader reader){
+    public static void submit(RuleReader reader){
 
-        executor.execute(reader);
+        executor.submit(reader);
     }
 
     public static boolean isTableOccupied(String tableName){
         return tablesOccupied.contains(tableName);
+    }
+
+    public static void shutDown() throws InterruptedException {
+
     }
 }

@@ -5,16 +5,16 @@ import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
 import com.pearson.Utilities.ThreadExectutor;
+import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import noNamespace.Rule;
 import noNamespace.RuleType;
-import noNamespace.SubstitutionActionType;
 import noNamespace.SubstitutionDataType;
 
-import java.awt.print.PrinterAbortException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 /**
  * @author Ruslan Kiselev
@@ -22,7 +22,7 @@ import java.util.Arrays;
  *         Time: 3:42 PM
  *         Project Name: DataScrubber
  */
-public class RuleReader implements Runnable {
+public class RuleReader implements Callable<Rule> {
 
     private Rule rule;
     private Database database;
@@ -41,15 +41,11 @@ public class RuleReader implements Runnable {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
+        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().disableUniqueChecks();
 
-        // create an unique key column if there is no such column
-        Column autoIncrementColumn = mySQLTable.getAutoIncrementColumn();
-        if (autoIncrementColumn == null) {
-            mySQLTable.addAutoIncrementColumn();
-        }
-
+        if (mySQLTable.getAutoIncrementColumn() == null) mySQLTable.addAutoIncrementColumn();
 
         // begin shuffling
         for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
@@ -60,6 +56,12 @@ public class RuleReader implements Runnable {
             mySQLTable.swap(randomRow1, randomRow2, new ArrayList(Arrays.asList(columnNamesArray)));
         }
         // get the result set that has already been shuffled
+
+        try {
+            mySQLTable.deleteAutoIncrementColumn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().enableUniqueChecks();
@@ -72,25 +74,24 @@ public class RuleReader implements Runnable {
 
         SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
 
-        if(dataType == SubstitutionDataType.DATE) new DateSubstitutionRuleReader(rule, database).run();
+        if (dataType == SubstitutionDataType.DATE) new DateSubstitutionRuleReader(rule, database).run();
         else if (dataType == SubstitutionDataType.NUMERIC) new NumericSubstitutionRuleReader(rule, database).run();
         else if (dataType == SubstitutionDataType.STRING) new StringSubstitutionRuleReader(rule, database).run();
     }
 
     @Override
-    public void run() {
+    public Rule call() throws Exception {
 
-        while(true){
+        while (true) {
 
-            if(!ThreadExectutor.isTableOccupied(rule.getTarget())){
+            if (!SetReader.isTableOccupied(rule.getTarget())) {
                 try {
                     run(database);
-                    break;
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-            }
-            else{
+                break;
+            } else {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -99,10 +100,6 @@ public class RuleReader implements Runnable {
             }
         }
 
-        if(!XMLInterface.isLeaf(rule)){
-            for(Rule childRule: rule.getDependencies().getRuleArray()){
-                ThreadExectutor.execute(new RuleReader(childRule, database));
-            }
-        }
+        return rule;
     }
 }

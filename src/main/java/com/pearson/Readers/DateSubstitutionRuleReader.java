@@ -1,7 +1,6 @@
 package com.pearson.Readers;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
 import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
@@ -35,6 +34,7 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
 
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 if (selectedColumn.getType() == MySQLDataType.TIME){
                     mySQLTable.setColumnToValue(selectedColumn.name, getRandomTime());
@@ -52,6 +52,7 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
             }
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 setToNull();
                 enableConstraints();
@@ -61,6 +62,7 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
 
             try {
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 if (selectedColumn.getType() == MySQLDataType.TIME){
                     mySQLTable.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
@@ -77,6 +79,8 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
                 e.printStackTrace();
             }
         }
+
+        mySQLTable.cleanResourses();
     }
 
     private Time getRandomTime(){

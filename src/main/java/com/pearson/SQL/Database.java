@@ -1,5 +1,6 @@
 package com.pearson.SQL;
 
+import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Utilities.SQLStatements;
@@ -26,6 +27,11 @@ public class Database {
         }
     }
     public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
+
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
     private String databaseName;
 
     public Database(String schema_name, String username, String password, String JDBCURL) throws SQLException {
@@ -33,7 +39,6 @@ public class Database {
         databaseName = schema_name;
         connect(username, password, JDBCURL);
         fillTables();
-
     }
 
     /**
