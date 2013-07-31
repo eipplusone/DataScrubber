@@ -126,12 +126,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
             }
         });
 
-        CancelButton.setText("Cancel");
-        CancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelButtonActionPerformed(evt);
-            }
-        });
 
         OKButton.setText("OK");
         OKButton.addActionListener(new java.awt.event.ActionListener() {
@@ -158,8 +152,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(TestConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(80, 80, 80)
-                                .addComponent(CancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(121, 121, 121)
                                 .addComponent(OKButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -227,7 +219,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
                 .addGap(44, 44, 44)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TestConnectionButton)
-                    .addComponent(CancelButton)
                     .addComponent(OKButton))
                 .addGap(23, 23, 23))
         );
@@ -254,12 +245,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
         pack();
     }
-
-    private void CancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
-
-        dispose();
-    }
-
 
 
     private void TestConnectionButtonActionPerformed(java.awt.event.ActionEvent evt) {
