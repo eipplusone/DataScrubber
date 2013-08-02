@@ -12,7 +12,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- *
  * @author Ruslan Kiselev, Jia Ma
  */
 public class DatabaseConnectionInfoWindow extends JDialog {
@@ -60,64 +59,35 @@ public class DatabaseConnectionInfoWindow extends JDialog {
         DefaultSchemaLabel = new javax.swing.JLabel();
         DefaultSchemaField = new javax.swing.JTextField();
         TestConnectionButton = new javax.swing.JButton();
-        CancelButton = new javax.swing.JButton();
         OKButton = new javax.swing.JButton();
         ConnectionDetailsLabel = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 100, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         UserNameLabel.setText("User Name:");
 
-        UserNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                UserNameFieldKeyPressed(evt);
-            }
-        });
-
         PasswordLabel.setText("Password:");
-
-        PasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                PasswordFieldKeyPressed(evt);
-            }
-        });
 
         HostNameLabel.setText("Host Name:");
 
-        HostNameField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                HostNameFieldKeyPressed(evt);
-            }
-        });
-
         PortField.setText("3306");
-        PortField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                PortFieldKeyPressed(evt);
-            }
-        });
 
         PortLabel.setText("Port:");
 
         DefaultSchemaLabel.setText("Default Schema:");
 
         DefaultSchemaField.setEditable(true);
-        DefaultSchemaField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                DefaultSchemaFieldKeyPressed(evt);
-            }
-        });
 
         TestConnectionButton.setText("Test Connection");
         TestConnectionButton.addActionListener(new java.awt.event.ActionListener() {
@@ -139,101 +109,101 @@ public class DatabaseConnectionInfoWindow extends JDialog {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(210, 210, 210)
-                        .addComponent(ConnectionDetailsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(203, 203, 203))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(TestConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(121, 121, 121)
-                                .addComponent(OKButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(55, 55, 55)
-                                        .addComponent(PortLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(HostNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(23, 23, 23)
-                                        .addComponent(UserNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                        .addGap(29, 29, 29)
-                                        .addComponent(PasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(DefaultSchemaLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(66, 66, 66)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(PasswordField)
-                                    .addComponent(UserNameField)
-                                    .addComponent(DefaultSchemaField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(HostNameField, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(PortField, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(43, 43, 43)))
-                        .addGap(78, 78, 78))))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                .addGap(210, 210, 210)
+                                                .addComponent(ConnectionDetailsLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGap(203, 203, 203))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                .addGap(10, 10, 10)
+                                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addComponent(TestConnectionButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addGap(121, 121, 121)
+                                                                .addComponent(OKButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                                                .addGap(55, 55, 55)
+                                                                                .addComponent(PortLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                                                .addGap(23, 23, 23)
+                                                                                .addComponent(HostNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                                                .addGap(23, 23, 23)
+                                                                                .addComponent(UserNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                                                                .addGap(29, 29, 29)
+                                                                                .addComponent(PasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                        .addComponent(DefaultSchemaLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                                .addGap(66, 66, 66)
+                                                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(PasswordField)
+                                                                        .addComponent(UserNameField)
+                                                                        .addComponent(DefaultSchemaField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                        .addComponent(HostNameField, javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                        .addComponent(PortField, javax.swing.GroupLayout.Alignment.TRAILING))
+                                                                .addGap(43, 43, 43)))
+                                                .addGap(78, 78, 78))))
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(ConnectionDetailsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(HostNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(HostNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(PortField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(PortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(UserNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(UserNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(6, 6, 6)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(PasswordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(DefaultSchemaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(DefaultSchemaField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(44, 44, 44)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TestConnectionButton)
-                    .addComponent(OKButton))
-                .addGap(23, 23, 23))
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(ConnectionDetailsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(HostNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(3, 3, 3)
+                                                .addComponent(HostNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(2, 2, 2)
+                                                .addComponent(PortField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(PortLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(UserNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(3, 3, 3)
+                                                .addComponent(UserNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(PasswordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(DefaultSchemaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(1, 1, 1)
+                                                .addComponent(DefaultSchemaField, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(44, 44, 44)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(TestConnectionButton)
+                                        .addComponent(OKButton))
+                                .addGap(23, 23, 23))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         addWindowListener(new WindowAdapter() {
@@ -260,36 +230,36 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     }
 
-    public int getReturnValue(){
+    public int getReturnValue() {
         return returnValue;
     }
 
     private boolean isInputNotEmpty() {
-            String username = UserNameField.getText();
-            if (username.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the username");
-                return false;
-            }
-            String password = PasswordField.getText();
-            if (password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the password");
-                return false;
-            }
-            String port = PortField.getText();
-            if (port.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter port number");
-                return false;
-            }
-            String url = HostNameField.getText();
-            if (url.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the url");
-                return false;
-            }
-            String defaultSchema = DefaultSchemaField.getText();
-            if (defaultSchema.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please enter the default schema");
-                return false;
-            }
+        String username = UserNameField.getText();
+        if (username.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the username");
+            return false;
+        }
+        String password = PasswordField.getText();
+        if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the password");
+            return false;
+        }
+        String port = PortField.getText();
+        if (port.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter port number");
+            return false;
+        }
+        String url = HostNameField.getText();
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the url");
+            return false;
+        }
+        String defaultSchema = DefaultSchemaField.getText();
+        if (defaultSchema.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter the default schema");
+            return false;
+        }
         return true;
     }
 
@@ -309,7 +279,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
 
                 // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
+                if (!UIManager.isUserInformationSet()) {
                     JOptionPane.showMessageDialog(null, "Connection has been established");
                 }
 
@@ -318,7 +288,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
                 UIManager.setUrl(url);
                 UIManager.setDefaultSchema(defaultSchema);
                 UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
 
                 dispose();
             } else {
@@ -328,169 +297,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     }
 
-    private void DefaultSchemaFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_DefaultSchemaFieldKeyPressed
-        // if enter key is pressed in DefaultSchemaField, and all inputs are not empty, 
-        //open the create new rule window
-            int kc = evt.getKeyCode();
-            if (kc == evt.VK_ENTER){
-            if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
 
-                // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-            }
-        }
-
-        dispose();
-    }
-    if (kc == evt.VK_ESCAPE){
-            dispose();
-        }
-    }
-    private void HostNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_HostNameFieldKeyPressed
-       // if enter key is pressed in HostnameField, and all inputs are not empty, 
-        //open the create new rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-
-                // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-            }
-        }
-
-        dispose();
-    }
-        if (kc == evt.VK_ESCAPE){
-            dispose();
-        }
-    }//GEN-LAST:event_HostNameFieldKeyPressed
-
-    private void PortFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PortFieldKeyPressed
-        // if enter key is pressed in PortField, and all inputs are not empty, 
-        //open the create new rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-
-                // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-            }
-        }
-
-        dispose();
-    }
-        if (kc == evt.VK_ESCAPE){
-            dispose();
-        }
-    }//GEN-LAST:event_PortFieldKeyPressed
-
-    private void UserNameFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_UserNameFieldKeyPressed
-        // if enter key is pressed in usernameFieldKey, and all inputs are not empty, 
-        //open the create new rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-
-                // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-            }
-        }
-
-        dispose();
-    }
-        if (kc == evt.VK_ESCAPE){
-            dispose();
-        }
-    }//GEN-LAST:event_UserNameFieldKeyPressed
-
-    private void PasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PasswordFieldKeyPressed
-        // if enter key is pressed in PasswordField, and all inputs are not empty, 
-        //open the create new rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-
-                // check so we don't annoy user with connection has been established multiple times
-                if(!UIManager.getUserEnteredLogInInformation()){
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
-                UIManager.setUserEnteredLogInInformation(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
-            }
-        }
-        
-        
-
-        dispose();
-    }
-        
-        if (kc == evt.VK_ESCAPE){
-            dispose();
-        }
-    }//GEN-LAST:event_PasswordFieldKeyPressed
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton CancelButton;
     private javax.swing.JLabel ConnectionDetailsLabel;
     private javax.swing.JTextField DefaultSchemaField;
     private javax.swing.JLabel DefaultSchemaLabel;

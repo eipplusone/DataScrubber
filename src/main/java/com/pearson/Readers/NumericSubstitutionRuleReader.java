@@ -35,7 +35,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 setToRandom(dataType);
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -45,7 +44,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 setToNull();
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -54,7 +52,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), rule.getSubstitute().getNumericValue());
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

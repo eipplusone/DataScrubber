@@ -18,6 +18,7 @@ import java.util.TreeMap;
 public class Database {
 
     public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
+
         try {
             DatabaseManager.createConnectionPool(username, password, url + "/" + defaultSchema);
             DatabaseManager.shutDown();

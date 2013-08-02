@@ -46,7 +46,6 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
                 else {
                     mySQLTable.setColumnToValue(selectedColumn.name, getRandomDate());
                 }
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -55,7 +54,6 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 setToNull();
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -74,7 +72,6 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
                 else {
                     mySQLTable.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
                 }
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

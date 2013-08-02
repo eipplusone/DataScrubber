@@ -1,6 +1,10 @@
+// todo : clean off database connection window and make it ask for connection information and when it does so
+// save for the current session and don't ask for the information again.
+
+// for database connection make sure that when you cancel databse connection window you return a value that can be checked in the main window
+// so we know that user cancelled window and don't bring new rule window if so. Yo.
 package com.pearson.Interface.Windows;
 
-import com.pearson.Database.DatabaseManager;
 import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Models.RulesTreeTableModel;
@@ -10,17 +14,17 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.UIManager;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.pearson.Readers.SetReader;
 import com.pearson.SQL.Database;
+import com.pearson.Utilities.CleanUp;
 import noNamespace.Rule;
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
-import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
+import org.jdesktop.swingx.JXTreeTable;
 
 /*
  * To change this template, choose Tools | Templates
@@ -28,34 +32,40 @@ import org.jdesktop.swingx.treetable.DefaultTreeTableModel;
  */
 
 /**
- * @author UMA99J5
+ * Project: DataScrubber
+ *
+ * @author Ruslan Kiselev
+ *         <p/>
+ *         Date: 08-30-2013
  */
 public class MainWindow extends javax.swing.JFrame {
 
-    private RulesTreeTableModel rulesInSetTreeModel;
-    private javax.swing.JTabbedPane RulesInSetPane;
-    private javax.swing.JTree RulesInSetTree;
-    private org.jdesktop.swingx.JXTreeTable TestTree;
-    private javax.swing.JMenuItem clearMaskingSetMenuButton;
-    private javax.swing.JMenuItem deleteRuleMenuButton;
-    private javax.swing.JMenuItem disableRuleMenuButton;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JMenu maskingSetMenuItem;
-    private javax.swing.JMenuItem newMaskingSetMenuButton;
-    private JMenuItem runMaskingSetMenuButton;
-    private javax.swing.JMenuItem newRuleMenuButton;
-    private javax.swing.JMenuItem openMaskingSetMenuButton;
-    private javax.swing.JMenu ruleMenuItem;
-    private javax.swing.JMenuItem saveSetAsMenuButton;
-    private javax.swing.JMenuItem saveSetMenuButton;
-    private javax.swing.JPanel settings;
-    private JMenuItem rightClickMenuItem;
-    private JPopupMenu rulesInSetRightClickMenu;
+    public static Logger logger = Logger.getLogger(MainWindow.class.getName());
+
+    private RulesTreeTableModel rulesInSetTreeModel = new RulesTreeTableModel();
+    private javax.swing.JTabbedPane RulesInSetPane = new JTabbedPane();
+    private javax.swing.JTree RulesInSetTree = new JTree();
+    private org.jdesktop.swingx.JXTreeTable TestTree = new JXTreeTable();
+    private javax.swing.JCheckBox jCheckBox1 = new JCheckBox();
+    private javax.swing.JCheckBox jCheckBox3 = new JCheckBox();
+    private javax.swing.JMenuBar topMenuBar = new JMenuBar();
+    private javax.swing.JPanel jPanel1 = new JPanel();
+    private javax.swing.JScrollPane jScrollPane1 = new JScrollPane();
+    private javax.swing.JMenu maskingSetMenuItem = new JMenu();
+    private javax.swing.JMenuItem newMaskingSetMenuButton = new JMenuItem();
+    private JMenuItem runMaskingSetMenuButton = new JMenuItem();
+    private javax.swing.JMenuItem newRuleMenuButton = new JMenuItem();
+    private javax.swing.JMenuItem openMaskingSetMenuButton = new JMenuItem();
+    private javax.swing.JMenu ruleMenuItem = new JMenu();
+    private JMenu connectionMenuItem = new JMenu();
+    private javax.swing.JMenuItem saveSetAsMenuButton = new JMenuItem();
+    private javax.swing.JMenuItem saveSetMenuButton = new JMenuItem();
+    private javax.swing.JPanel settings = new JPanel();
+    private JMenuItem rightClickMenuItem = new JMenuItem();
+    private JPopupMenu rulesInSetRightClickMenu = new JPopupMenu();
+    private JMenuItem setConnectionMenuButton = new JMenuItem();
+    private JMenuItem disconnectMenuButton = new JMenuItem();
+    private JMenuItem cleanUpMenuButton = new JMenuItem();
 
     /**
      * Creates new form DataMaskFrontEndGUI
@@ -110,48 +120,18 @@ public class MainWindow extends javax.swing.JFrame {
         window.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if(XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()){
+                if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
                     Object[] options = {"Discard", "Cancel"};
                     int userChoice = JOptionPane.showOptionDialog(null, "Please Save Or Discard New Changes", "Are you sure you want to exit?",
                             JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
                     if (userChoice == JOptionPane.YES_OPTION) window.dispose();
-                }
-                else window.dispose();
+                } else window.dispose();
             }
         });
         window.setVisible(true);
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
     private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        RulesInSetPane = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        RulesInSetTree = new javax.swing.JTree();
-        settings = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-
-        TestTree = new org.jdesktop.swingx.JXTreeTable();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        maskingSetMenuItem = new javax.swing.JMenu();
-        newMaskingSetMenuButton = new javax.swing.JMenuItem();
-        openMaskingSetMenuButton = new javax.swing.JMenuItem();
-
-        saveSetMenuButton = new javax.swing.JMenuItem();
-        saveSetAsMenuButton = new javax.swing.JMenuItem();
-        ruleMenuItem = new javax.swing.JMenu();
-        newRuleMenuButton = new javax.swing.JMenuItem();
-        deleteRuleMenuButton = new javax.swing.JMenuItem();
-        disableRuleMenuButton = new javax.swing.JMenuItem();
-        rulesInSetRightClickMenu = new JPopupMenu();
-        runMaskingSetMenuButton = new JMenuItem();
 
         // initialise right click menu
         rightClickMenuItem = new JMenuItem("Create a new dependent rule");
@@ -282,9 +262,12 @@ public class MainWindow extends javax.swing.JFrame {
         });
         maskingSetMenuItem.add(runMaskingSetMenuButton);
 
-        jMenuBar1.add(maskingSetMenuItem);
+        topMenuBar.add(maskingSetMenuItem);
+        topMenuBar.add(ruleMenuItem);
+        topMenuBar.add(connectionMenuItem);
 
         ruleMenuItem.setText("Rule");
+        connectionMenuItem.setText("Connection");
 
         newRuleMenuButton.setText("New Rule...");
         newRuleMenuButton.addActionListener(new java.awt.event.ActionListener() {
@@ -294,10 +277,34 @@ public class MainWindow extends javax.swing.JFrame {
         });
         ruleMenuItem.add(newRuleMenuButton);
 
+        setConnectionMenuButton.setText("Set Connection");
+        setConnectionMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setConnectionMenuButtonActionPerformed(e);
+            }
+        });
+        connectionMenuItem.add(setConnectionMenuButton);
 
-        jMenuBar1.add(ruleMenuItem);
+        cleanUpMenuButton.setText("Set Connection");
+        cleanUpMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cleanUpMenuButtonActionPerformed(e);
+            }
+        });
+        connectionMenuItem.add(cleanUpMenuButton);
 
-        setJMenuBar(jMenuBar1);
+        disconnectMenuButton.setText("Disconnect");
+        disconnectMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                disconnectMenuButtonActionPerformed(e);
+            }
+        });
+        connectionMenuItem.add(disconnectMenuButton);
+
+        setJMenuBar(topMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -317,13 +324,41 @@ public class MainWindow extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
+    private void cleanUpMenuButtonActionPerformed(ActionEvent e) {
+        CleanUp.fixTriggers();
+
+        try {
+            CleanUp.deleteRowId();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void disconnectMenuButtonActionPerformed(ActionEvent e) {
+
+        com.pearson.Interface.UIManager.cleanConnectionInformation();
+        JOptionPane.showMessageDialog(null, "Connection has been closed");
+
+        disconnectMenuButton.setEnabled(false);
+    }
+
+    private void setConnectionMenuButtonActionPerformed(ActionEvent e) {
 
         DatabaseConnectionInfoWindow connectionInfoWindow = new DatabaseConnectionInfoWindow();
-        connectionInfoWindow.setVisible(true);
 
-        // if the window was just closed
-        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
+        if (!com.pearson.Interface.UIManager.isUserInformationSet()) {
+            connectionInfoWindow.setVisible(true);
+        }
+
+        if(connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
+
+        disconnectMenuButton.setEnabled(true);
+
+    }
+
+    private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
+
+        setConnectionMenuButtonActionPerformed(e);
 
         Database database = null;
         try {
@@ -369,7 +404,7 @@ public class MainWindow extends javax.swing.JFrame {
         int returnOption = chooser.showSaveDialog(null);
         if (returnOption == JFileChooser.APPROVE_OPTION) {
             File newFile = chooser.getSelectedFile();
-            if (!newFile.exists()){
+            if (!newFile.exists()) {
                 try {
                     newFile.createNewFile();
                 } catch (IOException e) {
@@ -399,10 +434,16 @@ public class MainWindow extends javax.swing.JFrame {
         }
 
         com.pearson.Interface.UIManager.setParentRule(newRule);
-        DatabaseConnectionInfoWindow newWindow = new DatabaseConnectionInfoWindow();
-        newWindow.setVisible(true);
-        CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
-        newRuleWindow.setVisible(true);
+
+        DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
+
+        if (!com.pearson.Interface.UIManager.isUserInformationSet()) {
+            iw.setVisible(true);
+        }
+        if (!(iw.getReturnValue() == com.pearson.Interface.UIManager.CLOSED)) {
+            CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
+            newRuleWindow.setVisible(true);
+        }
     }
 
     private void deleteRightClickMenuActionPerformed(ActionEvent evt) {
@@ -459,7 +500,6 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    // openmskset
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // create a file chooser
 
@@ -488,7 +528,7 @@ public class MainWindow extends javax.swing.JFrame {
 
                 XMLInterface.setXMLFile(openFile);
 
-                LinkedList<String> columnNames = new LinkedList<>();
+                LinkedList<String> columnNames = new LinkedList();
                 columnNames.add("Rule ID");
                 columnNames.add("Rule Type");
                 columnNames.add("Target");
@@ -507,10 +547,17 @@ public class MainWindow extends javax.swing.JFrame {
     private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
-        iw.setVisible(true);
-        CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
-        newRuleWindow.setVisible(true);
 
+        if (!com.pearson.Interface.UIManager.isUserInformationSet()) {
+            iw.setVisible(true);
+        }
+
+        if(!(iw.getReturnValue() == com.pearson.Interface.UIManager.CLOSED)) {
+            CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
+            newRuleWindow.setVisible(true);
+        }
+
+        disconnectMenuButton.setEnabled(true);
     }
 
     private void maskingSetMenuItemActionPerformed(java.awt.event.ActionEvent evt) {
@@ -523,6 +570,7 @@ public class MainWindow extends javax.swing.JFrame {
         ruleMenuItem.setEnabled(isVisible);
         saveSetMenuButton.setEnabled(isVisible);
         saveSetAsMenuButton.setEnabled(isVisible);
+        connectionMenuItem.setEnabled(isVisible);
         runMaskingSetMenuButton.setEnabled(isVisible);
     }
 

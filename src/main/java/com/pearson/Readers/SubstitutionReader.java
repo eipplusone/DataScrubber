@@ -32,9 +32,7 @@ public abstract class SubstitutionReader implements Runnable {
 
     public void setToNull() throws SQLException {
 
-        disableConstraints();
         mySQLTable.setColumnToNull(rule.getSubstitute().getColumn());
-        enableConstraints();
 
     }
 
@@ -42,13 +40,6 @@ public abstract class SubstitutionReader implements Runnable {
 
         mySQLTable.getConnectionConfig().disableUniqueChecks();
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-
-    }
-
-    protected void enableConstraints() throws SQLException {
-
-        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().enableUniqueChecks();
 
     }
 

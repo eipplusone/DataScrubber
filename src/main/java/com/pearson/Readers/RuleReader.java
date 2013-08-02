@@ -86,11 +86,15 @@ public class RuleReader implements Callable<Rule> {
 
             if (!SetReader.isTableOccupied(rule.getTarget())) {
                 try {
-                    run(database);
+                    // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
+                    if (SetReader.tablesOccupied.add(rule.getTarget())){
+                        run(database);
+                        break;
+                    }
                 } catch (SQLException e) {
                     e.printStackTrace();
+                    break;
                 }
-                break;
             } else {
                 try {
                     Thread.sleep(500);

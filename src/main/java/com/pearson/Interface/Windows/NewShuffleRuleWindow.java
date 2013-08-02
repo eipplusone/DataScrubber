@@ -28,7 +28,7 @@ import noNamespace.RulesDocument.Rules;
 public class NewShuffleRuleWindow extends JDialog {
 
     Database database;
-    ArrayList<String> tableNames = new ArrayList<>();
+    ArrayList<String> tableNames = new ArrayList();
     DefaultListModel<String> listModel;
     boolean firstTimeSelected = true;
 
@@ -440,7 +440,7 @@ public class NewShuffleRuleWindow extends JDialog {
     // this code works only if we create a rule without being dependent on another rule todo version 1.0 make create new rule dependent on another rule
     private void createShuffleRuleButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_createShuffleRuleButtonActionPerformed
 
-        ArrayList<String> columns = new ArrayList<>();
+        ArrayList<String> columns = new ArrayList();
 
         // get all column names user has entered
         for (Object column : listModel.toArray()) {

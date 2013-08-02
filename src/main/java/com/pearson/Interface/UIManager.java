@@ -8,17 +8,20 @@ import com.pearson.Interface.Windows.MainWindow;
 import noNamespace.Rule;
 
 /**
- *
+ * Project: DataScrubber
  * @author Ruslan Kiselev
+ *
+ * Date: 08/31/2013
  */
+
 public class UIManager {
 
     public static final int CLOSED = -1;
     private static MainWindow mainWindow;
-    private static String username = "dbadmin";
-    private static String password = "Pw123";
-    private static String url = "10.25.98.121";
-    private static String defaultSchema = "core";
+    private static String username;
+    private static String password;
+    private static String url;
+    private static String defaultSchema;
     private static String port = null;
     private static boolean userEnteredLogInInformation = true;
     private static Rule parentRule;
@@ -38,40 +41,40 @@ public class UIManager {
         return username;
     }
 
-    public static void setUsername(String username) {
-        UIManager.username = username;
+    public static void setUsername(String username_) {
+        username = username_;
     }
 
     public static String getPassword() {
         return password;
     }
 
-    public static void setPassword(String password) {
-        UIManager.password = password;
+    public static void setPassword(String password_) {
+        password = password_;
     }
 
     public static String getUrl() {
         return url;
     }
 
-    public static void setUrl(String url) {
-        UIManager.url = url;
+    public static void setUrl(String url_) {
+        url = url_;
     }
 
     public static String getDefaultSchema() {
         return defaultSchema;
     }
 
-    public static void setDefaultSchema(String defaultSchema) {
-        UIManager.defaultSchema = defaultSchema;
+    public static void setDefaultSchema(String defaultSchema_) {
+        defaultSchema = defaultSchema_;
     }
 
     public static String getPort() {
         return port;
     }
 
-    public static void setPort(String port) {
-        UIManager.port = port;
+    public static void setPort(String port_) {
+        port = port_;
     }
 
 
@@ -79,12 +82,8 @@ public class UIManager {
         mainWindow.updateTreeModel();
     }
 
-    public static void setUserEnteredLogInInformation(boolean b) {
-        userEnteredLogInInformation = true;
-    }
-
-    public static boolean getUserEnteredLogInInformation() {
-        return userEnteredLogInInformation;
+    public static boolean isUserInformationSet() {
+        return username != null && password != null && url != null && defaultSchema != null;
     }
 
     /**
@@ -103,5 +102,13 @@ public class UIManager {
 
     public static void setParentRule(Rule parentRule_){
         parentRule = parentRule_;
+    }
+
+    public static void cleanConnectionInformation() {
+        username = null;
+        password = null;
+        url = null;
+        defaultSchema = null;
+        port = null;
     }
 }

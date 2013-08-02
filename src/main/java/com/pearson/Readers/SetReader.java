@@ -90,7 +90,7 @@ public class SetReader implements Runnable {
 
     private LinkedList<Rule> getChildren(RuleNode root) {
 
-        LinkedList<Rule> rulesToReturn = new LinkedList<>();
+        LinkedList<Rule> rulesToReturn = new LinkedList();
 
         // Breadth-first search
         Enumeration it = root.children();
@@ -167,7 +167,7 @@ public class SetReader implements Runnable {
 
     private void executeThreads(List<Rule> list, ExecutorService executor, Set rulesDone) throws ExecutionException, InterruptedException {
 
-        Set rulesRunning = Collections.synchronizedSet(new HashSet<>());
+        Set rulesRunning = Collections.synchronizedSet(new HashSet());
 
         Iterator<Rule> it = list.iterator();
 

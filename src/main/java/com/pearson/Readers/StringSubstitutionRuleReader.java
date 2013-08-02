@@ -36,7 +36,6 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
                 disableConstraints();
                 setFromFile(selectedFile);
-                enableConstraints();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -45,6 +44,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
             try {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+                disableConstraints();
                 setToRandom(stringLength);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -54,6 +54,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
             try {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+                disableConstraints();
                 setToValue(setToString);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -62,6 +63,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
             try {
                 mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+                disableConstraints();
                 setToNull();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -73,16 +75,12 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     public void setToValue(String value) throws SQLException {
 
-        disableConstraints();
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
-        enableConstraints();
     }
 
     public void setToRandom(int count) throws SQLException {
 
-        disableConstraints();
         mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), RandomStringUtils.random(count));
-        enableConstraints();
     }
 
     /**
@@ -90,7 +88,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
      */
     public void setFromFile(File file) throws SQLException {
 
-        HashMap<Integer, String> words = new HashMap<>();
+        HashMap<Integer, String> words = new HashMap();
         Scanner scanner = null;
 
         //build a hashmap of words to replace

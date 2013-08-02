@@ -37,7 +37,7 @@ public class NewSubstitutionRuleWindow extends JDialog {
      * Creates new form NewSubstitutionRule
      */
     Database database;
-    ArrayList<String> tableNames = new ArrayList<>();
+    ArrayList<String> tableNames = new ArrayList();
     boolean isTriggersIsolated = true;
     boolean isTableSelected = false;
     String tableSelected;
