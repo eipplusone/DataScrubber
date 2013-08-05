@@ -1,4 +1,4 @@
-package demo_pkg;
+package com.pearson.Utilities;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

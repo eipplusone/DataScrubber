@@ -11,6 +11,8 @@ import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.RulesDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -26,6 +28,8 @@ import java.util.concurrent.Future;
  *         Project Name: DataScrubber
  */
 public class SetReader implements Runnable {
+
+    public static Logger logger = LoggerFactory.getLogger(SetReader.class.getName());
 
     public static Set<String> tablesOccupied;
     //variables
@@ -120,6 +124,7 @@ public class SetReader implements Runnable {
                 try {
                     DatabaseSettings.disableTriggers();
                 } catch (SQLException e) {
+                    logger.error()
                     e.printStackTrace();
                 }
 

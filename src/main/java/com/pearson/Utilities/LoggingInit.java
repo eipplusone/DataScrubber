@@ -1,4 +1,4 @@
-package demo_pkg;
+package com.pearson.Utilities;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -12,9 +12,9 @@ import org.slf4j.MDC;
  * Hello world!
  *
  */
-public class Driver {
+public class LoggingInit {
     
-    private static Logger logger = LoggerFactory.getLogger(Driver.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(LoggingInit.class.getName());
     
     public static void main(String[] args) {
         readAndSetLogbackConfiguration("H:\\Projects\\Logback-example", "logback_config.xml"); 
