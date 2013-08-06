@@ -1,7 +1,7 @@
 package com.pearson.Readers;
 
-import com.pearson.SQL.Database;
-import com.pearson.SQL.MySQLTable;
+import com.pearson.Database.SQL.Database;
+import com.pearson.Database.MySQL.MySQLTable;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionDataType;

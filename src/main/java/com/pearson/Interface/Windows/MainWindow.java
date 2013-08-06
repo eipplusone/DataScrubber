@@ -5,9 +5,8 @@
 // so we know that user cancelled window and don't bring new rule window if so. Yo.
 package com.pearson.Interface.Windows;
 
-import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
-import com.pearson.Interface.Models.RulesTreeTableModel;
+import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 
 import java.awt.event.*;
 import java.io.File;
@@ -19,7 +18,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.pearson.Readers.SetReader;
-import com.pearson.SQL.Database;
+import com.pearson.Database.SQL.Database;
 import com.pearson.Utilities.CleanUp;
 import noNamespace.Rule;
 import org.jdesktop.swingx.JXTreeTable;

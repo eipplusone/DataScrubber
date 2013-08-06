@@ -1,13 +1,10 @@
-package com.pearson.SQL;
+package com.pearson.Database.SQL;
 
 import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.DatabaseManager;
 import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**

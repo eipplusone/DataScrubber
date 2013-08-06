@@ -1,7 +1,9 @@
-package com.pearson.SQL;
+package com.pearson.Database.MySQL;
 
 import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
+import com.pearson.Database.SQL.Column;
+import com.pearson.Database.SQL.Table;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
@@ -25,12 +27,12 @@ public class MySQLTable extends Table {
 
     private static Logger logger = LoggerFactory.getLogger(MySQLTable.class.getName());
 
-    ConnectionConfig connectionConfig;
+    com.pearson.Database.SQL.ConnectionConfig connectionConfig;
     DatabaseInterface databaseInterface;
 
     public MySQLTable(String tableName) {
         super(tableName);
-        connectionConfig = new ConnectionConfig(databaseInterface);
+        connectionConfig = new com.pearson.Database.SQL.ConnectionConfig(databaseInterface);
     }
 
     /**
@@ -79,15 +81,6 @@ public class MySQLTable extends Table {
             return resultSet.getInt(1);
         } else throw new IllegalArgumentException("MySQLTable - couldn't return number of rows");
 
-    }
-
-    public ResultSet getColumnContents(String columnName) throws SQLException {
-
-        establishConnection();
-        databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
-        ResultSet resultSet = databaseInterface.createStatement().executeQuery("SELECT " + columnName + " FROM " + tableName);
-
-        return resultSet;
     }
 
     /**
@@ -282,7 +275,7 @@ public class MySQLTable extends Table {
         databaseInterface.cleanupAutomatic();
     }
 
-    public ConnectionConfig getConnectionConfig() {
+    public com.pearson.Database.SQL.ConnectionConfig getConnectionConfig() {
         // make sure this table connection to the database
         establishConnection();
         // make sure that both classes work on the same connection

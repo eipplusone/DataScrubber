@@ -1,7 +1,6 @@
 package com.pearson.Interface;
 
-import com.pearson.Interface.Models.RulesTreeTableModel;
-import noNamespace.MaskingSetDocument;
+import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionRule;
@@ -9,10 +8,8 @@ import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Enumeration;
 
 /**
  * @author Ruslan Kiselev

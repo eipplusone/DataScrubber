@@ -1,4 +1,4 @@
-package com.pearson.Interface.Models;
+package com.pearson.Interface.Windows.Models;
 
 import com.pearson.Interface.RuleNode;
 import org.jdesktop.swingx.treetable.AbstractTreeTableModel;

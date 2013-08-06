@@ -1,8 +1,8 @@
 package com.pearson.Readers;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.SQL.Column;
-import com.pearson.SQL.Database;
+import com.pearson.Database.SQL.Column;
+import com.pearson.Database.SQL.Database;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.slf4j.Logger;

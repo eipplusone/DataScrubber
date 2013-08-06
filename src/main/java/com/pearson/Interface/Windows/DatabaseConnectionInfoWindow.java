@@ -5,7 +5,7 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Interface.UIManager;
-import com.pearson.SQL.Database;
+import com.pearson.Database.SQL.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

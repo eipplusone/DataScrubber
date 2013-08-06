@@ -7,13 +7,14 @@ package com.pearson.Interface.Windows;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
+import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.NumericSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.StringSubstitutionTypes;
-import com.pearson.SQL.Database;
-import com.pearson.SQL.Column;
+import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.Column;
 import noNamespace.*;
-import com.pearson.SQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTable;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -178,7 +179,7 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         selectOptionsPanel.setLayout(new java.awt.GridBagLayout());
 
-        tablesSelectedTable.setModel(new com.pearson.Interface.Models.ItemsSelectedTableModel(tableNames));
+        tablesSelectedTable.setModel(new ItemsSelectedTableModel(tableNames));
         tablesSelectedTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablesSelectedTableMouseClicked(evt);

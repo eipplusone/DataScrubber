@@ -1,8 +1,8 @@
-package com.pearson.SQL;
+package com.pearson.Database.SQL;
 
-import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,23 +21,24 @@ public class Database {
     
     private static Logger logger = LoggerFactory.getLogger(Database.class.getName());
 
+    private String databaseName;
+    public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
+    private DatabaseManager;
+
     public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
 
         try {
-            DatabaseManager.createConnectionPool(username, password, url + "/" + defaultSchema);
-            DatabaseManager.shutDown();
+            DatabaseManager databaseManager = new DatabaseManager(username, password, url);
             return true;
         } catch(SQLException ex){
             return false;
         }
     }
-    public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
 
     public String getDatabaseName() {
         return databaseName;
     }
 
-    private String databaseName;
 
     public Database(String schema_name, String username, String password, String JDBCURL) throws SQLException {
 

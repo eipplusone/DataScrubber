@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.pearson.Interface.Models;
+package com.pearson.Interface.Windows.Models;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

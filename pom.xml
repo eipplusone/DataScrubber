@@ -38,7 +38,7 @@
                     <schemaDirectory>src/main/resources/</schemaDirectory>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.7</version>
@@ -60,7 +60,9 @@
     <repositories>
         <repository>
             <id>unknown-jars-temp-repo</id>
-            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
+            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please
+                replace the dependencies in this repository with correct ones and delete this repository.
+            </name>
             <url>file:${project.basedir}/lib</url>
         </repository>
     </repositories>
@@ -75,7 +77,7 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-    
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -141,16 +143,31 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
         <dependency>
             <groupId>unknown.binary</groupId>
             <artifactId>AbsoluteLayout</artifactId>
             <version>SNAPSHOT</version>
         </dependency>
+
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
             <version>1.2.1</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.xmlbeans</groupId>
             <artifactId>xmlbeans</artifactId>
@@ -163,7 +180,7 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        
-       
+
+
     </dependencies>
 </project>

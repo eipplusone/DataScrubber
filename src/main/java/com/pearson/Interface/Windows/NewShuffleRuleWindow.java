@@ -1,11 +1,11 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Interface.Interfaces.XMLInterface;
-import com.pearson.Interface.Models.ItemsSelectedTableModel;
-import com.pearson.SQL.Database;
-import com.pearson.SQL.Column;
+import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
+import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.Column;
 import noNamespace.*;
-import com.pearson.SQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTable;
 
 import java.awt.event.ActionEvent;
 

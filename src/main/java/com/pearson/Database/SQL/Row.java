@@ -1,4 +1,4 @@
-package com.pearson.SQL;
+package com.pearson.Database.SQL;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;

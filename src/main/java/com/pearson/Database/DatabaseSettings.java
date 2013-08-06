@@ -1,9 +1,5 @@
 package com.pearson.Database;
 
-import com.pearson.SQL.Database;
-import com.pearson.Utilities.Constants;
-import com.pearson.Utilities.Query;
-import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

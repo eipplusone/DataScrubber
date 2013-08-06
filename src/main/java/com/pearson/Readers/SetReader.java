@@ -5,7 +5,7 @@ import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
-import com.pearson.SQL.Database;
+import com.pearson.Database.SQL.Database;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -123,7 +123,6 @@ public class SetReader implements Runnable {
                 try {
                     DatabaseSettings.disableTriggers();
                 } catch (SQLException e) {
-                    logger.error()
                     e.printStackTrace();
                 }
 

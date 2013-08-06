@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * com.pearson.Database manager is class that encapsulates giving and closing
@@ -20,66 +23,52 @@ public class DatabaseManager {
 
     private static Logger logger = LoggerFactory.getLogger(DatabaseManager.class.getName());
 
-    public static BoneCP connectionPool = null;
-    private static boolean connectionEstablished;
+    private Set<Connection> openConnections;
+    public BoneCP connectionPool;
 
-    public static void createConnectionPool(String userName, String password, String JDBCURL) throws SQLException {
+    public DatabaseManager(String username, String password, String JDBCURL) throws SQLException {
+
+        openConnections = Collections.synchronizedSet(new HashSet());
+        createConnectionPool(username, password, JDBCURL);
+    }
+
+    public void createConnectionPool(String username, String password, String JDBCURL) throws SQLException {
 
         BoneCPConfig config = new BoneCPConfig();
         config.setMaxConnectionsPerPartition(20);
         config.setJdbcUrl(JDBCURL);
 
-        config.setUsername(userName);
+        config.setUsername(username);
         config.setPassword(password);
         config.setDefaultAutoCommit(false);
 
         connectionPool = new BoneCP(config);
-        connectionEstablished = true;
     }
 
-    public static Connection getConnection() {
+    public Connection getConnection() throws SQLException {
 
-        Connection connection = null;
-
-        if (!connectionEstablished) {
-            throw new NullPointerException("DatabaseManager - connection pool has not been initialised");
-        }
-
-        try {
-            connection = connectionPool.getConnection();
-            if(connection.isClosed()) throw new IllegalArgumentException("For some reason connection returned from BoneCP was already closed");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            return connection;
-        }
+        Connection returnConnection = connectionPool.getConnection();
+        openConnections.add(returnConnection);
+        return returnConnection;
     }
 
-    public static boolean disconnect(Connection connection) {
-        try {
-            if ((connection != null) && !connection.isClosed()) {
+    public void disconnect(Connection connection) throws SQLException {
 
-                if (!connection.getAutoCommit()) {
-                    connection.commit();
-                }
+        connection.close();
+    }
 
+    public void shutDown() throws SQLException {
+
+        closeAllConnections();
+        connectionPool.close();
+    }
+
+    public void closeAllConnections() throws SQLException {
+
+        synchronized (openConnections){
+            for(Connection connection : openConnections){
                 connection.close();
             }
-
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static void shutDown() {
-        try {
-            if (connectionPool != null) {
-                connectionPool.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

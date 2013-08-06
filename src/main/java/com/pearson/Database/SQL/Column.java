@@ -1,4 +1,4 @@
-package com.pearson.SQL;
+package com.pearson.Database.SQL;
 
 import com.pearson.Database.MySQL.MySQLDataType;
 
