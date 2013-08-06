@@ -1,6 +1,8 @@
 package com.pearson.SQL;
 
 import com.pearson.Database.DatabaseInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
@@ -11,6 +13,8 @@ import java.util.HashMap;
  *         Project Name: DataScrubber
  */
 public class Table {
+    
+    private static Logger logger = LoggerFactory.getLogger(Table.class.getName());
 
     public HashMap<String, Column> columns = new HashMap<>();
     protected String tableName;

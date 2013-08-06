@@ -2,6 +2,9 @@ package com.pearson.Database;
 
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -14,6 +17,8 @@ import java.sql.SQLException;
  * @author Ruslan Kiselev
  */
 public class DatabaseManager {
+
+    private static Logger logger = LoggerFactory.getLogger(DatabaseManager.class.getName());
 
     public static BoneCP connectionPool = null;
     private static boolean connectionEstablished;

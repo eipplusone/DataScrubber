@@ -14,9 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -25,6 +23,7 @@ import com.pearson.SQL.Database;
 import com.pearson.Utilities.CleanUp;
 import noNamespace.Rule;
 import org.jdesktop.swingx.JXTreeTable;
+import org.slf4j.LoggerFactory;
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,8 +38,8 @@ import org.jdesktop.swingx.JXTreeTable;
  *         Date: 08-30-2013
  */
 public class MainWindow extends javax.swing.JFrame {
-
-    public static Logger logger = Logger.getLogger(MainWindow.class.getName());
+    
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(MainWindow.class.getName());
 
     private RulesTreeTableModel rulesInSetTreeModel = new RulesTreeTableModel();
     private javax.swing.JTabbedPane RulesInSetPane = new JTabbedPane();

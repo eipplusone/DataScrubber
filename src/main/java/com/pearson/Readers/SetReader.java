@@ -6,7 +6,6 @@ import com.pearson.Database.DatabaseSettings;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
 import com.pearson.SQL.Database;
-import com.pearson.Utilities.ThreadExectutor;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;

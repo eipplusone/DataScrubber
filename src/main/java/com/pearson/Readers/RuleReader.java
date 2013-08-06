@@ -1,14 +1,12 @@
 package com.pearson.Readers;
 
-import com.pearson.Interface.Interfaces.XMLInterface;
-import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
-import com.pearson.Utilities.ThreadExectutor;
-import com.sun.org.apache.bcel.internal.generic.IFEQ;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +21,8 @@ import java.util.concurrent.Callable;
  *         Project Name: DataScrubber
  */
 public class RuleReader implements Callable<Rule> {
+    
+    private static Logger logger = LoggerFactory.getLogger(RuleReader.class.getName());
 
     private Rule rule;
     private Database database;

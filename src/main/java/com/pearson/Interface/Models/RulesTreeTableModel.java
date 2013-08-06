@@ -2,6 +2,8 @@ package com.pearson.Interface.Models;
 
 import com.pearson.Interface.RuleNode;
 import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ruslan Kiselev
@@ -10,6 +12,8 @@ import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
  *         Project Name: DataScrubber
  */
 public class RulesTreeTableModel extends AbstractTreeTableModel {
+
+    private static Logger logger = LoggerFactory.getLogger(RulesTreeTableModel.class.getName());
 
     public final static String[] COLUMN_NAMES = new String[]{"RuleID", "Rule Type", "Target", "Column Names", "Action Type", "Value"};
     public final static int RULE_ID_COLUMN = 0;

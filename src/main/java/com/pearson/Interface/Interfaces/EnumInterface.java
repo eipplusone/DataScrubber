@@ -6,6 +6,8 @@ import com.pearson.Rules.SubstitutionTypes.NumericSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.StringSubstitutionTypes;
 import noNamespace.SubstitutionActionType;
 import noNamespace.SubstitutionDataType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ruslan Kiselev
@@ -14,6 +16,8 @@ import noNamespace.SubstitutionDataType;
  *         Project Name: DataScrubber
  */
 public class EnumInterface {
+
+    public static Logger logger = LoggerFactory.getLogger(EnumInterface.class.getName());
 
     public static SubstitutionActionType.Enum getSubstitutionActionType(String substitutionType){
 

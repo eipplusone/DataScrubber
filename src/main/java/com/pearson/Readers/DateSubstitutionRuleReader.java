@@ -7,6 +7,8 @@ import com.pearson.SQL.MySQLTable;
 import com.pearson.Utilities.Constants;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -21,6 +23,8 @@ import java.util.Random;
  *         Project Name: DataScrubber
  */
 public class DateSubstitutionRuleReader extends SubstitutionReader {
+    
+    private static Logger logger = LoggerFactory.getLogger(DateSubstitutionRuleReader.class.getName());
 
     public DateSubstitutionRuleReader(Rule rule, Database database) {
         super(rule, database);

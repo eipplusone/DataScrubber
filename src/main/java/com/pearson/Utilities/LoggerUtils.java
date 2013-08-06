@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Jeffrey Schmidt
  */
-public class Utils {
+public class LoggerUtils {
     
-    private static Logger logger = LoggerFactory.getLogger(Utils.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(LoggerUtils.class.getName());
     
     public static boolean doesFileExist(String filePathAndName) {
         

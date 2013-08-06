@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 import noNamespace.RulesDocument.Rules;
+import org.slf4j.LoggerFactory;
 
 /*
  * To change this template, choose Tools | Templates
@@ -26,6 +27,8 @@ import noNamespace.RulesDocument.Rules;
  * @author UMA99J5
  */
 public class NewShuffleRuleWindow extends JDialog {
+    
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(NewShuffleRuleWindow.class.getName());
 
     Database database;
     ArrayList<String> tableNames = new ArrayList();

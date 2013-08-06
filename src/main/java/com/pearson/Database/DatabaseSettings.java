@@ -4,6 +4,8 @@ import com.pearson.SQL.Database;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +17,8 @@ import java.sql.SQLException;
  *         Project Name: DataScrubber
  */
 public class DatabaseSettings {
+
+    private static Logger logger = LoggerFactory.getLogger(DatabaseSettings.class.getName());
     private static DatabaseInterface databaseInterface;
 
     private static void copyTable(String tableToCopyFrom, String newTable) throws SQLException {

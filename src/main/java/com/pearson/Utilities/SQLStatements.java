@@ -1,6 +1,8 @@
 package com.pearson.Utilities;
 
 import com.pearson.SQL.Column;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -12,6 +14,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class SQLStatements {
+
+    private static Logger logger = LoggerFactory.getLogger(SQLStatements.class.getName());
 
     public final static String GET_NUMBER_OF_ROWS = "SELECT COUNT(*) FROM ";
     public final static String GET_TABLES = "SHOW TABLES";

@@ -4,6 +4,8 @@ import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Utilities.SQLStatements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,8 @@ import java.util.TreeMap;
  * change this template use File | Settings | File Templates.
  */
 public class Database {
+    
+    private static Logger logger = LoggerFactory.getLogger(Database.class.getName());
 
     public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
 

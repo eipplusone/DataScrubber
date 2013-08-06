@@ -6,6 +6,8 @@ package com.pearson.Interface.Windows;
 
 import com.pearson.Interface.UIManager;
 import com.pearson.SQL.Database;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -15,6 +17,9 @@ import java.awt.event.WindowEvent;
  * @author Ruslan Kiselev, Jia Ma
  */
 public class DatabaseConnectionInfoWindow extends JDialog {
+    
+    private static Logger logger = LoggerFactory.getLogger(DatabaseConnectionInfoWindow.class.getName());
+
     String username = null;
     String password = null;
     String url = null;

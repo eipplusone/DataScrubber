@@ -5,6 +5,8 @@ import com.pearson.SQL.Column;
 import com.pearson.SQL.Database;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -17,6 +19,7 @@ import java.util.Random;
  */
 public class NumericSubstitutionRuleReader extends SubstitutionReader {
 
+    private static Logger logger = LoggerFactory.getLogger(NumericSubstitutionRuleReader.class.getName());
 
     public NumericSubstitutionRuleReader(Rule rule, Database database) {
 

@@ -4,10 +4,12 @@
  */
 package com.pearson.Interface.Windows;
 
+import org.slf4j.LoggerFactory;
+
+import javax.print.PrintServiceLookup;
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -15,6 +17,8 @@ import java.util.logging.Logger;
  * @author Ruslan Kiselev
  */
 public class CreateNewRuleWindow extends JDialog {
+
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(CreateNewRuleWindow.class.getName());
 
     private javax.swing.JButton cancelButton = new JButton();
     private javax.swing.JLabel chooseTypeLabel = new JLabel();
@@ -136,7 +140,6 @@ public class CreateNewRuleWindow extends JDialog {
         try {
         rw = new NewSubstitutionRuleWindow();
         } catch (SQLException ex) {
-            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
         rw.setVisible(true);
@@ -149,7 +152,6 @@ public class CreateNewRuleWindow extends JDialog {
         try {
             srw = new NewShuffleRuleWindow();
         } catch (SQLException ex) {
-            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
         srw.setVisible(true);
@@ -169,7 +171,6 @@ public class CreateNewRuleWindow extends JDialog {
         try {
         rw = new NewSubstitutionRuleWindow();
         } catch (SQLException ex) {
-            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
         rw.setVisible(true);
@@ -186,7 +187,6 @@ public class CreateNewRuleWindow extends JDialog {
         try {
             srw = new NewShuffleRuleWindow();
         } catch (SQLException ex) {
-            Logger.getLogger(CreateNewRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
         dispose();
         srw.setVisible(true);

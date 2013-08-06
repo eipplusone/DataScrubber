@@ -4,6 +4,8 @@ import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -20,6 +22,8 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class MySQLTable extends Table {
+
+    private static Logger logger = LoggerFactory.getLogger(MySQLTable.class.getName());
 
     ConnectionConfig connectionConfig;
     DatabaseInterface databaseInterface;

@@ -4,6 +4,8 @@ import com.pearson.SQL.Database;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.apache.commons.lang.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +21,8 @@ import java.util.Scanner;
  *         Project Name: DataScrubber
  */
 public class StringSubstitutionRuleReader extends SubstitutionReader {
+    
+    private static Logger logger = LoggerFactory.getLogger(StringSubstitutionRuleReader.class.getName());
 
     public StringSubstitutionRuleReader(Rule rule, Database database) {
         super(rule, database);

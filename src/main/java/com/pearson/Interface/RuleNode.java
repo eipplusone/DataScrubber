@@ -6,6 +6,8 @@ import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionRule;
 import org.jdesktop.swingx.treetable.AbstractMutableTreeTableNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.File;
@@ -20,6 +22,7 @@ import java.util.Enumeration;
  */
 public class RuleNode extends AbstractMutableTreeTableNode {
 
+    public static Logger logger = LoggerFactory.getLogger(RuleNode.class.getName());
 
     public RuleNode(Rule rule){
 

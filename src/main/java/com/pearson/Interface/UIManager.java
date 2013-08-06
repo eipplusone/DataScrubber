@@ -6,6 +6,8 @@ package com.pearson.Interface;
 
 import com.pearson.Interface.Windows.MainWindow;
 import noNamespace.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Project: DataScrubber
@@ -15,6 +17,8 @@ import noNamespace.Rule;
  */
 
 public class UIManager {
+
+    public static Logger logger = LoggerFactory.getLogger(UIManager.class.getName());
 
     public static final int CLOSED = -1;
     private static MainWindow mainWindow;

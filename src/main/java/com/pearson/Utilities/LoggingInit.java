@@ -29,7 +29,7 @@ public class LoggingInit {
     
     public static boolean readAndSetLogbackConfiguration(String filePath, String fileName) {
         
-        boolean doesConfigFileExist = Utils.doesFileExist(filePath, fileName);
+        boolean doesConfigFileExist = LoggerUtils.doesFileExist(filePath, fileName);
         
         if (doesConfigFileExist) {
             File loggerConfigFile = new File(filePath + File.separator + fileName);

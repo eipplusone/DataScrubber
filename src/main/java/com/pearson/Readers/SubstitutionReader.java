@@ -3,6 +3,8 @@ package com.pearson.Readers;
 import com.pearson.SQL.Database;
 import com.pearson.SQL.MySQLTable;
 import noNamespace.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
@@ -16,6 +18,8 @@ import java.sql.SQLException;
  *         Project Name: DataScrubber
  */
 public abstract class SubstitutionReader implements Runnable {
+    
+    private static Logger logger = LoggerFactory.getLogger(SubstitutionReader.class.getName());
     Database database;
     Rule rule;
     MySQLTable mySQLTable;

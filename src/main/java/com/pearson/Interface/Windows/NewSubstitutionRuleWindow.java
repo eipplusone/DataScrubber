@@ -20,10 +20,10 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import noNamespace.RulesDocument.Rules;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -32,6 +32,8 @@ import javax.swing.*;
  * @author : Ruslan Kiselev
  */
 public class NewSubstitutionRuleWindow extends JDialog {
+
+    private static Logger logger = LoggerFactory.getLogger(NewSubstitutionRuleWindow.class.getName());
 
     /**
      * Creates new form NewSubstitutionRule
@@ -133,7 +135,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
                     new NewSubstitutionRuleWindow().setVisible(true);
 
                 } catch (SQLException ex) {
-                    Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

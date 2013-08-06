@@ -17,12 +17,16 @@ import noNamespace.Rule;
 import noNamespace.RulesDocument;
 import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Ruslan Kiselev
  */
 public class XMLInterface{
+
+    public static Logger logger = LoggerFactory.getLogger(XMLInterface.class.getName());
 
     public final static XmlOptions options = initialiseOptions();
     private static File xmlFile; // todo several applications running
