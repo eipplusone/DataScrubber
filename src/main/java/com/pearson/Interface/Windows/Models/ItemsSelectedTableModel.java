@@ -7,8 +7,8 @@ package com.pearson.Interface.Windows.Models;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 
 /**
  *

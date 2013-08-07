@@ -17,7 +17,7 @@ package noNamespace;
 public interface ColumnDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(ColumnDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("columndd0fdoctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(ColumnDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("columndd0fdoctype");
     
     /**
      * Gets the "column" element

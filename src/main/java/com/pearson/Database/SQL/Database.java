@@ -1,6 +1,7 @@
 package com.pearson.Database.SQL;
 
-import com.pearson.Database.DatabaseManager;
+import com.pearson.Database.DatabaseInterface;
+import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Utilities.SQLStatements;
@@ -23,12 +24,13 @@ public class Database {
 
     private String databaseName;
     public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
-    private DatabaseManager;
+    private com.pearson.Database.databaseManager databaseManager;
+    private DatabaseSettings databaseSettings;
 
     public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
 
         try {
-            DatabaseManager databaseManager = new DatabaseManager(username, password, url);
+            com.pearson.Database.databaseManager databaseManager = new com.pearson.Database.databaseManager(username, password, url);
             return true;
         } catch(SQLException ex){
             return false;
@@ -45,6 +47,7 @@ public class Database {
         databaseName = schema_name;
         connect(username, password, JDBCURL);
         fillTables();
+        databaseSettings = new DatabaseSettings(new DatabaseInterface(databaseManager.getConnection()));
     }
 
     /**
@@ -56,8 +59,7 @@ public class Database {
      * @param JDBCURL url that is used to log in on MySQL server
      */
     private void connect(String username, String password, String JDBCURL) throws SQLException {
-        DatabaseManager.createConnectionPool(username, password, JDBCURL + "/" + databaseName);
-        assert DatabaseManager.connectionPool != null;
+        databaseManager = new com.pearson.Database.databaseManager(username, password, JDBCURL);
     }
 
     @Override
@@ -68,13 +70,13 @@ public class Database {
     /**
      * fillTables populates database with information(tables and columns).
      */
-    private void fillTables() {
-        Connection conn = DatabaseManager.getConnection();
+    private void fillTables() throws SQLException {
+        Connection conn = databaseManager.getConnection();
         try {
             try (PreparedStatement tablesStmt = conn.prepareStatement(SQLStatements.GET_TABLES)) {
                 try (ResultSet tablesResult = tablesStmt.executeQuery()) {
                     while (tablesResult.next()) {
-                        add(new MySQLTable(tablesResult.getString("Tables_in_" + databaseName)));
+                        add(new MySQLTable(tablesResult.getString("Tables_in_" + databaseName), this.databaseManager));
                     }
                 }
             }
@@ -131,5 +133,16 @@ public class Database {
 
         if (!tables.containsKey(tableName)) throw new IllegalArgumentException("Table " + tableName + " does not exist in the database " + databaseName);
         return tables.get(tableName);
+    }
+
+    public DatabaseSettings getDatabaseSettings() {
+
+        return databaseSettings;
+    }
+
+    public void cleanUp() throws SQLException {
+
+        databaseSettings.cleanUp();
+        databaseManager.shutDown();
     }
 }

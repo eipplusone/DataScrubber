@@ -1,22 +1,22 @@
 package com.pearson.Interface.Windows;
 
+import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.SQL.Column;
+import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
-import com.pearson.Database.SQL.Database;
-import com.pearson.Database.SQL.Column;
-import noNamespace.*;
-import com.pearson.Database.MySQL.MySQLTable;
+import noNamespace.Rule;
+import noNamespace.RuleType;
+import noNamespace.RulesDocument.Rules;
+import noNamespace.ShuffleRule;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.*;
-
-import noNamespace.RulesDocument.Rules;
-import org.slf4j.LoggerFactory;
 
 /*
  * To change this template, choose Tools | Templates

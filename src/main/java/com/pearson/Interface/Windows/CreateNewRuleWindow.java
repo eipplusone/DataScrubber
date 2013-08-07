@@ -6,10 +6,8 @@ package com.pearson.Interface.Windows;
 
 import org.slf4j.LoggerFactory;
 
-import javax.print.PrintServiceLookup;
 import javax.swing.*;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
 
 /**

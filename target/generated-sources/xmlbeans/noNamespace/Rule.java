@@ -16,7 +16,7 @@ package noNamespace;
 public interface Rule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("rule44e5type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("rule44e5type");
     
     /**
      * Gets the "id" element

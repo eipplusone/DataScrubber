@@ -1,11 +1,9 @@
 package com.pearson.Readers;
 
-import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
+import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
-import com.pearson.Database.SQL.Database;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -115,13 +113,13 @@ public class SetReader implements Runnable {
         // get the list of all rules that yet to be run in the order they suppose to run
         LinkedList<Rule> rulesToRun = getChildren(root);
 
-        DatabaseSettings.setDatabaseInterface(new DatabaseInterface(DatabaseManager.getConnection()));
+        DatabaseSettings databaseSettings = database.getDatabaseSettings();
 
         try {
-            if (DatabaseSettings.isTriggersExist()) {
+            if (databaseSettings.isTriggersExist()) {
 
                 try {
-                    DatabaseSettings.disableTriggers();
+                    databaseSettings.disableTriggers();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -136,7 +134,7 @@ public class SetReader implements Runnable {
                 }
 
                 try {
-                    DatabaseSettings.enableTriggers();
+                    databaseSettings.enableTriggers();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -154,8 +152,6 @@ public class SetReader implements Runnable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        DatabaseSettings.cleanUp();
     }
 
     private void executeThreads(LinkedList<Rule> firstLevelRules, int threadPoolSize) throws ExecutionException, InterruptedException {

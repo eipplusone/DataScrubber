@@ -13,7 +13,7 @@ public class Column {
     public long character_max_length;
     public int numeric_precision;   // Total number of places
     public int numeric_scale;       // Number after decimal .#####
-    boolean autoIncrement = false;
+    public boolean autoIncrement = false;
 
     public Column(String name) {
         this.name = name;

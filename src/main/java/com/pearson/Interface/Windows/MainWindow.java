@@ -5,24 +5,24 @@
 // so we know that user cancelled window and don't bring new rule window if so. Yo.
 package com.pearson.Interface.Windows;
 
+import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
+import com.pearson.Readers.SetReader;
+import com.pearson.Utilities.CleanUp;
+import com.pearson.Utilities.StackTrace;
+import noNamespace.Rule;
+import org.jdesktop.swingx.JXTreeTable;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeSelectionModel;
-
-import com.pearson.Readers.SetReader;
-import com.pearson.Database.SQL.Database;
-import com.pearson.Utilities.CleanUp;
-import noNamespace.Rule;
-import org.jdesktop.swingx.JXTreeTable;
-import org.slf4j.LoggerFactory;
+import java.util.LinkedList;
 
 /*
  * To change this template, choose Tools | Templates
@@ -371,6 +371,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database);
         setReader.run();
+
+        try {
+            database.cleanUp();
+        } catch (SQLException exc) {
+            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
+        }
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {

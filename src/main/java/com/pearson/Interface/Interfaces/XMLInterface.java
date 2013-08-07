@@ -4,21 +4,22 @@
  */
 package com.pearson.Interface.Interfaces;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
 import com.pearson.Interface.RuleNode;
 import com.pearson.Readers.SetReader;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.Rule;
 import noNamespace.RulesDocument;
-import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 
 /**

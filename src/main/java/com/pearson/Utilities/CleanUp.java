@@ -1,8 +1,6 @@
 package com.pearson.Utilities;
 
 import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.DatabaseManager;
-import com.pearson.Database.DatabaseSettings;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,11 +22,11 @@ public class CleanUp {
     public static void main(String[] args) {
 
 
-        try {
-            DatabaseManager.createConnectionPool("dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306/core");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            databaseManager.createConnectionPool("dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306/core");
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         //if there are any triggers left inside trigger table delete them
 //        try {
@@ -43,7 +41,7 @@ public class CleanUp {
             e.printStackTrace();
         }
 
-        databaseInterface.cleanupAutomatic();
+//        databaseInterface.cleanupAutomatic();
 
         System.out.println("Triggers have been fixed");
     }
@@ -150,9 +148,9 @@ public class CleanUp {
 
     private static void establishConnection() {
 
-        if(databaseInterface == null || !databaseInterface.isConnectionValid()){
-            databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
-        }
+//        if(databaseInterface == null || !databaseInterface.isConnectionValid()){
+//            databaseInterface = new DatabaseInterface(databaseManager.getConnection());
+//        }
     }
 
     public static void fixTriggers() {

@@ -15,52 +15,61 @@ import java.sql.SQLException;
 public class DatabaseSettings {
 
     private static Logger logger = LoggerFactory.getLogger(DatabaseSettings.class.getName());
-    private static DatabaseInterface databaseInterface;
 
-    private static void copyTable(String tableToCopyFrom, String newTable) throws SQLException {
+    private DatabaseInterface databaseInterface;
 
+    public DatabaseSettings(DatabaseInterface databaseInterface) {
 
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
-        }
+        this.databaseInterface = databaseInterface;
+    }
 
-        String query = "SHOW TABLES LIKE \'" + newTable + "\'";
+    private void copyTable(String tableToCopyFrom, String newTable) throws SQLException {
 
-        databaseInterface.createPreparedStatement(query);
-        ResultSet resultSet = databaseInterface.executePreparedStatement();
+        try {
 
-        if(!resultSet.isBeforeFirst()){
-            query = "create table " + newTable + " LIKE " + tableToCopyFrom;
+            String query = "SHOW TABLES LIKE \'" + newTable + "\'";
+
+            databaseInterface.createPreparedStatement(query);
+            ResultSet resultSet = databaseInterface.executePreparedStatement();
+
+            if(!resultSet.isBeforeFirst()){
+                query = "create table " + newTable + " LIKE " + tableToCopyFrom;
+
+                databaseInterface.createStatement().executeUpdate(query);
+            }
+
+            query = "insert " + newTable + " SELECT * " + " FROM " + tableToCopyFrom;
 
             databaseInterface.createStatement().executeUpdate(query);
+
+            databaseInterface.commit();
         }
-
-        query = "insert " + newTable + " SELECT * " + " FROM " + tableToCopyFrom;
-
-        databaseInterface.createStatement().executeUpdate(query);
-
-        databaseInterface.commit();
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
 
     }
 
-    private static void deleteTriggers() throws SQLException {
+    private void deleteTriggers() throws SQLException {
 
+        try {
 
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
+            ResultSet resultSet = getTriggers();
+
+            while (resultSet.next()) {
+                databaseInterface.createStatement().executeUpdate("DROP TRIGGER " + resultSet.getString("TRIGGER_NAME"));
+            }
+
+            databaseInterface.commit();
         }
-
-        ResultSet resultSet = getTriggers();
-
-        while (resultSet.next()) {
-            databaseInterface.createStatement().executeUpdate("DROP TRIGGER " + resultSet.getString("TRIGGER_NAME"));
+        catch (SQLException exc) {
+            databaseInterface.rollback();
         }
-
-        databaseInterface.commit();
 
     }
 
-    private static ResultSet getTriggers() throws SQLException {
+    private ResultSet getTriggers() throws SQLException {
 
 
         if (!databaseInterface.isConnectionValid()) {
@@ -72,28 +81,35 @@ public class DatabaseSettings {
         return databaseInterface.createStatement().executeQuery(query);
     }
 
-    public static void disableTriggers() throws SQLException {
+    public void disableTriggers() throws SQLException {
 
         copyTable("information_schema.triggers", "datascrubber_triggers_copy");
         deleteTriggers();
 
     }
 
-    public static void enableTriggers() throws SQLException {
+    public void enableTriggers() throws SQLException {
 
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
+        try {
+
+            if (!databaseInterface.isConnectionValid()) {
+                throw new SQLException("Connection is not valid");
+            }
+
+            String query = "SELECT * FROM " + "datascrubber_triggers_copy";
+
+            ResultSet resultSet = databaseInterface.createStatement().executeQuery(query);
+
+            while (resultSet.next()) createTrigger(resultSet);
+
+            databaseInterface.createStatement().executeUpdate("DROP TABLE datascrubber_triggers_copy");
+
+            databaseInterface.commit();
         }
-
-        String query = "SELECT * FROM " + "datascrubber_triggers_copy";
-
-        ResultSet resultSet = databaseInterface.createStatement().executeQuery(query);
-
-        while (resultSet.next()) createTrigger(resultSet);
-
-        databaseInterface.createStatement().executeUpdate("DROP TABLE datascrubber_triggers_copy");
-
-        databaseInterface.commit();
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
 
     }
 
@@ -103,7 +119,7 @@ public class DatabaseSettings {
      *
      * @param resultSet
      */
-    private static void createTrigger(ResultSet resultSet) throws SQLException {
+    private void createTrigger(ResultSet resultSet) throws SQLException {
 
 // creating triggers result in modifying the trigger table settting: todo version 2.0 set sql_mode and character_set when changing triggers
 //        String sessionProperties = resultSet.getString("SQL_MODE");
@@ -114,29 +130,31 @@ public class DatabaseSettings {
 //
 //        setCharacterSetClient(character_set);
 
-        if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
+        try {
+            if (!databaseInterface.isConnectionValid()) {
+                throw new SQLException("Connection is not valid");
+            }
+            String createTriggerQuery = "CREATE TRIGGER " + resultSet.getString("trigger_name") +
+                    " " + resultSet.getString("action_timing") + " " + resultSet.getString("event_manipulation") +
+                    " ON " + resultSet.getString("event_object_table") + " FOR EACH ROW " +
+                    resultSet.getString("action_statement");
+
+            databaseInterface.createStatement().executeUpdate(createTriggerQuery);
+
+            databaseInterface.commit();
         }
- String createTriggerQuery = "CREATE TRIGGER " + resultSet.getString("trigger_name") +
-                " " + resultSet.getString("action_timing") + " " + resultSet.getString("event_manipulation") +
-                " ON " + resultSet.getString("event_object_table") + " FOR EACH ROW " +
-                resultSet.getString("action_statement");
-
-        databaseInterface.createStatement().executeUpdate(createTriggerQuery);
-
-        databaseInterface.commit();
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
 
     }
 
-    public static void setDatabaseInterface(DatabaseInterface databaseInterface_){
-        databaseInterface = databaseInterface_;
-    }
-
-    public static void cleanUp() {
+    public void cleanUp() throws SQLException {
         databaseInterface.cleanupAutomatic();
     }
 
-    public static boolean isTriggersExist() throws SQLException {
+    public boolean isTriggersExist() throws SQLException {
 
         ResultSet resultSet = getTriggers();
 

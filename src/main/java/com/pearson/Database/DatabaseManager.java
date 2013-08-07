@@ -19,14 +19,14 @@ import java.util.Set;
  *
  * @author Ruslan Kiselev
  */
-public class DatabaseManager {
+public class databaseManager {
 
-    private static Logger logger = LoggerFactory.getLogger(DatabaseManager.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(databaseManager.class.getName());
 
     private Set<Connection> openConnections;
     public BoneCP connectionPool;
 
-    public DatabaseManager(String username, String password, String JDBCURL) throws SQLException {
+    public databaseManager(String username, String password, String JDBCURL) throws SQLException {
 
         openConnections = Collections.synchronizedSet(new HashSet());
         createConnectionPool(username, password, JDBCURL);

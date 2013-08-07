@@ -5,28 +5,26 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.SQL.Column;
+import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.NumericSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.StringSubstitutionTypes;
-import com.pearson.Database.SQL.Database;
-import com.pearson.Database.SQL.Column;
 import noNamespace.*;
-import com.pearson.Database.MySQL.MySQLTable;
-
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 import noNamespace.RulesDocument.Rules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 /**

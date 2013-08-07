@@ -1,7 +1,6 @@
 package com.pearson.Database.MySQL;
 
 import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Table;
 import com.pearson.Utilities.Query;
@@ -9,7 +8,6 @@ import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,9 +27,12 @@ public class MySQLTable extends Table {
 
     com.pearson.Database.SQL.ConnectionConfig connectionConfig;
     DatabaseInterface databaseInterface;
+    com.pearson.Database.databaseManager databaseManager;
 
-    public MySQLTable(String tableName) {
+    public MySQLTable(String tableName, com.pearson.Database.databaseManager databaseManager) {
+
         super(tableName);
+        this.databaseManager = databaseManager;
         connectionConfig = new com.pearson.Database.SQL.ConnectionConfig(databaseInterface);
     }
 
@@ -42,16 +43,11 @@ public class MySQLTable extends Table {
      */
     public int getNumberOfRows() throws SQLException {
 
-        establishConnection();
+            establishConnection();
 
-        String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
+            String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
 
-        if (!databaseInterface.isConnectionValid()) {
-            throw new NullPointerException("getNumberOfRows - Table has no columns");
-        }
-
-
-        ResultSet results = databaseInterface.createStatement().executeQuery(numberOfRowsQuery);
+            ResultSet results = databaseInterface.createStatement().executeQuery(numberOfRowsQuery);
 
             results.next();
             return results.getInt(1);
@@ -67,20 +63,17 @@ public class MySQLTable extends Table {
      */
     public int getNumberOfRows(String columnName) throws SQLException {
 
-        establishConnection();
+            establishConnection();
 
-        String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
+            String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
 
-        databaseInterface.createPreparedStatement(numberOfRowsQuery);
-        databaseInterface.addPreparedStatementParameters(columnName);
+            databaseInterface.createPreparedStatement(numberOfRowsQuery);
+            databaseInterface.addPreparedStatementParameters(columnName);
 
-        ResultSet resultSet = databaseInterface.executePreparedStatement();
+            ResultSet resultSet = databaseInterface.executePreparedStatement();
 
-        if (databaseInterface.isResultSetValid()) {
             resultSet.next();
             return resultSet.getInt(1);
-        } else throw new IllegalArgumentException("MySQLTable - couldn't return number of rows");
-
     }
 
     /**
@@ -90,30 +83,43 @@ public class MySQLTable extends Table {
      * @param columnName
      * @param id
      */
-    public void updateRow(Object object, String columnName, int id) {
+    public void updateRow(Object object, String columnName, int id) throws SQLException {
 
-        establishConnection();
+        try {
 
-        if(getAutoIncrementColumn() == null) throw new NullPointerException("Auto increment column is null");
+            establishConnection();
 
-        Query query = new Query();
-        query.update(tableName).set(columnName).where(getAutoIncrementColumn().name);
+            if (getAutoIncrementColumn() == null) throw new NullPointerException("Auto increment column is null");
 
-        databaseInterface.createPreparedStatement(query.toString());
-        databaseInterface.addPreparedStatementParameters(object, id);
+            Query query = new Query();
+            query.update(tableName).set(columnName).where(getAutoIncrementColumn().name);
 
-        databaseInterface.executePreparedStatement();
+            databaseInterface.createPreparedStatement(query.toString());
+            databaseInterface.addPreparedStatementParameters(object, id);
 
-        databaseInterface.commit();
+            databaseInterface.executePreparedStatement();
+
+            databaseInterface.commit();
+        }
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
     }
 
     public void setColumnToNull(String columnName) throws SQLException {
 
-        establishConnection();
-        databaseInterface.createStatement().executeUpdate("UPDATE " + tableName + " SET " + columnName + " = NULL");
+        try {
 
-        databaseInterface.commit();
+            establishConnection();
+            databaseInterface.createStatement().executeUpdate("UPDATE " + tableName + " SET " + columnName + " = NULL");
 
+            databaseInterface.commit();
+        }
+        catch (SQLException exc){
+            databaseInterface.rollback();
+            throw exc;
+        }
     }
 
     /**
@@ -124,21 +130,19 @@ public class MySQLTable extends Table {
      */
     public ResultSet getRandomRow(ArrayList<String> columnNames) throws SQLException {
 
+        establishConnection();
+
         int numberOfRows = getNumberOfRows();
 
         String autoIncrementColumn = getAutoIncrementColumn().name;
 
         int randomNumber = new Random().nextInt(numberOfRows - 1);
 
-        Connection connection = DatabaseManager.getConnection();
-
         // get a random row
         String query = SQLStatements.appendColumns(columnNames) + ", " + autoIncrementColumn
                 + " FROM " + tableName + " LIMIT " + randomNumber + ", 1";
 
-        ResultSet resultSet = connection.createStatement().executeQuery(query);
-
-        connection.close();
+        ResultSet resultSet = databaseInterface.createStatement().executeQuery(query);
 
         return resultSet;
     }
@@ -154,38 +158,46 @@ public class MySQLTable extends Table {
      */
     public void swap(ResultSet row1, ResultSet row2, ArrayList<String> columnNames) throws SQLException {
 
-        establishConnection();
+        try {
 
-        String query = null;
+            establishConnection();
 
-        String idColumn = getAutoIncrementColumn().name;
+            String query = null;
 
-        if (idColumn == null)
-            throw new SQLException("MySQLTable " + tableName + " does not have auto-increment column;" +
-                    " please create an auto-increment column");
+            String idColumn = getAutoIncrementColumn().name;
 
-        // main logic for swap
-        for (String columnName : columnNames) {
-            // move the cursor of the result set onto the next line
+            if (idColumn == null)
+                throw new SQLException("MySQLTable " + tableName + " does not have auto-increment column;" +
+                        " please create an auto-increment column");
 
-            if (row1.next() && row2.next()) {
-                //query = "UPDATE " + tableName + " SET " + columnName + " = " + "?" + " WHERE " + idColumn + " = " + "?";
-                Object row1Object = row1.getObject(columnName);
-                Object row2Object = row2.getObject(columnName);
-                Query queryObject = new Query();
-                queryObject.update(tableName).set(columnName).where(idColumn);
-                databaseInterface.createPreparedStatement(queryObject.toString());
-                databaseInterface.addPreparedStatementParameters(row1Object, row2.getInt(idColumn));
-                databaseInterface.executePreparedStatement();
+            // main logic for swap
+            for (String columnName : columnNames) {
+                // move the cursor of the result set onto the next line
 
-                databaseInterface.createPreparedStatement(queryObject.toString());
-                databaseInterface.addPreparedStatementParameters(row2Object, row1.getInt(idColumn));
-                databaseInterface.executePreparedStatement();
+                if (row1.next() && row2.next()) {
+                    //query = "UPDATE " + tableName + " SET " + columnName + " = " + "?" + " WHERE " + idColumn + " = " + "?";
+                    Object row1Object = row1.getObject(columnName);
+                    Object row2Object = row2.getObject(columnName);
+                    Query queryObject = new Query();
+                    queryObject.update(tableName).set(columnName).where(idColumn);
+                    databaseInterface.createPreparedStatement(queryObject.toString());
+                    databaseInterface.addPreparedStatementParameters(row1Object, row2.getInt(idColumn));
+                    databaseInterface.executePreparedStatement();
+
+                    databaseInterface.createPreparedStatement(queryObject.toString());
+                    databaseInterface.addPreparedStatementParameters(row2Object, row1.getInt(idColumn));
+                    databaseInterface.executePreparedStatement();
+                }
             }
+
+
+            databaseInterface.commit();
+        }
+        catch (SQLException exc){
+            databaseInterface.rollback();
+            throw exc;
         }
 
-
-        databaseInterface.commit();
     }
 
     /**
@@ -196,22 +208,32 @@ public class MySQLTable extends Table {
 
     public Column addAutoIncrementColumn() throws SQLException {
 
-        establishConnection();
-        int numberOfRows = getNumberOfRows();
+        Column autoIncrementColumn;
 
-        String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL AUTO_INCREMENT UNIQUE";
+        try {
 
-        databaseInterface.createStatement().executeUpdate(createColumnQuery);
+            establishConnection();
 
-        // end creating index column
+            int numberOfRows = getNumberOfRows();
 
-        // begin adding to app database
-        Column autoIncrementColumn = new Column("datascrubber_rowid");
-        autoIncrementColumn.nullable = false;
-        autoIncrementColumn.autoIncrement = true;
-        columns.put(autoIncrementColumn.name, autoIncrementColumn);
+            String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL AUTO_INCREMENT UNIQUE";
 
-        databaseInterface.commit();
+            databaseInterface.createStatement().executeUpdate(createColumnQuery);
+
+            // end creating index column
+
+            // begin adding to app database
+            autoIncrementColumn = new Column("datascrubber_rowid");
+            autoIncrementColumn.nullable = false;
+            autoIncrementColumn.autoIncrement = true;
+            columns.put(autoIncrementColumn.name, autoIncrementColumn);
+
+            databaseInterface.commit();
+        }
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
 
         return autoIncrementColumn;
     }
@@ -223,9 +245,16 @@ public class MySQLTable extends Table {
      */
     public void deleteAutoIncrementColumn() throws Exception {
 
-        establishConnection();
-        databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name);
-        databaseInterface.commit();
+        try {
+
+            establishConnection();
+            databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name);
+            databaseInterface.commit();
+        }
+        catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
     }
 
     /**
@@ -248,50 +277,67 @@ public class MySQLTable extends Table {
 
     }
 
-    public void setColumnToValue(String columnName, Object value) {
+    /**
+     * @param columnName
+     * @param value
+     * @throws SQLException
+     */
+    public void setColumnToValue(String columnName, Object value) throws SQLException {
 
-        establishConnection();
+        try {
 
-        Query query = new Query();
-        query = query.update(tableName).set(columnName);
+            establishConnection();
 
-        databaseInterface.createPreparedStatement(query.toString());
-        databaseInterface.addPreparedStatementParameters(value);
-        databaseInterface.executePreparedStatement();
+            Query query = new Query();
+            query = query.update(tableName).set(columnName);
 
-        databaseInterface.commit();
+            databaseInterface.createPreparedStatement(query.toString());
+            databaseInterface.addPreparedStatementParameters(value);
+            databaseInterface.executePreparedStatement();
+
+            databaseInterface.commit();
+        } catch (SQLException exc) {
+            databaseInterface.rollback();
+            throw exc;
+        }
 
     }
 
     /**
-     * clearResourses should be called in case any of the operations on
+     * cleanResourses should be called in case any of the operations on
      * table were interrupted by an exception to make sure
      * all the connections are closed
+     * <p/>
+     * cleanResources must be called outside of this class
      */
-    public void cleanResourses() {
+    public void cleanResourses() throws SQLException {
 
-        if (databaseInterface == null || !databaseInterface.isConnectionValid())
-            throw new NullPointerException("Database Interface is null - cannot clean resources");
         databaseInterface.cleanupAutomatic();
     }
 
-    public com.pearson.Database.SQL.ConnectionConfig getConnectionConfig() {
+    /**
+     * @return
+     * @throws SQLException
+     */
+    public com.pearson.Database.SQL.ConnectionConfig getConnectionConfig() throws SQLException {
         // make sure this table connection to the database
         establishConnection();
         // make sure that both classes work on the same connection
+        // todo : make sure that you don't have to do anything before using the object except instaniating it!
         connectionConfig.setDatabaseInterface(databaseInterface);
         return connectionConfig;
     }
 
     /**
-     * ATTENTION: the reason why we have establishConnection at every method is because if any of the methods inside loop
+     * Warning: the reason why we have establishConnection at every method is because if any of the methods inside loop
      * they will trigger getConnection() every turn. This way we don't idle a connection on creation of the object
      * and allow to reuse one connection for the entire mySQL table purposes
      */
     // todo test if this method can still be valid after cleanupAutomatic
-    private void establishConnection() {
+    private void establishConnection() throws SQLException {
+
         if (databaseInterface == null || !databaseInterface.isConnectionValid()) {
-            databaseInterface = new DatabaseInterface(DatabaseManager.getConnection());
+            databaseInterface = new DatabaseInterface(databaseManager.getConnection());
         }
         assert databaseInterface.isConnectionValid();
     }

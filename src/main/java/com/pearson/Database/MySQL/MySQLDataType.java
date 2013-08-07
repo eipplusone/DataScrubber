@@ -1,6 +1,5 @@
 package com.pearson.Database.MySQL;
 
-import com.pearson.SQL.*;
 
 public enum MySQLDataType {
     BIT, TINYINT, SMALLINT, MEDIUMINT, INT, BIGINT, DECIMAL, DEC, FLOAT, DOUBLE, //Numeric Types

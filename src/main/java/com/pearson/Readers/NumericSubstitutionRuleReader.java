@@ -3,6 +3,7 @@ package com.pearson.Readers;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.slf4j.Logger;
@@ -60,7 +61,11 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
             }
         }
 
-        mySQLTable.cleanResourses();
+        try {
+            mySQLTable.cleanResourses();
+        } catch (SQLException e) {
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
 
     }
 

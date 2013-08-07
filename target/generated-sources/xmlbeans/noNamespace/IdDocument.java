@@ -17,7 +17,7 @@ package noNamespace;
 public interface IdDocument extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(IdDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s889EF4ACD0644FA986AF56F6B1D377EA").resolveHandle("iddb54doctype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(IdDocument.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("iddb54doctype");
     
     /**
      * Gets the "id" element
