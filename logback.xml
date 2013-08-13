@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.FileAppender">
+        <file>datascrubber.log</file>
+        <encoder>
+            <pattern>%date{ISO8601} : %level : %logger{100}:%line : %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{ISO8601} : %level : %logger{0} : %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
