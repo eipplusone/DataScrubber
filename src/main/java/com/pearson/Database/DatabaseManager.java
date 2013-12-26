@@ -1,5 +1,6 @@
 package com.pearson.Database;
 
+import ch.qos.logback.core.pattern.color.BlackCompositeConverter;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import org.slf4j.Logger;
@@ -19,14 +20,14 @@ import java.util.Set;
  *
  * @author Ruslan Kiselev
  */
-public class databaseManager {
+public class DatabaseManager {
 
-    private static Logger logger = LoggerFactory.getLogger(databaseManager.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(DatabaseManager.class.getName());
 
     private Set<Connection> openConnections;
     public BoneCP connectionPool;
 
-    public databaseManager(String username, String password, String JDBCURL) throws SQLException {
+    public DatabaseManager(String username, String password, String JDBCURL) throws SQLException {
 
         openConnections = Collections.synchronizedSet(new HashSet());
         createConnectionPool(username, password, JDBCURL);
@@ -37,6 +38,8 @@ public class databaseManager {
         BoneCPConfig config = new BoneCPConfig();
         config.setMaxConnectionsPerPartition(20);
         config.setJdbcUrl(JDBCURL);
+        config.setJdbcUrl(JDBCURL);
+        config.setUsername(username);
 
         config.setUsername(username);
         config.setPassword(password);
@@ -46,9 +49,9 @@ public class databaseManager {
     }
 
     public Connection getConnection() throws SQLException {
-
         Connection returnConnection = connectionPool.getConnection();
         openConnections.add(returnConnection);
+        returnConnection.close();
         return returnConnection;
     }
 

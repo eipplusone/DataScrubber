@@ -16,7 +16,7 @@ package noNamespace;
 public interface RuleType extends org.apache.xmlbeans.XmlString
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RuleType.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("ruletype4a54type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(RuleType.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s58FAB3B4D6AA99BEB84FAA29DCB5C0BC").resolveHandle("ruletype4a54type");
     
     org.apache.xmlbeans.StringEnumAbstractBase enumValue();
     void set(org.apache.xmlbeans.StringEnumAbstractBase e);

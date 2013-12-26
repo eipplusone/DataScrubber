@@ -32,6 +32,8 @@ public class RuleImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentI
         new javax.xml.namespace.QName("", "target");
     private static final javax.xml.namespace.QName RULETYPE$10 = 
         new javax.xml.namespace.QName("", "rule_type");
+    private static final javax.xml.namespace.QName DISABLED$12 = 
+        new javax.xml.namespace.QName("", "disabled");
     
     
     /**
@@ -457,6 +459,98 @@ public class RuleImpl extends org.apache.xmlbeans.impl.values.XmlComplexContentI
                 target = (noNamespace.RuleType)get_store().add_attribute_user(RULETYPE$10);
             }
             target.set(ruleType);
+        }
+    }
+    
+    /**
+     * Gets the "disabled" attribute
+     */
+    public boolean getDisabled()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(DISABLED$12);
+            if (target == null)
+            {
+                return false;
+            }
+            return target.getBooleanValue();
+        }
+    }
+    
+    /**
+     * Gets (as xml) the "disabled" attribute
+     */
+    public org.apache.xmlbeans.XmlBoolean xgetDisabled()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlBoolean target = null;
+            target = (org.apache.xmlbeans.XmlBoolean)get_store().find_attribute_user(DISABLED$12);
+            return target;
+        }
+    }
+    
+    /**
+     * True if has "disabled" attribute
+     */
+    public boolean isSetDisabled()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            return get_store().find_attribute_user(DISABLED$12) != null;
+        }
+    }
+    
+    /**
+     * Sets the "disabled" attribute
+     */
+    public void setDisabled(boolean disabled)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.SimpleValue target = null;
+            target = (org.apache.xmlbeans.SimpleValue)get_store().find_attribute_user(DISABLED$12);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.SimpleValue)get_store().add_attribute_user(DISABLED$12);
+            }
+            target.setBooleanValue(disabled);
+        }
+    }
+    
+    /**
+     * Sets (as xml) the "disabled" attribute
+     */
+    public void xsetDisabled(org.apache.xmlbeans.XmlBoolean disabled)
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            org.apache.xmlbeans.XmlBoolean target = null;
+            target = (org.apache.xmlbeans.XmlBoolean)get_store().find_attribute_user(DISABLED$12);
+            if (target == null)
+            {
+                target = (org.apache.xmlbeans.XmlBoolean)get_store().add_attribute_user(DISABLED$12);
+            }
+            target.set(disabled);
+        }
+    }
+    
+    /**
+     * Unsets the "disabled" attribute
+     */
+    public void unsetDisabled()
+    {
+        synchronized (monitor())
+        {
+            check_orphaned();
+            get_store().remove_attribute(DISABLED$12);
         }
     }
 }

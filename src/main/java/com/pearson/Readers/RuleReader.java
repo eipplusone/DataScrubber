@@ -8,6 +8,7 @@ import noNamespace.SubstitutionDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.concurrent.Callable;
  *         Project Name: DataScrubber
  */
 public class RuleReader implements Callable<Rule> {
-    
+
     private static Logger logger = LoggerFactory.getLogger(RuleReader.class.getName());
 
     private Rule rule;
@@ -32,12 +33,14 @@ public class RuleReader implements Callable<Rule> {
         this.database = database;
     }
 
-    public void run(Database database) throws SQLException {
-        if (rule.getRuleType() == RuleType.SHUFFLE) runShuffle(database);
-        else if (rule.getRuleType() == RuleType.SUBSTITUTION) runSubstitution(database);
+    public Rule call(Database database) throws SQLException, FileNotFoundException {
+
+        if (rule.getRuleType() == RuleType.SHUFFLE) return callShuffle(database);
+        else if (rule.getRuleType() == RuleType.SUBSTITUTION) return callSubstitution(database);
+        else throw new IllegalArgumentException("XML file is invalid");
     }
 
-    private void runShuffle(Database database) throws SQLException {
+    private Rule callShuffle(Database database) throws SQLException {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
@@ -57,50 +60,44 @@ public class RuleReader implements Callable<Rule> {
         }
         // get the result set that has already been shuffled
 
-        try {
-            mySQLTable.deleteAutoIncrementColumn();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mySQLTable.getConnectionConfig().enableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().enableUniqueChecks();
+        mySQLTable.deleteAutoIncrementColumn();
 
         // clean all the resources
         mySQLTable.cleanResourses();
+
+        return rule;
     }
 
-    private void runSubstitution(Database database) {
+    private Rule callSubstitution(Database database) throws SQLException, FileNotFoundException {
 
         SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
 
-        if (dataType == SubstitutionDataType.DATE) new DateSubstitutionRuleReader(rule, database).run();
-        else if (dataType == SubstitutionDataType.NUMERIC) new NumericSubstitutionRuleReader(rule, database).run();
-        else if (dataType == SubstitutionDataType.STRING) new StringSubstitutionRuleReader(rule, database).run();
+        if (dataType == SubstitutionDataType.DATE) return new DateSubstitutionRuleReader(rule, database).call();
+        else if (dataType == SubstitutionDataType.NUMERIC)
+            return new NumericSubstitutionRuleReader(rule, database).call();
+        else return new StringSubstitutionRuleReader(rule, database).call();
     }
 
     @Override
-    public Rule call() throws Exception {
+    public Rule call() throws SQLException, FileNotFoundException, InterruptedException {
 
-        while (true) {
+        boolean done = false;
+
+        while (!done) {
 
             if (!SetReader.isTableOccupied(rule.getTarget())) {
-                try {
-                    // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
-                    if (SetReader.tablesOccupied.add(rule.getTarget())){
-                        run(database);
-                        break;
+                // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
+                if (SetReader.tablesOccupied.add(rule.getTarget())) {
+                    try {
+                        if (!rule.isSetDisabled() && rule.getDisabled() == false) call(database);
+                    } catch (SQLException e) {
+                        logger.error("Rule " + rule.getId() + " has exited with an SQL exception");
+                        throw e;
                     }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    break;
+                    done = true;
                 }
             } else {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                Thread.sleep(500);
             }
         }
 

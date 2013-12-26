@@ -10,14 +10,17 @@ import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
+import com.pearson.Utilities.LoggingInit;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import org.jdesktop.swingx.JXTreeTable;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.text.Highlighter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +62,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveSetAsMenuButton = new JMenuItem();
     private javax.swing.JMenuItem saveSetMenuButton = new JMenuItem();
     private javax.swing.JPanel settings = new JPanel();
-    private JMenuItem rightClickMenuItem = new JMenuItem();
+    private JMenuItem rightClickMenuItem, disableMenuItem, enableMenuItem = new JMenuItem();
     private JPopupMenu rulesInSetRightClickMenu = new JPopupMenu();
     private JMenuItem setConnectionMenuButton = new JMenuItem();
     private JMenuItem disconnectMenuButton = new JMenuItem();
@@ -113,7 +116,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         final MainWindow window = new MainWindow();
 
-        // not allow user to close the window untill saved or explicitly discarded
+        // not allow user to close the window until saved or explicitly discarded
         window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
             @Override
@@ -148,6 +151,22 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         rulesInSetRightClickMenu.add(rightClickMenuItem);
+
+        disableMenuItem = new JMenuItem("Disable");
+        disableMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                disableRuleActionPerformed(evt);
+            }
+        });
+        rulesInSetRightClickMenu.add(disableMenuItem);
+
+        enableMenuItem = new JMenuItem("Enable");
+        enableMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enableRuleActionPerformed(evt);
+            }
+        });
+        rulesInSetRightClickMenu.add(enableMenuItem);
 
         TestTree.addMouseListener(new MouseAdapter() {
             @Override
@@ -322,6 +341,28 @@ public class MainWindow extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void disableRuleActionPerformed(ActionEvent evt) {
+
+        int row = TestTree.getSelectedRow();
+        String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
+
+        XMLInterface.setDisabledRule(ruleID, true);
+
+        disableMenuItem.setEnabled(false);
+        enableMenuItem.setEnabled(true);
+    }
+
+    private void enableRuleActionPerformed(ActionEvent evt){
+
+        int row = TestTree.getSelectedRow();
+        String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
+
+        XMLInterface.setDisabledRule(ruleID, false);
+
+        enableMenuItem.setEnabled(false);
+        disableMenuItem.setEnabled(true);
+    }
+
     private void cleanUpMenuButtonActionPerformed(ActionEvent e) {
         CleanUp.fixTriggers();
 
@@ -390,7 +431,7 @@ public class MainWindow extends javax.swing.JFrame {
         try {
             XMLInterface.saveCurrentFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
     }
 
@@ -412,7 +453,7 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
                     newFile.createNewFile();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
             }
             XMLInterface.setXMLFile(newFile);
@@ -422,7 +463,7 @@ public class MainWindow extends javax.swing.JFrame {
         try {
             XMLInterface.saveCurrentFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
     }
 
@@ -473,7 +514,7 @@ public class MainWindow extends javax.swing.JFrame {
         try {
             XMLInterface.saveCurrentFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
         updateTreeModel();
     }

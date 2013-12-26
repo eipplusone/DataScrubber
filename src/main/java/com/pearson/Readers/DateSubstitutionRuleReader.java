@@ -3,7 +3,6 @@ package com.pearson.Readers;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
-import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.slf4j.Logger;
@@ -22,7 +21,7 @@ import java.util.Random;
  *         Project Name: DataScrubber
  */
 public class DateSubstitutionRuleReader extends SubstitutionReader {
-    
+
     private static Logger logger = LoggerFactory.getLogger(DateSubstitutionRuleReader.class.getName());
 
     public DateSubstitutionRuleReader(Rule rule, Database database) {
@@ -30,72 +29,52 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
     }
 
     @Override
-    public void run() {
+    public Rule call() throws SQLException {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
         Column selectedColumn = mySQLTable.columns.get(rule.getSubstitute().getColumn());
+        prepareToRun();
 
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                if (selectedColumn.getType() == MySQLDataType.TIME){
-                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomTime());
-                }
-                else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP){
-                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomTimeStamp());
-                }
-                // in case of Date, DateTime, Year
-                else {
-                    mySQLTable.setColumnToValue(selectedColumn.name, getRandomDate());
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (selectedColumn.getType() == MySQLDataType.TIME) {
+                mySQLTable.setColumnToValue(selectedColumn.name, getRandomTime());
+            } else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP) {
+                mySQLTable.setColumnToValue(selectedColumn.name, getRandomTimeStamp());
             }
+            // in case of Date, DateTime, Year
+            else {
+                mySQLTable.setColumnToValue(selectedColumn.name, getRandomDate());
+            }
+
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToNull();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            setToNull();
+
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
-
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                if (selectedColumn.getType() == MySQLDataType.TIME){
-                    mySQLTable.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
-                }
-                else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP){
-                    mySQLTable.setColumnToValue(selectedColumn.name, new Timestamp(rule.getSubstitute().getDateValue1().longValue()));
-                }
-                // in case of Date, DateTime, Year
-                else {
-                    mySQLTable.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (selectedColumn.getType() == MySQLDataType.TIME) {
+                mySQLTable.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
+            } else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP) {
+                mySQLTable.setColumnToValue(selectedColumn.name, new Timestamp(rule.getSubstitute().getDateValue1().longValue()));
+            }
+            // in case of Date, DateTime, Year
+            else {
+                mySQLTable.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
             }
         }
 
-        try {
-            mySQLTable.cleanResourses();
-        } catch (SQLException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
+        mySQLTable.cleanResourses();
+
+        return rule;
     }
 
-    private Time getRandomTime(){
+    private Time getRandomTime() {
         return new Time(getRandomMillis());
     }
 
-    private Date getRandomDate(){
+    private Date getRandomDate() {
         return new Date(getRandomMillis());
     }
 
-    private Timestamp getRandomTimeStamp(){
+    private Timestamp getRandomTimeStamp() {
         return new Timestamp(getRandomMillis());
     }
 

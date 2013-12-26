@@ -22,7 +22,7 @@ import java.util.Scanner;
  *         Project Name: DataScrubber
  */
 public class StringSubstitutionRuleReader extends SubstitutionReader {
-    
+
     private static Logger logger = LoggerFactory.getLogger(StringSubstitutionRuleReader.class.getName());
 
     public StringSubstitutionRuleReader(Rule rule, Database database) {
@@ -30,56 +30,30 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
     }
 
     @Override
-    public void run() {
+    public Rule call() throws SQLException, FileNotFoundException {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
+        prepareToRun();
 
         if (actionType == SubstitutionActionType.SET_FROM_FILE) {
             File selectedFile = new File(rule.getSubstitute().getFilePath());
+            setFromFile(selectedFile);
 
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setFromFile(selectedFile);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         } else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             int stringLength = rule.getSubstitute().getNumericValue().intValue();
+            setToRandom(stringLength);
 
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToRandom(stringLength);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
             String setToString = rule.getSubstitute().getStringValue1();
+            setToValue(setToString);
 
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToValue(setToString);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
-
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToNull();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            setToNull();
         }
 
-        try {
-            mySQLTable.cleanResourses();
-        } catch (SQLException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
+        mySQLTable.cleanResourses();
+
+        return rule;
     }
 
     public void setToValue(String value) throws SQLException {
@@ -95,43 +69,33 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
     /**
      * Updates the column with random values within the file
      */
-    public void setFromFile(File file) throws SQLException {
+    public void setFromFile(File file) throws SQLException, FileNotFoundException {
 
         HashMap<Integer, String> words = new HashMap();
         Scanner scanner = null;
 
         //build a hashmap of words to replace
-        try {
-            scanner = new Scanner(file);
+        scanner = new Scanner(file);
 
-            for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
-                // if there are still words inside the scanner
-                if (scanner.hasNext()) {
-                    String stringToUpdate = scanner.next();
-                    // if we reached the end of file make sure that no newline character is inside
-                    if (stringToUpdate.contains("\n")) {
-                        stringToUpdate.replaceAll("\n", "");
-                    }
+        int i = 0;
+        while (scanner.hasNext()) {
 
-                    words.put(i, stringToUpdate);
-                    assert (stringToUpdate != null);
-                    // if there are no more words inside scanner just start from the beginning of file
-                } else {
-                    scanner = new Scanner(file);
-                }
+            String stringToUpdate = scanner.next();
+            // if we reached the end of file make sure that no newline character is inside
+            if (stringToUpdate.contains("\n")) {
+                stringToUpdate.replaceAll("\n", "");
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            scanner.close();
+
+            assert (stringToUpdate != null);
+            words.put(i++, stringToUpdate);
         }
+
 
         Random random = new Random();
         // get a random word from the list and update with it next row inside column
-        for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
+        for (int j = 0; j < mySQLTable.getNumberOfRows(); j++) {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
-            mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), i);
+            mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), j);
         }
-
     }
 }

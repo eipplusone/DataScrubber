@@ -27,51 +27,31 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
         super(rule, database);
     }
 
-    public void run() {
+    public Rule call() throws SQLException {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
+        prepareToRun();
 
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             String columnName = rule.getSubstitute().getColumn();
             MySQLDataType dataType = database.getTable(rule.getTarget()).columns.get(columnName).getType();
-
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToRandom(dataType);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            setToRandom(dataType);
 
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                setToNull();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            setToNull();
+
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
-            try {
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-                disableConstraints();
-                mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), rule.getSubstitute().getNumericValue());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), rule.getSubstitute().getNumericValue());
         }
 
-        try {
-            mySQLTable.cleanResourses();
-        } catch (SQLException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
+        mySQLTable.cleanResourses();
 
+        return rule;
     }
 
     private void setToRandom(MySQLDataType dataType) throws SQLException {
 
-        if(mySQLTable.getAutoIncrementColumn() == null){
+        if (mySQLTable.getAutoIncrementColumn() == null) {
             mySQLTable.addAutoIncrementColumn();
         }
 
@@ -92,10 +72,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.updateRow(random.nextDouble(), targetColumn.getName(), i);
         }
 
-        try {
             mySQLTable.deleteAutoIncrementColumn();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

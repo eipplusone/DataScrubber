@@ -115,7 +115,6 @@ public class NewShuffleRuleWindow extends JDialog {
                     new NewShuffleRuleWindow().setVisible(true);
                 } catch (SQLException ex) {
                     Logger.getLogger(NewShuffleRuleWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    ex.printStackTrace();
                 }
             }
         });

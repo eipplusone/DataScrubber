@@ -142,7 +142,7 @@ public class CreateNewRuleWindow extends JDialog {
         dispose();
         rw.setVisible(true);
         rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_newSubstitutionRuleButtonActionPerformed
+    }
 
     private void newShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonActionPerformed
         // open the new shuffle rule window

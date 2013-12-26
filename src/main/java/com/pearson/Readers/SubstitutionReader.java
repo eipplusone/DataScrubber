@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.concurrent.Callable;
 
 /**
  * This is an abstract class for three types of substitution readers(sorted by type). SetToNull,
@@ -17,7 +18,7 @@ import java.sql.SQLException;
  *         Time: 9:22 AM
  *         Project Name: DataScrubber
  */
-public abstract class SubstitutionReader implements Runnable {
+public abstract class SubstitutionReader implements Callable<Rule> {
     
     private static Logger logger = LoggerFactory.getLogger(SubstitutionReader.class.getName());
     Database database;
@@ -31,20 +32,21 @@ public abstract class SubstitutionReader implements Runnable {
         mySQLTable = database.getTable(rule.getTarget());
     }
 
-    public abstract void run();
-
-
     public void setToNull() throws SQLException {
 
         mySQLTable.setColumnToNull(rule.getSubstitute().getColumn());
-
     }
 
     protected void disableConstraints() throws SQLException {
 
         mySQLTable.getConnectionConfig().disableUniqueChecks();
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+    }
 
+    protected void prepareToRun() throws SQLException {
+
+        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+        disableConstraints();
     }
 
 }

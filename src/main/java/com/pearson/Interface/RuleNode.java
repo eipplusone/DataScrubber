@@ -72,6 +72,9 @@ public class RuleNode extends AbstractMutableTreeTableNode {
                     }
                     else return "";
                 }
+            case RulesTreeTableModel.DISABLED:
+                if(!rule.isSetDisabled()) return false;
+                return rule.getDisabled();
         }
         throw new IllegalArgumentException("Column out of range");
     }

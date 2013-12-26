@@ -1,7 +1,10 @@
 package com.pearson;
 
 import com.pearson.Interface.Windows.MainWindow;
+import com.pearson.Utilities.StackTrace;
 import org.apache.commons.lang.math.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,6 +23,8 @@ import java.util.Date;
  *         Project Name: DataScrubber
  */
 public class LauncherTry {
+
+    public static Logger logger = LoggerFactory.getLogger(LauncherTry.class.getName());
 
     public static void main(String[] args) {
         System.out.println(new Date(Math.abs(System.currentTimeMillis() - RandomUtils.nextLong())).toString());
@@ -64,11 +69,11 @@ public class LauncherTry {
     //            //testing
     //            //System.out.println(username + password + url);
     //        } catch (ParserConfigurationException e) {
-    //            e.printStackTrace();
+    //            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
     //        } catch (SAXException e) {
-    //            e.printStackTrace();
+    //            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
     //        } catch (IOException e) {
-    //            e.printStackTrace();
+    //            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
     //        }
     //
     //
@@ -88,7 +93,7 @@ public class LauncherTry {
     //        try {
     //            substitution.setToNull();
     //        } catch (SQLException e) {
-    //            e.printStackTrace();
+    //            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
     //        }
     //
     ////        ArrayList<String> arrayList = new ArrayList<>();
@@ -99,7 +104,7 @@ public class LauncherTry {
     ////        try {
     ////            shuffleRule.run();
     ////        } catch (SQLException e) {
-    ////            e.printStackTrace();
+    ////            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
     ////        }
 
             /* Set the Nimbus look and feel */
@@ -181,7 +186,7 @@ public class LauncherTry {
             }
         }
         } catch (Exception e) {
-        e.printStackTrace();
+        logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
       }
 

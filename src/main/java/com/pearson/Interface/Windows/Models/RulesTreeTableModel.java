@@ -15,13 +15,14 @@ public class RulesTreeTableModel extends AbstractTreeTableModel {
 
     private static Logger logger = LoggerFactory.getLogger(RulesTreeTableModel.class.getName());
 
-    public final static String[] COLUMN_NAMES = new String[]{"RuleID", "Rule Type", "Target", "Column Names", "Action Type", "Value"};
+    public final static String[] COLUMN_NAMES = new String[]{"RuleID", "Rule Type", "Target", "Column Names", "Action Type", "Value", "Disabled"};
     public final static int RULE_ID_COLUMN = 0;
     public final static int RULE_TYPE = 1;
     public final static int TARGET_COLUMN = 2;
     public final static int COLUMN_NAMES_COLUMN = 3;
     public final static int ACTION_TYPE = 4;
     public final static int VALUE = 5;
+    public final static int DISABLED = 6;
 
     public RulesTreeTableModel(){
 

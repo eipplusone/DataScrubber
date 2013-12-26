@@ -16,7 +16,7 @@ package noNamespace;
 public interface Rule extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("rule44e5type");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(Rule.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s58FAB3B4D6AA99BEB84FAA29DCB5C0BC").resolveHandle("rule44e5type");
     
     /**
      * Gets the "id" element
@@ -152,6 +152,36 @@ public interface Rule extends org.apache.xmlbeans.XmlObject
      * Sets (as xml) the "rule_type" attribute
      */
     void xsetRuleType(noNamespace.RuleType ruleType);
+    
+    /**
+     * Gets the "disabled" attribute
+     */
+    boolean getDisabled();
+    
+    /**
+     * Gets (as xml) the "disabled" attribute
+     */
+    org.apache.xmlbeans.XmlBoolean xgetDisabled();
+    
+    /**
+     * True if has "disabled" attribute
+     */
+    boolean isSetDisabled();
+    
+    /**
+     * Sets the "disabled" attribute
+     */
+    void setDisabled(boolean disabled);
+    
+    /**
+     * Sets (as xml) the "disabled" attribute
+     */
+    void xsetDisabled(org.apache.xmlbeans.XmlBoolean disabled);
+    
+    /**
+     * Unsets the "disabled" attribute
+     */
+    void unsetDisabled();
     
     /**
      * A factory class with static methods for creating instances

@@ -1,5 +1,6 @@
 package com.pearson.Database;
 
+import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,19 +14,22 @@ import java.util.List;
  * @author Jeffrey Schmidt
  */
 public class DatabaseInterface {
-    
+
     private static Logger logger = LoggerFactory.getLogger(DatabaseInterface.class.getName());
-    
+
     private Connection connection = null;
     private PreparedStatement preparedStatement = null;
-    private List<Object> preparedStatementParameters_ = null;
+    private List<Object> preparedStatementParameters = null;
     private Statement statement = null;
     private ResultSet results = null;
 
     public DatabaseInterface(Connection connection) {
         this.connection = connection;
     }
-    
+
+    /**
+     * Closes all the resourses(connection, preparedStatement, statement, and resultSet)
+     */
     public void cleanupAutomatic() throws SQLException {
 
         if (connection != null){
@@ -45,51 +49,46 @@ public class DatabaseInterface {
         }
     }
 
+    /**
+     * Creates statement resource
+     *
+     * @return
+     * @throws SQLException
+     */
     public Statement createStatement() throws SQLException {
 
             statement = connection.createStatement();
             return statement;
     }
-    
+
     public PreparedStatement createPreparedStatement(String sql) throws SQLException {
 
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatementParameters_ = new ArrayList<>();
-            
+            preparedStatementParameters = new ArrayList<>();
+
             return preparedStatement;
     }
-    
+
     public ResultSet executePreparedStatement() throws SQLException {
 
             setPreparedStatementParameters();
-            
+
             boolean result = preparedStatement.execute();
-            
+
             if (result) {
                 results = preparedStatement.getResultSet();
             }
-             
+
             return results;
     }
-    
-    public List<Object> addPreparedStatementParameters(Object... objects) {
-        try {
-            if ((connection == null) || (preparedStatement == null) || (preparedStatementParameters_ == null)) {
-                return null;
-            } 
-            
-            preparedStatementParameters_.addAll(Arrays.asList(objects));
-            
-            return preparedStatementParameters_;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }  
+
+    public void addPreparedStatementParameters(Object... objects) {
+
+            preparedStatementParameters.addAll(Arrays.asList(objects));
     }
-    
+
     public void commit() throws SQLException {
-        
+
             if (!connection.getAutoCommit()) {
                 connection.commit();
             }
@@ -97,9 +96,9 @@ public class DatabaseInterface {
                 logger.debug("Cannot commit when Auto-Commit is enabled");
             }
     }
-    
+
     public void rollback() throws SQLException {
-        
+
             if (!connection.getAutoCommit()) {
                 connection.rollback();
             }
@@ -107,31 +106,16 @@ public class DatabaseInterface {
                 logger.debug("Cannot rollback when Auto-Commit is enabled");
             }
     }
-    
+
     public boolean isConnectionValid() throws SQLException {
-            if (connection == null) {
-                return false;
-            }
-            else if (!connection.isValid(5)) {
-                connection.close();
-                return false;
-            }
-            else {
-                return true;
-            }
+        return connection.isValid(5);
     }
 
-    private int setPreparedStatementParameter(Object object, int index) {
-        
-        if ((preparedStatement == null) || (preparedStatementParameters_ == null)) {
-            logger.warn("Can't set preparedStatementParameters - preparedStatementParameters or preparedStatement is null");
-            return -1;
-        } 
-        
-        try {
+    private int setPreparedStatementParameter(Object object, int index) throws SQLException {
+
             if (object == null) {
                 preparedStatement.setObject(index++, null);
-            }       
+            }
             else if (object instanceof Boolean) {
                 preparedStatement.setBoolean(index++, (Boolean) object);
             }
@@ -177,51 +161,27 @@ public class DatabaseInterface {
                 else {
                     logger.warn("Setting PreparedStatement parameter to 'object' type when object is not an object type");
                 }
-                
+
                 preparedStatement.setObject(index++, object);
             }
-            
+
             return index;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        }  
+
     }
-    
-    public void setPreparedStatementParameters() {
-        
-        if ((preparedStatement == null) || (preparedStatementParameters_ == null)) {
+
+    public void setPreparedStatementParameters() throws SQLException {
+
+        if ((preparedStatement == null) || (preparedStatementParameters == null)) {
             logger.warn("Can't set preparedStatementParameters - preparedStatementParameters or preparedStatement is null");
             return;
-        } 
-        
+        }
+
             int index = 1;
 
-            for (Object object : preparedStatementParameters_) {
+            for (Object object : preparedStatementParameters) {
                 int incrementedIndex = setPreparedStatementParameter(object, index);
                 index = incrementedIndex;
             }
-    }
-
-    public Connection getConnection() {
-        return connection;
-    }
-    
-    public Statement getStatement() {
-        return statement;
-    }
-    
-    public PreparedStatement getPreparedStatement() {
-        return preparedStatement;
-    }
-    
-    public List<Object> getPreparedStatementParameters() {
-        return preparedStatementParameters_;
-    }
-    
-    public ResultSet getResults() {
-        return results;
     }
 
 }

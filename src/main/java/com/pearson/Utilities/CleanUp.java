@@ -1,6 +1,8 @@
 package com.pearson.Utilities;
 
 import com.pearson.Database.DatabaseInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import java.sql.SQLException;
 public class CleanUp {
 
     public static DatabaseInterface databaseInterface = null;
+    public static Logger logger = LoggerFactory.getLogger(CleanUp.class.getName());
 
     public static void main(String[] args) {
 
@@ -25,20 +28,20 @@ public class CleanUp {
 //        try {
 //            databaseManager.createConnectionPool("dbadmin", "Pw123", "jdbc:mysql://10.25.98.121:3306/core");
 //        } catch (SQLException e) {
-//            e.printStackTrace();
+//            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
 //        }
 
         //if there are any triggers left inside trigger table delete them
 //        try {
 //            deleteTriggers();
 //        } catch (SQLException e) {
-//            e.printStackTrace();
+//            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e))();
 //        }
 
         try {
             enableTriggers();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
 
 //        databaseInterface.cleanupAutomatic();

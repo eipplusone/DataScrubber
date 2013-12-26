@@ -6,6 +6,7 @@ package com.pearson.Interface.Interfaces;
 
 import com.pearson.Interface.RuleNode;
 import com.pearson.Readers.SetReader;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.MaskingSetDocument;
 import noNamespace.MaskingSetDocument.MaskingSet;
 import noNamespace.Rule;
@@ -25,7 +26,7 @@ import java.util.Iterator;
 /**
  * @author Ruslan Kiselev
  */
-public class XMLInterface{
+public class XMLInterface {
 
     public static Logger logger = LoggerFactory.getLogger(XMLInterface.class.getName());
 
@@ -64,9 +65,9 @@ public class XMLInterface{
                 throw new XmlException("XML file is invalid");
             }
         } catch (XmlException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
     }
 
@@ -212,17 +213,23 @@ public class XMLInterface{
 
     public static boolean isFileSaved() {
 
-        if(setDocument == null || xmlFile == null) throw new IllegalArgumentException("File was not chosen");
+        if (setDocument == null || xmlFile == null) throw new IllegalArgumentException("File was not chosen");
 
         try {
             // compare the texts of xml files - if no changes were made, they should be the same
             return setDocument.xmlText().equals(MaskingSetDocument.Factory.parse(xmlFile).xmlText());
         } catch (XmlException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
         return false;
     }
-}
 
+    public static void setDisabledRule(String ruleID, boolean disabled) {
+
+        Rule ruleToDisable = getRule(ruleID);
+
+        ruleToDisable.setDisabled(disabled);
+    }
+}

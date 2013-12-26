@@ -41,6 +41,7 @@
     <xs:attribute name="rule_type" type="rule_type"/>
     <xs:attribute name="substitution_data_type" type="substitution_data_type"/>
     <xs:attribute name="substitution__action_type" type="substitution_action_type"/>
+    <xs:attribute name="disabled" type="xs:boolean"/>
 
     <!--complex types-->
 
@@ -61,6 +62,7 @@
         </xs:sequence>
         <xs:attribute ref="target" use="required"/>
         <xs:attribute ref="rule_type" use="required"/>
+        <xs:attribute ref="disabled"/>
     </xs:complexType>
 
     <xs:complexType name="shuffle_rule">

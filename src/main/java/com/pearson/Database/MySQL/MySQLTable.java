@@ -1,6 +1,7 @@
 package com.pearson.Database.MySQL;
 
 import com.pearson.Database.DatabaseInterface;
+import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Table;
 import com.pearson.Utilities.Query;
@@ -22,15 +23,13 @@ import java.util.Random;
  * To change this template use File | Settings | File Templates.
  */
 public class MySQLTable extends Table {
-
     private static Logger logger = LoggerFactory.getLogger(MySQLTable.class.getName());
 
     com.pearson.Database.SQL.ConnectionConfig connectionConfig;
     DatabaseInterface databaseInterface;
-    com.pearson.Database.databaseManager databaseManager;
+    DatabaseManager databaseManager;
 
-    public MySQLTable(String tableName, com.pearson.Database.databaseManager databaseManager) {
-
+    public MySQLTable(String tableName, DatabaseManager databaseManager) {
         super(tableName);
         this.databaseManager = databaseManager;
         connectionConfig = new com.pearson.Database.SQL.ConnectionConfig(databaseInterface);
@@ -42,15 +41,14 @@ public class MySQLTable extends Table {
      * @return number of rows max in all columns
      */
     public int getNumberOfRows() throws SQLException {
+        establishConnection();
 
-            establishConnection();
+        String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
 
-            String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS + tableName;
+        ResultSet results = databaseInterface.createStatement().executeQuery(numberOfRowsQuery);
 
-            ResultSet results = databaseInterface.createStatement().executeQuery(numberOfRowsQuery);
-
-            results.next();
-            return results.getInt(1);
+        results.next();
+        return results.getInt(1);
 
     }
 
@@ -62,18 +60,17 @@ public class MySQLTable extends Table {
      * @
      */
     public int getNumberOfRows(String columnName) throws SQLException {
+        establishConnection();
 
-            establishConnection();
+        String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
 
-            String numberOfRowsQuery = SQLStatements.GET_NUMBER_OF_ROWS_IN_A_COLUMN + tableName;
+        databaseInterface.createPreparedStatement(numberOfRowsQuery);
+        databaseInterface.addPreparedStatementParameters(columnName);
 
-            databaseInterface.createPreparedStatement(numberOfRowsQuery);
-            databaseInterface.addPreparedStatementParameters(columnName);
+        ResultSet resultSet = databaseInterface.executePreparedStatement();
 
-            ResultSet resultSet = databaseInterface.executePreparedStatement();
-
-            resultSet.next();
-            return resultSet.getInt(1);
+        resultSet.next();
+        return resultSet.getInt(1);
     }
 
     /**
@@ -84,9 +81,7 @@ public class MySQLTable extends Table {
      * @param id
      */
     public void updateRow(Object object, String columnName, int id) throws SQLException {
-
         try {
-
             establishConnection();
 
             if (getAutoIncrementColumn() == null) throw new NullPointerException("Auto increment column is null");
@@ -100,23 +95,19 @@ public class MySQLTable extends Table {
             databaseInterface.executePreparedStatement();
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
     }
 
     public void setColumnToNull(String columnName) throws SQLException {
-
         try {
-
             establishConnection();
             databaseInterface.createStatement().executeUpdate("UPDATE " + tableName + " SET " + columnName + " = NULL");
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc){
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -129,13 +120,10 @@ public class MySQLTable extends Table {
      * @return
      */
     public ResultSet getRandomRow(ArrayList<String> columnNames) throws SQLException {
-
         establishConnection();
 
         int numberOfRows = getNumberOfRows();
-
         String autoIncrementColumn = getAutoIncrementColumn().name;
-
         int randomNumber = new Random().nextInt(numberOfRows - 1);
 
         // get a random row
@@ -157,13 +145,10 @@ public class MySQLTable extends Table {
      * @
      */
     public void swap(ResultSet row1, ResultSet row2, ArrayList<String> columnNames) throws SQLException {
-
         try {
-
             establishConnection();
 
             String query = null;
-
             String idColumn = getAutoIncrementColumn().name;
 
             if (idColumn == null)
@@ -189,11 +174,8 @@ public class MySQLTable extends Table {
                     databaseInterface.executePreparedStatement();
                 }
             }
-
-
             databaseInterface.commit();
-        }
-        catch (SQLException exc){
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -207,15 +189,12 @@ public class MySQLTable extends Table {
      */
 
     public Column addAutoIncrementColumn() throws SQLException {
-
         Column autoIncrementColumn;
 
         try {
-
             establishConnection();
 
             int numberOfRows = getNumberOfRows();
-
             String createColumnQuery = "ALTER TABLE " + tableName + " add column datascrubber_rowid INT NOT NULL AUTO_INCREMENT UNIQUE";
 
             databaseInterface.createStatement().executeUpdate(createColumnQuery);
@@ -229,8 +208,7 @@ public class MySQLTable extends Table {
             columns.put(autoIncrementColumn.name, autoIncrementColumn);
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -243,15 +221,12 @@ public class MySQLTable extends Table {
      *
      * @throws Exception
      */
-    public void deleteAutoIncrementColumn() throws Exception {
-
+    public void deleteAutoIncrementColumn() throws SQLException {
         try {
-
             establishConnection();
             databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name);
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -264,9 +239,7 @@ public class MySQLTable extends Table {
      * @return auto-increment column
      */
     public Column getAutoIncrementColumn() {
-
         Iterator<Column> it = columns.values().iterator();
-
         while (it.hasNext()) {
             Column column = it.next();
             if (column.autoIncrement) {
@@ -274,7 +247,6 @@ public class MySQLTable extends Table {
             }
         }
         return null;
-
     }
 
     /**
@@ -283,9 +255,7 @@ public class MySQLTable extends Table {
      * @throws SQLException
      */
     public void setColumnToValue(String columnName, Object value) throws SQLException {
-
         try {
-
             establishConnection();
 
             Query query = new Query();

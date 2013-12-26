@@ -4,6 +4,7 @@ import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -41,8 +42,8 @@ public class SetReader implements Runnable {
     }
 
     /**
-     * Returns a Tree composed of rules inside the rules set. The first level of rules are children of root
-     * the root itself is masking set object
+     * Returns a Tree(RuleNode) composed of rules inside the rules set. The first level of rules are children of root
+     * the root itself is masking set object(i.e. not a rule)
      */
     public static RuleNode getRulesTree(MaskingSetDocument setDocument) {
 
@@ -85,6 +86,11 @@ public class SetReader implements Runnable {
         }
     }
 
+    /**
+     * Static method that returns if a rule occupies given table at the moment
+     * @param target
+     * @return
+     */
     public static boolean isTableOccupied(String target) {
         return tablesOccupied.contains(target);
     }
@@ -121,36 +127,37 @@ public class SetReader implements Runnable {
                 try {
                     databaseSettings.disableTriggers();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
 
 
                 try {
                     executeThreads(rulesToRun, numberOfThreadsAllowed);
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
 
                 try {
                     databaseSettings.enableTriggers();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
 
             }
+            // if database have no triggers
             else {
                 try {
                     executeThreads(rulesToRun, numberOfThreadsAllowed);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
     }
 
@@ -171,11 +178,16 @@ public class SetReader implements Runnable {
         Iterator<Rule> it = list.iterator();
 
         for (Rule rule : list) {
-            Future<Rule> future = executor.submit(new RuleReader(rule, database));
-            // we have to wait for a little in order for RuleReader to startup running
-            Thread.sleep(10);
-            tablesOccupied.add(rule.getTarget());
-            rulesRunning.add(future);
+
+            Future<Rule> future;
+            if (!rule.getDisabled()) {
+                logger.info("Rule " + rule.getId() + " starts running");
+                future = executor.submit(new RuleReader(rule, database));
+                // we have to wait for a little in order for RuleReader to startup running
+                Thread.sleep(10);
+                tablesOccupied.add(rule.getTarget());
+                rulesRunning.add(future);
+            }
         }
 
         while (!rulesRunning.isEmpty()) {
@@ -188,6 +200,8 @@ public class SetReader implements Runnable {
                         tablesOccupied.remove(future.get().getTarget());
                         rulesRunning.remove(future);
 
+                        logger.info("Rule " + doneRule.getId() + " has completed running");
+
                         if (!XMLInterface.isLeaf(doneRule))
                             executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()), executor, rulesDone);
                         else return;
@@ -197,10 +211,6 @@ public class SetReader implements Runnable {
         }
 
 
-    }
-
-    public int getNumberOfThreadsAllowed() {
-        return numberOfThreadsAllowed;
     }
 
     public void setNumberOfThreadsAllowed(int numberOfThreadsAllowed) {

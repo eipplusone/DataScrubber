@@ -17,7 +17,7 @@ package noNamespace;
 public interface TargetAttribute extends org.apache.xmlbeans.XmlObject
 {
     public static final org.apache.xmlbeans.SchemaType type = (org.apache.xmlbeans.SchemaType)
-        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(TargetAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s268628CF22FBF8F7EA26DC2E534909B0").resolveHandle("targetef7cattrtypetype");
+        org.apache.xmlbeans.XmlBeans.typeSystemForClassLoader(TargetAttribute.class.getClassLoader(), "schemaorg_apache_xmlbeans.system.s58FAB3B4D6AA99BEB84FAA29DCB5C0BC").resolveHandle("targetef7cattrtypetype");
     
     /**
      * Gets the "target" attribute
