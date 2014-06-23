@@ -28,13 +28,11 @@ public class DatabaseManager {
     public BoneCP connectionPool;
 
     public DatabaseManager(String username, String password, String JDBCURL) throws SQLException {
-
         openConnections = Collections.synchronizedSet(new HashSet());
         createConnectionPool(username, password, JDBCURL);
     }
 
     public void createConnectionPool(String username, String password, String JDBCURL) throws SQLException {
-
         BoneCPConfig config = new BoneCPConfig();
         config.setMaxConnectionsPerPartition(20);
         config.setJdbcUrl(JDBCURL);
@@ -51,23 +49,19 @@ public class DatabaseManager {
     public Connection getConnection() throws SQLException {
         Connection returnConnection = connectionPool.getConnection();
         openConnections.add(returnConnection);
-        returnConnection.close();
         return returnConnection;
     }
 
     public void disconnect(Connection connection) throws SQLException {
-
         connection.close();
     }
 
     public void shutDown() throws SQLException {
-
         closeAllConnections();
         connectionPool.close();
     }
 
     public void closeAllConnections() throws SQLException {
-
         synchronized (openConnections){
             for(Connection connection : openConnections){
                 connection.close();

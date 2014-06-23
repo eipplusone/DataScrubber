@@ -44,11 +44,18 @@ public class RuleReader implements Callable<Rule> {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
+        // TODO: BUG; having already done these setting in a parent rule causes the child rule,
+        // if it's the rule that targets the same table
+        // to exit with exception right away.
         mySQLTable.getConnectionConfig().setDefaultDatabase(database);
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().disableUniqueChecks();
 
-        if (mySQLTable.getAutoIncrementColumn() == null) mySQLTable.addAutoIncrementColumn();
+        boolean autoIncrementColumnCreated = false;
+        if (mySQLTable.getAutoIncrementColumn() == null) {
+            mySQLTable.addAutoIncrementColumn();
+            autoIncrementColumnCreated = true;
+        }
 
         // begin shuffling
         for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
@@ -60,7 +67,10 @@ public class RuleReader implements Callable<Rule> {
         }
         // get the result set that has already been shuffled
 
-        mySQLTable.deleteAutoIncrementColumn();
+        if (autoIncrementColumnCreated) {
+            mySQLTable.deleteAutoIncrementColumn();
+            autoIncrementColumnCreated = false;
+        }
 
         // clean all the resources
         mySQLTable.cleanResourses();
@@ -85,17 +95,17 @@ public class RuleReader implements Callable<Rule> {
 
         while (!done) {
 
-            if (!SetReader.isTableOccupied(rule.getTarget())) {
-                // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
-                if (SetReader.tablesOccupied.add(rule.getTarget())) {
-                    try {
-                        if (!rule.isSetDisabled() && rule.getDisabled() == false) call(database);
-                    } catch (SQLException e) {
-                        logger.error("Rule " + rule.getId() + " has exited with an SQL exception");
-                        throw e;
-                    }
-                    done = true;
+            // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
+            // add() returns false if the element is already present in the set; since the set is
+            // thread-safe, that means only one rule at a time would be able to add table to the set
+            if (SetReader.tablesOccupied.add(rule.getTarget())) {
+                try {
+                    if (!rule.isSetDisabled() && rule.getDisabled() == false) call(database);
+                } catch (SQLException e) {
+                    logger.error("Rule " + rule.getId() + " has exited with an SQL exception");
+                    throw e;
                 }
+                done = true;
             } else {
                 Thread.sleep(500);
             }

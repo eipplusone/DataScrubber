@@ -107,8 +107,13 @@ public class DatabaseInterface {
             }
     }
 
-    public boolean isConnectionValid() throws SQLException {
-        return connection.isValid(5);
+    public boolean isConnectionValid() {
+        // TODO: FOUND BUG - if connection is closed, this return SQL exception
+        try {
+            return connection.isValid(5);
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     private int setPreparedStatementParameter(Object object, int index) throws SQLException {

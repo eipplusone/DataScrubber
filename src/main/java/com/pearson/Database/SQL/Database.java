@@ -53,8 +53,7 @@ public class Database {
     }
 
     /**
-     * Connect creates connection pool to draw connections from, and populates
-     * database with information
+     * Connect creates connection pool to draw connections from
      *
      * @param username username that is used to log in on MySQL server
      * @param password password that is used to log in on MySQL server
@@ -76,6 +75,7 @@ public class Database {
         DatabaseInterface databaseInterface = new DatabaseInterface(databaseManager.getConnection());
         ConnectionConfig config = new ConnectionConfig(databaseInterface);
         config.setDefaultDatabase(this);
+        System.out.println("bla3");
         try {
             try (PreparedStatement tablesStmt = databaseInterface.createPreparedStatement(SQLStatements.GET_TABLES)) {
                 try (ResultSet tablesResult = tablesStmt.executeQuery()) {

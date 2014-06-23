@@ -88,6 +88,7 @@ public class SetReader implements Runnable {
 
     /**
      * Static method that returns if a rule occupies given table at the moment
+     *
      * @param target
      * @return
      */
@@ -161,17 +162,36 @@ public class SetReader implements Runnable {
         }
     }
 
+    /**
+     * Preparation method for the main execute threads method. Initializes worker that runs threads,
+     * set that keeps track of occupied tables in order to prevent deadlock(from running multiple threads
+     * on the same table)
+     *
+     * @param firstLevelRules - list of the first level rules in a set
+     * @param threadPoolSize  - number of threads
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     private void executeThreads(LinkedList<Rule> firstLevelRules, int threadPoolSize) throws ExecutionException, InterruptedException {
 
         ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
         tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
-        Set rulesDone = Collections.synchronizedSet(new HashSet<Rule>());
 
 
-        executeThreads(firstLevelRules, executor, rulesDone);
+        executeThreads(firstLevelRules, executor);
     }
 
-    private void executeThreads(List<Rule> list, ExecutorService executor, Set rulesDone) throws ExecutionException, InterruptedException {
+    /**
+     * Main method for executing the rule set. It starts off by submitting the first level rules to the executor,
+     * waiting for them to complete. It then cycles through the future object list, checking if anyone finished running yet.
+     * If thread detects a finished rule, it calls itself on the children of that particular rule.
+     *
+     * @param list     - list of first level rules to run
+     * @param executor - Executor to run the threads in
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    private void executeThreads(List<Rule> list, ExecutorService executor) throws ExecutionException, InterruptedException {
 
         Set rulesRunning = Collections.synchronizedSet(new HashSet());
 
@@ -183,9 +203,6 @@ public class SetReader implements Runnable {
             if (!rule.getDisabled()) {
                 logger.info("Rule " + rule.getId() + " starts running");
                 future = executor.submit(new RuleReader(rule, database));
-                // we have to wait for a little in order for RuleReader to startup running
-                Thread.sleep(10);
-                tablesOccupied.add(rule.getTarget());
                 rulesRunning.add(future);
             }
         }
@@ -193,27 +210,30 @@ public class SetReader implements Runnable {
         while (!rulesRunning.isEmpty()) {
 
             synchronized (rulesRunning) {
-                for (Object futureObject : rulesRunning) {
-                    Future<Rule> future = (Future<Rule>) futureObject;
+                // if rulesRunning is modified at any point while iterator is alive, the next time
+                // we go through the get next element and the element isn't there, it throws an exception.
+                // which is why we use iterator explicitly
+//                for (Object futureObject : rulesRunning) {
+                Iterator<Future<Rule>> iter = rulesRunning.iterator();
+                while(iter.hasNext()) {
+                    Future<Rule> future = iter.next();
                     if (future.isDone()) {
                         Rule doneRule = future.get();
-                        tablesOccupied.remove(future.get().getTarget());
-                        rulesRunning.remove(future);
-
+                        iter.remove();
+                        tablesOccupied.remove(doneRule.getTarget());
                         logger.info("Rule " + doneRule.getId() + " has completed running");
 
                         if (!XMLInterface.isLeaf(doneRule))
-                            executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()), executor, rulesDone);
+                            executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()), executor);
                         else return;
                     }
                 }
             }
         }
-
-
     }
 
     public void setNumberOfThreadsAllowed(int numberOfThreadsAllowed) {
         this.numberOfThreadsAllowed = numberOfThreadsAllowed;
     }
+
 }

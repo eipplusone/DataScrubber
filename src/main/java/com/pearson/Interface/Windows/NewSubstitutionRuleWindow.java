@@ -82,7 +82,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
                 + ":" + com.pearson.Interface.UIManager.getPort());
 
         // end of preparing database structure
-
         for (MySQLTable table : database.tables.values()) {
             tableNames.add(table.getTableName());
         }

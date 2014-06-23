@@ -4,6 +4,7 @@
  */
 package com.pearson.Interface.Windows;
 
+import com.pearson.Utilities.StackTrace;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -138,6 +139,11 @@ public class CreateNewRuleWindow extends JDialog {
         try {
         rw = new NewSubstitutionRuleWindow();
         } catch (SQLException ex) {
+            logger.error("Couldn't create a new SubstitutionWindow");
+            System.out.println(ex.getErrorCode());
+            System.out.println(ex.getMessage());
+            logger.error(ex + System.lineSeparator() + StackTrace.getStringFromStackTrace(ex));
+            System.exit(1);
         }
         dispose();
         rw.setVisible(true);
@@ -150,6 +156,8 @@ public class CreateNewRuleWindow extends JDialog {
         try {
             srw = new NewShuffleRuleWindow();
         } catch (SQLException ex) {
+            logger.error("Couldn't createa a new SubstitutionWindow");
+            logger.error(ex + System.lineSeparator() + StackTrace.getStringFromStackTrace(ex));
         }
         dispose();
         srw.setVisible(true);

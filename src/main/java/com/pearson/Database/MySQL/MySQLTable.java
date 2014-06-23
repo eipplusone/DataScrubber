@@ -299,7 +299,7 @@ public class MySQLTable extends Table {
     }
 
     /**
-     * Warning: the reason why we have establishConnection at every method is because if any of the methods inside loop
+     * The reason why we have establishConnection at every method is because if any of the methods inside loop
      * they will trigger getConnection() every turn. This way we don't idle a connection on creation of the object
      * and allow to reuse one connection for the entire mySQL table purposes
      */

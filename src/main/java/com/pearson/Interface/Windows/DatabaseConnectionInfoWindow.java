@@ -6,6 +6,7 @@ package com.pearson.Interface.Windows;
 
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.UIManager;
+import com.pearson.Utilities.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +34,19 @@ public class DatabaseConnectionInfoWindow extends JDialog {
     public DatabaseConnectionInfoWindow() {
         initComponents();
 
-        HostNameField.setText(UIManager.getUrl());
-        UserNameField.setText(UIManager.getUsername());
-        PasswordField.setText(UIManager.getPassword());
-        DefaultSchemaField.setText(UIManager.getDefaultSchema());
+        // if we are in development, use the localhost as the sqlserver
+        if (Constants.IN_DEVELOPMENT) {
+            HostNameField.setText("127.0.0.1");
+            UserNameField.setText("root");
+            DefaultSchemaField.setText("sakila");
+        }
+        // otherwise use the previous setting entered by the user
+        else {
+            HostNameField.setText(UIManager.getUrl());
+            UserNameField.setText(UIManager.getUsername());
+            PasswordField.setText(UIManager.getPassword());
+            DefaultSchemaField.setText(UIManager.getDefaultSchema());
+        }
 
         setModalityType(ModalityType.APPLICATION_MODAL);
     }
@@ -78,39 +88,36 @@ public class DatabaseConnectionInfoWindow extends JDialog {
                         .addGap(0, 100, Short.MAX_VALUE)
         );
 
+        // makes sure that we just close on exit
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+
+        // set the label and button names
         UserNameLabel.setText("User Name:");
-
         PasswordLabel.setText("Password:");
-
         HostNameLabel.setText("Host Name:");
-
+        PortLabel.setText("Port:");
+        DefaultSchemaLabel.setText("Default Schema:");
+        TestConnectionButton.setText("Test Connection");
+        OKButton.setText("OK");
+        ConnectionDetailsLabel.setText("Connection Details");
         PortField.setText("3306");
 
-        PortLabel.setText("Port:");
 
-        DefaultSchemaLabel.setText("Default Schema:");
-
-        DefaultSchemaField.setEditable(true);
-
-        TestConnectionButton.setText("Test Connection");
+        // two buttons - test connection and ok
         TestConnectionButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 TestConnectionButtonActionPerformed(evt);
             }
         });
 
-
-        OKButton.setText("OK");
         OKButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 OKButtonActionPerformed(evt);
             }
         });
 
-        ConnectionDetailsLabel.setText("Connection Details");
-
+        // netbeans gui madness
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -239,15 +246,14 @@ public class DatabaseConnectionInfoWindow extends JDialog {
         return returnValue;
     }
 
+    /**
+     * Used to check non-emptiness of the input inside the connection info window. Allows for an empty password
+     * @return
+     */
     private boolean isInputNotEmpty() {
         String username = UserNameField.getText();
         if (username.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter the username");
-            return false;
-        }
-        String password = PasswordField.getText();
-        if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter the password");
             return false;
         }
         String port = PortField.getText();

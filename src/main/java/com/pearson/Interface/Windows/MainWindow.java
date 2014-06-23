@@ -10,17 +10,16 @@ import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
-import com.pearson.Utilities.LoggingInit;
+import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
+import org.apache.commons.io.FileUtils;
 import org.jdesktop.swingx.JXTreeTable;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.text.Highlighter;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +86,27 @@ public class MainWindow extends javax.swing.JFrame {
         TestTree.setOpenIcon(null);
         TestTree.getTreeSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        setMaskingSetLogic(false);
+        // check if we have a default schema; if so, load it
+        File defaultSchema = new File(Constants.DEFAULT_SCHEMA);
+        if (defaultSchema.exists()) {
+
+            XMLInterface.setXMLFile(defaultSchema);
+
+            LinkedList<String> columnNames = new LinkedList();
+            columnNames.add("Rule ID");
+            columnNames.add("Rule Type");
+            columnNames.add("Target");
+            columnNames.add("Columns");
+
+            setMaskingSetLogic(true);
+
+            RulesInSetPane.setTitleAt(0, "Last Used Schema");
+            updateTreeModel();
+            TestTree.expandAll();
+        }
+        else {
+            setMaskingSetLogic(false);
+        }
 
         com.pearson.Interface.UIManager.setMainWindow(this);
     }
@@ -561,7 +580,8 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
-        JFileChooser fc = new JFileChooser();
+        // start off in the DataScrubber directory
+        JFileChooser fc = new JFileChooser(Constants.WORKING_DIRECTORY);
         int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
         File openFile = null;
 
@@ -571,6 +591,15 @@ public class MainWindow extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
 
+                // save the file for default usage so that it's already open on the next application start
+                File newDefaultFile = new File(Constants.WORKING_DIRECTORY + "/.defaultSchemaDS");
+                try {
+                    FileUtils.copyFile(openFile, newDefaultFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // load the file
                 XMLInterface.setXMLFile(openFile);
 
                 LinkedList<String> columnNames = new LinkedList();
