@@ -1,4 +1,4 @@
-package com.pearson.Readers;
+package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.SQL.Column;

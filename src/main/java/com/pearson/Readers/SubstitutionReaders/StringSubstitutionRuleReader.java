@@ -1,7 +1,6 @@
-package com.pearson.Readers;
+package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.SQL.Database;
-import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.apache.commons.lang.RandomStringUtils;

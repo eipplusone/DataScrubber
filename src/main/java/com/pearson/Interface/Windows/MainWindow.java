@@ -358,10 +358,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    } // please don't look here, it's so ugly
 
     private void disableRuleActionPerformed(ActionEvent evt) {
-
         int row = TestTree.getSelectedRow();
         String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
 
@@ -372,7 +371,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void enableRuleActionPerformed(ActionEvent evt){
-
         int row = TestTree.getSelectedRow();
         String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
 
@@ -393,7 +391,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void disconnectMenuButtonActionPerformed(ActionEvent e) {
-
         com.pearson.Interface.UIManager.cleanConnectionInformation();
         JOptionPane.showMessageDialog(null, "Connection has been closed");
 
@@ -429,14 +426,26 @@ public class MainWindow extends javax.swing.JFrame {
             exception.printStackTrace();
         }
 
-        SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database);
-        setReader.run();
+        SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database, XMLInterface.getXmlFile().getName());
+
 
         try {
-            database.cleanUp();
-        } catch (SQLException exc) {
+            setReader.execute();
+//            setReader.run(); // temporary hack
+        } catch (Exception exc) {
             logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
         }
+
+        // todo need to figure out a way to clean up the database
+        // ****** BUG *****
+        // here is the bug; If we run execute(), the edt thread continues on
+        // and tries to cleanUp DB while the set is still performing operations on the DB.
+        // YOU ARE AN IDIOT!!!
+//        try {
+//            database.cleanUp();
+//        } catch (SQLException exc) {
+//            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
+//        }
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
@@ -459,6 +468,9 @@ public class MainWindow extends javax.swing.JFrame {
         saveAsFile();
     }
 
+    /**
+     * Saves the currently open masking set.
+     */
     private void saveAsFile() {
 
         JFileChooser chooser = new JFileChooser();
@@ -486,6 +498,11 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Creates a new dependent rule using context menu.
+     *
+     * @param evt
+     */
     private void createNewDependentRuleRightClickMenuActionPerformed(ActionEvent evt) {
 
         int row = TestTree.getSelectedRow();
@@ -510,6 +527,11 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Deletes a rule from a set using context menu.
+     *
+     * @param evt
+     */
     private void deleteRightClickMenuActionPerformed(ActionEvent evt) {
 
         int row = TestTree.getSelectedRow();
@@ -538,6 +560,11 @@ public class MainWindow extends javax.swing.JFrame {
         updateTreeModel();
     }
 
+    /**
+     * Runs when a user creates a new set.
+     *
+     * @param evt
+     */
     private void newMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         // need to do checks if a masking set has already been created and if the user wants
@@ -564,6 +591,11 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Runs once the "Open Masking Set" button is pressed in the drop down meny of the main window.
+     *
+     * @param evt
+     */
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // create a file chooser
 
@@ -638,6 +670,11 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }
 
+    /**
+     * Sets the Visible parameter for all the GUI components
+     *
+     * @param isVisible
+     */
     private void setMaskingSetLogic(boolean isVisible) {
 
         RulesInSetPane.setVisible(isVisible);

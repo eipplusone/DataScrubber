@@ -1,9 +1,8 @@
-package com.pearson.Readers;
+package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
-import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.slf4j.Logger;
@@ -72,6 +71,6 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
                 mySQLTable.updateRow(random.nextDouble(), targetColumn.getName(), i);
         }
 
-            mySQLTable.deleteAutoIncrementColumn();
+        mySQLTable.deleteAutoIncrementColumn();
     }
 }

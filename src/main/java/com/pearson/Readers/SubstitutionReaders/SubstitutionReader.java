@@ -1,4 +1,4 @@
-package com.pearson.Readers;
+package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Database;
@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
  *         Project Name: DataScrubber
  */
 public abstract class SubstitutionReader implements Callable<Rule> {
-    
+
     private static Logger logger = LoggerFactory.getLogger(SubstitutionReader.class.getName());
     Database database;
     Rule rule;

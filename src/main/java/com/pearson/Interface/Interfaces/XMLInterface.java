@@ -232,4 +232,5 @@ public class XMLInterface {
 
         ruleToDisable.setDisabled(disabled);
     }
+
 }

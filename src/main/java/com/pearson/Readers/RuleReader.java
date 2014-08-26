@@ -2,6 +2,9 @@ package com.pearson.Readers;
 
 import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Readers.SubstitutionReaders.DateSubstitutionRuleReader;
+import com.pearson.Readers.SubstitutionReaders.NumericSubstitutionRuleReader;
+import com.pearson.Readers.SubstitutionReaders.StringSubstitutionRuleReader;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionDataType;
@@ -20,6 +23,10 @@ import java.util.concurrent.Callable;
  *         Date: 7/15/13
  *         Time: 3:42 PM
  *         Project Name: DataScrubber
+ *
+ *         Rule reader is called everytime we need to parse a rule. Shuffling is implemented within
+ *         RuleReader, whereas all the substitution methods are handled by calling the respective substitution
+ *         class.
  */
 public class RuleReader implements Callable<Rule> {
 
@@ -44,9 +51,14 @@ public class RuleReader implements Callable<Rule> {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
-        // TODO: BUG; having already done these setting in a parent rule causes the child rule,
+        // BUG; having already done these setting in a parent rule causes the child rule,
         // if it's the rule that targets the same table
         // to exit with exception right away.
+
+        // Aug 12th: Checked on a test set, wasn't able to imitate the bug.
+        // Thereotically it shouldn't matter since the quieries that these methods
+        // do if ran, don't affect the running of the program. English skilzz
+
         mySQLTable.getConnectionConfig().setDefaultDatabase(database);
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().disableUniqueChecks();
@@ -58,6 +70,7 @@ public class RuleReader implements Callable<Rule> {
         }
 
         // begin shuffling
+        logger.debug("Rule " + rule.getId() + " finished setting up; begin shuffling");
         for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
             // two random rows to be swapped
             String[] columnNamesArray = rule.getShuffle().getColumnArray();
@@ -66,14 +79,18 @@ public class RuleReader implements Callable<Rule> {
             mySQLTable.swap(randomRow1, randomRow2, new ArrayList(Arrays.asList(columnNamesArray)));
         }
         // get the result set that has already been shuffled
+        logger.debug("Rule " + rule.getId() + " finished shuffling");
 
         if (autoIncrementColumnCreated) {
+            logger.debug("Rule " + rule.getId() + ": Deleting autoincrement column");
             mySQLTable.deleteAutoIncrementColumn();
             autoIncrementColumnCreated = false;
         }
 
         // clean all the resources
+        logger.debug("Rule " + rule.getId() + ":Cleaning resources");
         mySQLTable.cleanResourses();
+        logger.debug("Rule " + rule.getId() + ":Finished running; returning to dispatch thread");
 
         return rule;
     }
@@ -98,16 +115,20 @@ public class RuleReader implements Callable<Rule> {
             // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
             // add() returns false if the element is already present in the set; since the set is
             // thread-safe, that means only one rule at a time would be able to add table to the set
-            if (SetReader.tablesOccupied.add(rule.getTarget())) {
+            if (SetReader.addTarget(rule.getTarget())) {
                 try {
-                    if (!rule.isSetDisabled() && rule.getDisabled() == false) call(database);
+                    if (!rule.isSetDisabled() && rule.getDisabled() == false) {
+                        logger.info("Rule " + rule.getId() + " has started running");
+                        call(database);
+                    }
                 } catch (SQLException e) {
                     logger.error("Rule " + rule.getId() + " has exited with an SQL exception");
-                    throw e;
+                    throw new MySQLException(e, rule.getId());
                 }
                 done = true;
             } else {
                 Thread.sleep(500);
+                logger.info("Rule " + rule.getId() + " is waiting for table " + rule.getTarget());
             }
         }
 

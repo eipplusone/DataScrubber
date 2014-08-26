@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.SQL.Database;
@@ -18,7 +14,7 @@ import java.awt.event.WindowEvent;
  * @author Ruslan Kiselev, Jia Ma
  */
 public class DatabaseConnectionInfoWindow extends JDialog {
-    
+
     private static Logger logger = LoggerFactory.getLogger(DatabaseConnectionInfoWindow.class.getName());
 
     String username = null;
@@ -248,6 +244,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     /**
      * Used to check non-emptiness of the input inside the connection info window. Allows for an empty password
+     *
      * @return
      */
     private boolean isInputNotEmpty() {

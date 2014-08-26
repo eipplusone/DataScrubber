@@ -32,7 +32,7 @@ public class DatabaseSettings {
             databaseInterface.createPreparedStatement(query);
             ResultSet resultSet = databaseInterface.executePreparedStatement();
 
-            if(!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 query = "create table " + newTable + " LIKE " + tableToCopyFrom;
 
                 databaseInterface.createStatement().executeUpdate(query);
@@ -43,8 +43,7 @@ public class DatabaseSettings {
             databaseInterface.createStatement().executeUpdate(query);
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -62,8 +61,7 @@ public class DatabaseSettings {
             }
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
         }
 
@@ -73,7 +71,7 @@ public class DatabaseSettings {
 
 
         if (!databaseInterface.isConnectionValid()) {
-            throw new SQLException("Connection is not valid");
+            throw new SQLException("DatabaseSettings: getTriggers - Connection is not valid");
         }
 
         String query = "SELECT * FROM " + "information_schema.triggers";
@@ -93,7 +91,7 @@ public class DatabaseSettings {
         try {
 
             if (!databaseInterface.isConnectionValid()) {
-                throw new SQLException("Connection is not valid");
+                throw new SQLException("Database Settings: enableTriggers - Connection is not valid");
             }
 
             String query = "SELECT * FROM " + "datascrubber_triggers_copy";
@@ -105,8 +103,7 @@ public class DatabaseSettings {
             databaseInterface.createStatement().executeUpdate("DROP TABLE datascrubber_triggers_copy");
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -142,8 +139,7 @@ public class DatabaseSettings {
             databaseInterface.createStatement().executeUpdate(createTriggerQuery);
 
             databaseInterface.commit();
-        }
-        catch (SQLException exc) {
+        } catch (SQLException exc) {
             databaseInterface.rollback();
             throw exc;
         }
@@ -156,9 +152,10 @@ public class DatabaseSettings {
 
     public boolean isTriggersExist() throws SQLException {
 
+        System.out.println("Reached 1");
         ResultSet resultSet = getTriggers();
-
-        if(resultSet.isBeforeFirst()) return false;
+        System.out.println("Reached 2");
+        if (resultSet.isBeforeFirst()) return false;
         else return true;
     }
 }

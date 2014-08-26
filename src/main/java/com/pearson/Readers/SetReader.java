@@ -4,6 +4,7 @@ import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
+import com.pearson.Interface.Windows.ProgressWindow;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
@@ -12,8 +13,9 @@ import noNamespace.RulesDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
+import javax.swing.*;
 import java.util.*;
+import java.util.Timer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,21 +26,41 @@ import java.util.concurrent.Future;
  *         Date: 7/15/13
  *         Time: 2:59 PM
  *         Project Name: DataScrubber
+ *         <p/>
+ *         Set Reader is responsible for running the set of rules specified by the user.
  */
-public class SetReader implements Runnable {
+public class SetReader extends SwingWorker<Integer, String> {
 
+    private static final int TIMER_PERIOD = 5000;
     public static Logger logger = LoggerFactory.getLogger(SetReader.class.getName());
 
-    public static Set<String> tablesOccupied;
-    //variables
+    ProgressWindow progressWindow;
+
+    private static Set<String> tablesOccupied;
     MaskingSetDocument setDocument = null;
     Database database;
+    Timer timer;
     private int numberOfThreadsAllowed = 50;
+    String setName;
 
 
-    public SetReader(MaskingSetDocument setDocument, Database database) {
+    public SetReader(final MaskingSetDocument setDocument, Database database, final String name) {
         this.setDocument = setDocument;
         this.database = database;
+        this.setName = name;
+
+        System.out.println();
+
+
+        progressWindow = new ProgressWindow(this);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                progressWindow.setLabelName(name);
+                progressWindow.setVisible(true);
+            }
+        });
     }
 
     /**
@@ -67,6 +89,11 @@ public class SetReader implements Runnable {
         return root;
     }
 
+    @Override
+    protected void process(List<String> chunks) {
+        progressWindow.updateLogText(chunks.toArray(new String[chunks.size()]));
+    }
+
     /**
      * A recursive method-helpers that initialises tree with the information from masking set
      *
@@ -86,16 +113,6 @@ public class SetReader implements Runnable {
         }
     }
 
-    /**
-     * Static method that returns if a rule occupies given table at the moment
-     *
-     * @param target
-     * @return
-     */
-    public static boolean isTableOccupied(String target) {
-        return tablesOccupied.contains(target);
-    }
-
     private LinkedList<Rule> getChildren(RuleNode root) {
 
         LinkedList<Rule> rulesToReturn = new LinkedList();
@@ -113,53 +130,39 @@ public class SetReader implements Runnable {
         return rulesToReturn;
     }
 
-    public void run() {
-
+    /**
+     * Should be running on a separate thread using SwingWorker API. Enables interactivity for the application
+     *
+     * @return 0 if successful
+     * @throws Exception
+     */
+    @Override
+    public Integer doInBackground() throws Exception {
         RuleNode root = getRulesTree(this.setDocument);
+        publish("Partitioned the set");
 
         // get the list of all rules that yet to be run in the order they suppose to run
         LinkedList<Rule> rulesToRun = getChildren(root);
 
         DatabaseSettings databaseSettings = database.getDatabaseSettings();
-
         try {
             if (databaseSettings.isTriggersExist()) {
-
-                try {
-                    databaseSettings.disableTriggers();
-                } catch (SQLException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
-
-
-                try {
-                    executeThreads(rulesToRun, numberOfThreadsAllowed);
-                } catch (ExecutionException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                } catch (InterruptedException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
-
-                try {
-                    databaseSettings.enableTriggers();
-                } catch (SQLException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
-
+                databaseSettings.disableTriggers();
+                executeThreads(rulesToRun, numberOfThreadsAllowed);
+                databaseSettings.enableTriggers();
             }
-            // if database have no triggers
+            // if database has no triggers
             else {
-                try {
-                    executeThreads(rulesToRun, numberOfThreadsAllowed);
-                } catch (InterruptedException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                } catch (ExecutionException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
+                executeThreads(rulesToRun, numberOfThreadsAllowed);
             }
-        } catch (SQLException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        } catch (MySQLException sqlexc) {
+            publish("Rule " + sqlexc.getRuleID() + " has exited with an SQL exception: " + sqlexc);
+            logger.error(sqlexc + System.lineSeparator() + StackTrace.getStringFromStackTrace(sqlexc));
+        } catch (Exception exc) {
+            publish("Something terrible happened; check the logs");
+            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
         }
+        return 0;
     }
 
     /**
@@ -177,7 +180,6 @@ public class SetReader implements Runnable {
         ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
         tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
 
-
         executeThreads(firstLevelRules, executor);
     }
 
@@ -193,47 +195,52 @@ public class SetReader implements Runnable {
      */
     private void executeThreads(List<Rule> list, ExecutorService executor) throws ExecutionException, InterruptedException {
 
-        Set rulesRunning = Collections.synchronizedSet(new HashSet());
-
-        Iterator<Rule> it = list.iterator();
+        final Set<Future<Rule>> rulesRunning = Collections.synchronizedSet(new HashSet<Future<Rule>>());
 
         for (Rule rule : list) {
 
             Future<Rule> future;
             if (!rule.getDisabled()) {
+                publish("Rule " + rule.getId() + " starts running");
                 logger.info("Rule " + rule.getId() + " starts running");
                 future = executor.submit(new RuleReader(rule, database));
                 rulesRunning.add(future);
             }
         }
 
-        while (!rulesRunning.isEmpty()) {
 
-            synchronized (rulesRunning) {
-                // if rulesRunning is modified at any point while iterator is alive, the next time
-                // we go through the get next element and the element isn't there, it throws an exception.
-                // which is why we use iterator explicitly
-//                for (Object futureObject : rulesRunning) {
+        synchronized (rulesRunning) {
+            while (!rulesRunning.isEmpty()) {
+
+                Future<Rule> future;
                 Iterator<Future<Rule>> iter = rulesRunning.iterator();
-                while(iter.hasNext()) {
-                    Future<Rule> future = iter.next();
+                while (iter.hasNext()) {
+                    future = iter.next();
                     if (future.isDone()) {
                         Rule doneRule = future.get();
-                        iter.remove();
+                        logger.debug("Rule " + doneRule.getId() + ":Returned to SwingWorker");
+                        rulesRunning.remove(future);
                         tablesOccupied.remove(doneRule.getTarget());
+                        publish("Rule " + doneRule.getId() + " has completed running");
                         logger.info("Rule " + doneRule.getId() + " has completed running");
+                        progressWindow.setProgress(progressWindow.getProgress() + 100 / setDocument.getMaskingSet().getRules().sizeOfRuleArray());
 
                         if (!XMLInterface.isLeaf(doneRule))
                             executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()), executor);
-                        else return;
+                        else {
+                            return;
+                        }
                     }
                 }
             }
+            logger.debug("Finished running all the rules");
+        }
+
+    }
+
+    public static boolean addTarget(String target) {
+        synchronized (tablesOccupied) {
+            return tablesOccupied.add(target);
         }
     }
-
-    public void setNumberOfThreadsAllowed(int numberOfThreadsAllowed) {
-        this.numberOfThreadsAllowed = numberOfThreadsAllowed;
-    }
-
 }
