@@ -86,11 +86,9 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
     public void setFromFile(File file) throws SQLException, FileNotFoundException {
 
         HashMap<Integer, String> words = new HashMap();
-        Scanner scanner = null;
-
         //build a hashmap of words to replace
         logger.debug("For substitution using file: " + file.getAbsolutePath());
-        scanner = new Scanner(file);
+        Scanner scanner = new Scanner(file);
 
         int i = 0;
         while (scanner.hasNext()) {
@@ -108,7 +106,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
         Random random = new Random();
         // get a random word from the list and update with it next row inside column
-        for (int j = 0; j < mySQLTable.getNumberOfRows(); j++) {
+        for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
             mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), j);
         }
