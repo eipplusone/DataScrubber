@@ -5,6 +5,7 @@ import com.pearson.Database.SQL.Database;
 import com.pearson.Readers.SubstitutionReaders.DateSubstitutionRuleReader;
 import com.pearson.Readers.SubstitutionReaders.NumericSubstitutionRuleReader;
 import com.pearson.Readers.SubstitutionReaders.StringSubstitutionRuleReader;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.SubstitutionDataType;
@@ -17,27 +18,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author Ruslan Kiselev
  *         Date: 7/15/13
  *         Time: 3:42 PM
  *         Project Name: DataScrubber
- *
+ *         <p/>
  *         Rule reader is called everytime we need to parse a rule. Shuffling is implemented within
  *         RuleReader, whereas all the substitution methods are handled by calling the respective substitution
  *         class.
  */
-public class RuleReader implements Callable<Rule> {
+public class RuleReader implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger(RuleReader.class.getName());
 
     private Rule rule;
     private Database database;
+    private SetReader setReader;
 
-    public RuleReader(Rule rule, Database database) {
+    public RuleReader(Rule rule, Database database, SetReader setReader) {
         this.rule = rule;
         this.database = database;
+        this.setReader = setReader;
     }
 
     public Rule call(Database database) throws SQLException, FileNotFoundException {
@@ -106,32 +110,31 @@ public class RuleReader implements Callable<Rule> {
     }
 
     @Override
-    public Rule call() throws SQLException, FileNotFoundException, InterruptedException {
+    public void run() {
 
         boolean done = false;
 
-        while (!done) {
+        try {
+            while (!done) {
 
-            // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
-            // add() returns false if the element is already present in the set; since the set is
-            // thread-safe, that means only one rule at a time would be able to add table to the set
-            if (SetReader.addTarget(rule.getTarget())) {
-                try {
+                // if we succeeded in adding table to the tablesOccupied(if no other thread submitted it before us)
+                // add() returns false if the element is already present in the set; since the set is
+                // thread-safe, that means only one rule at a time would be able to add table to the set
+                if (setReader.addTarget(rule.getTarget())) {
                     if (!rule.isSetDisabled() && rule.getDisabled() == false) {
                         logger.info("Rule " + rule.getId() + " has started running");
                         call(database);
                     }
-                } catch (SQLException e) {
-                    logger.error("Rule " + rule.getId() + " has exited with an SQL exception");
-                    throw new MySQLException(e, rule.getId());
+                    done = true;
+                } else {
+                    Thread.sleep(500);
                 }
-                done = true;
-            } else {
-                Thread.sleep(500);
-                logger.info("Rule " + rule.getId() + " is waiting for table " + rule.getTarget());
             }
+            setReader.updateDoneRule(rule, true);
+        } catch (Exception e) {
+            setReader.addToLog("Rule " + rule.getId() + " has exited with an exception - see logs for details");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            setReader.updateDoneRule(rule, false); // let setReader know that we finished running it, but with exception
         }
-
-        return rule;
     }
 }

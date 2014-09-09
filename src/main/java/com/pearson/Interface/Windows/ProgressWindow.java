@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
  */
 public class ProgressWindow extends JDialog {
     private JPanel viewer;
-    private JProgressBar progressBar;
     private JLabel setName;
     private JTextArea logArea;
 
@@ -28,7 +27,6 @@ public class ProgressWindow extends JDialog {
     private ProgressWindow() {
 
         viewer = new JPanel();
-        progressBar = new JProgressBar();
         setName = new JLabel("This should be the set' name");
         logArea = new JTextArea();
 
@@ -38,7 +36,6 @@ public class ProgressWindow extends JDialog {
         viewer.setBorder(new EmptyBorder(borderSize, borderSize, borderSize, borderSize));
 
         viewer.add(setName);
-        viewer.add(progressBar);
         viewer.add(logArea);
         add(viewer);
 
@@ -70,14 +67,6 @@ public class ProgressWindow extends JDialog {
                 new ProgressWindow().setVisible(true);
             }
         });
-    }
-
-    public int getProgress() {
-        return progressBar.getValue();
-    }
-
-    public void setProgress(int progress) {
-        progressBar.setValue(progress);
     }
 
     public void setLabelName(String labelName) {

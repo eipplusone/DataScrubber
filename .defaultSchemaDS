@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<masking_set>
+    <date_created>2014-05-30-05:00</date_created>
+    <rules>
+        <rule target="staff" rule_type="substitution">
+            <id>1</id>
+            <substitute substitution__action_type="setFromFile" substitution_data_type="string">
+                <column>email</column>
+                <string_value>File: /Users/ruslankiselev/Google Drive/Work/DataScrubber/loadFromFile.txt</string_value>
+            </substitute>
+        </rule>
+    </rules>
+</masking_set>

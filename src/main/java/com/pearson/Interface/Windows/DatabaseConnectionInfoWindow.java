@@ -222,6 +222,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
         });
 
         pack();
+        setLocationRelativeTo(null);
     }
 
 
@@ -280,17 +281,11 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     }
 
-    private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OKButtonActionPerformed
+    private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {
         //test connection and open the createNewRuleWindow
         if (isInputNotEmpty()) {
             fetch();
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-
-                // check so we don't annoy user with connection has been established multiple times
-                if (!UIManager.isUserInformationSet()) {
-                    JOptionPane.showMessageDialog(null, "Connection has been established");
-                }
-
                 UIManager.setUsername(username);
                 UIManager.setPassword(password);
                 UIManager.setUrl(url);
@@ -322,5 +317,4 @@ public class DatabaseConnectionInfoWindow extends JDialog {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    // End of variables declaration//GEN-END:variables
 }

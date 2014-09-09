@@ -42,6 +42,7 @@ public class SetReader extends SwingWorker<Integer, String> {
     Timer timer;
     private int numberOfThreadsAllowed = 50;
     String setName;
+    ExecutorService executor;
 
 
     public SetReader(final MaskingSetDocument setDocument, Database database, final String name) {
@@ -143,17 +144,18 @@ public class SetReader extends SwingWorker<Integer, String> {
 
         // get the list of all rules that yet to be run in the order they suppose to run
         LinkedList<Rule> rulesToRun = getChildren(root);
+        executor = Executors.newFixedThreadPool(numberOfThreadsAllowed);
 
         DatabaseSettings databaseSettings = database.getDatabaseSettings();
         try {
             if (databaseSettings.isTriggersExist()) {
                 databaseSettings.disableTriggers();
-                executeThreads(rulesToRun, numberOfThreadsAllowed);
+                executeThreads(rulesToRun);
                 databaseSettings.enableTriggers();
             }
             // if database has no triggers
             else {
-                executeThreads(rulesToRun, numberOfThreadsAllowed);
+                executeThreads(rulesToRun);
             }
         } catch (MySQLException sqlexc) {
             publish("Rule " + sqlexc.getRuleID() + " has exited with an SQL exception: " + sqlexc);
@@ -165,82 +167,40 @@ public class SetReader extends SwingWorker<Integer, String> {
         return 0;
     }
 
-    /**
-     * Preparation method for the main execute threads method. Initializes worker that runs threads,
-     * set that keeps track of occupied tables in order to prevent deadlock(from running multiple threads
-     * on the same table)
-     *
-     * @param firstLevelRules - list of the first level rules in a set
-     * @param threadPoolSize  - number of threads
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    private void executeThreads(LinkedList<Rule> firstLevelRules, int threadPoolSize) throws ExecutionException, InterruptedException {
+    private void executeThreads(List<Rule> list) {
 
-        ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
         tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
-
-        executeThreads(firstLevelRules, executor);
-    }
-
-    /**
-     * Main method for executing the rule set. It starts off by submitting the first level rules to the executor,
-     * waiting for them to complete. It then cycles through the future object list, checking if anyone finished running yet.
-     * If thread detects a finished rule, it calls itself on the children of that particular rule.
-     *
-     * @param list     - list of first level rules to run
-     * @param executor - Executor to run the threads in
-     * @throws ExecutionException
-     * @throws InterruptedException
-     */
-    private void executeThreads(List<Rule> list, ExecutorService executor) throws ExecutionException, InterruptedException {
-
-        final Set<Future<Rule>> rulesRunning = Collections.synchronizedSet(new HashSet<Future<Rule>>());
-
         for (Rule rule : list) {
 
             Future<Rule> future;
             if (!rule.getDisabled()) {
                 publish("Rule " + rule.getId() + " starts running");
                 logger.info("Rule " + rule.getId() + " starts running");
-                future = executor.submit(new RuleReader(rule, database));
-                rulesRunning.add(future);
+                    executor.submit(new RuleReader(rule, database, this));
             }
         }
+    }
 
+    public boolean addTarget(String target) {
+        synchronized (tablesOccupied) {
+            return tablesOccupied.add(target);
+        }
+    }
 
-        synchronized (rulesRunning) {
-            while (!rulesRunning.isEmpty()) {
-
-                Future<Rule> future;
-                Iterator<Future<Rule>> iter = rulesRunning.iterator();
-                while (iter.hasNext()) {
-                    future = iter.next();
-                    if (future.isDone()) {
-                        Rule doneRule = future.get();
-                        logger.debug("Rule " + doneRule.getId() + ":Returned to SwingWorker");
-                        rulesRunning.remove(future);
-                        tablesOccupied.remove(doneRule.getTarget());
-                        publish("Rule " + doneRule.getId() + " has completed running");
-                        logger.info("Rule " + doneRule.getId() + " has completed running");
-                        progressWindow.setProgress(progressWindow.getProgress() + 100 / setDocument.getMaskingSet().getRules().sizeOfRuleArray());
-
-                        if (!XMLInterface.isLeaf(doneRule))
-                            executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()), executor);
-                        else {
-                            return;
-                        }
-                    }
-                }
+    public synchronized void updateDoneRule(Rule doneRule, boolean isSuccessful)  {
+        tablesOccupied.remove(doneRule.getTarget());
+        if (isSuccessful) {
+            publish("Rule " + doneRule.getId() + " has completed running");
+            if (!XMLInterface.isLeaf(doneRule))
+                executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()));
+            else {
+                return;
             }
-            logger.debug("Finished running all the rules");
         }
 
     }
 
-    public static boolean addTarget(String target) {
-        synchronized (tablesOccupied) {
-            return tablesOccupied.add(target);
-        }
+    public synchronized void addToLog(String s) {
+        publish(s);
     }
 }

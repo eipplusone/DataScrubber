@@ -12,5 +12,5 @@ public class Constants {
 
     public static final boolean IN_DEVELOPMENT = true;
     public static final String WORKING_DIRECTORY = System.getProperty("user.dir");
-    public static final String DEFAULT_SCHEMA = WORKING_DIRECTORY + "/.defaultSchemaDS";
+    public static final String ASCII_SET = "qwertyuiopasdfghjklzxcvbnm123456789";
 }

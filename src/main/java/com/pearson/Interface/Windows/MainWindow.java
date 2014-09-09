@@ -12,10 +12,13 @@ import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
+import com.sun.tools.internal.jxc.apt.Const;
 import noNamespace.Rule;
 import org.apache.commons.io.FileUtils;
+import org.apache.xmlbeans.XmlException;
 import org.jdesktop.swingx.JXTreeTable;
 import org.slf4j.LoggerFactory;
+import sun.misc.JavaxSecurityAuthKerberosAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -39,7 +42,7 @@ import java.util.LinkedList;
  *         Date: 08-30-2013
  */
 public class MainWindow extends javax.swing.JFrame {
-    
+
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(MainWindow.class.getName());
 
     private RulesTreeTableModel rulesInSetTreeModel = new RulesTreeTableModel();
@@ -86,27 +89,13 @@ public class MainWindow extends javax.swing.JFrame {
         TestTree.setOpenIcon(null);
         TestTree.getTreeSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        // check if we have a default schema; if so, load it
-        File defaultSchema = new File(Constants.DEFAULT_SCHEMA);
-        if (defaultSchema.exists()) {
+        LinkedList<String> columnNames = new LinkedList();
+        columnNames.add("Rule ID");
+        columnNames.add("Rule Type");
+        columnNames.add("Target");
+        columnNames.add("Columns");
 
-            XMLInterface.setXMLFile(defaultSchema);
-
-            LinkedList<String> columnNames = new LinkedList();
-            columnNames.add("Rule ID");
-            columnNames.add("Rule Type");
-            columnNames.add("Target");
-            columnNames.add("Columns");
-
-            setMaskingSetLogic(true);
-
-            RulesInSetPane.setTitleAt(0, "Last Used Schema");
-            updateTreeModel();
-            TestTree.expandAll();
-        }
-        else {
-            setMaskingSetLogic(false);
-        }
+        setMaskingSetLogic(true);
 
         com.pearson.Interface.UIManager.setMainWindow(this);
     }
@@ -116,23 +105,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
 
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
+        //todo set the look and feel such that the save dialog displays files correctly
         final MainWindow window = new MainWindow();
 
         // not allow user to close the window until saved or explicitly discarded
@@ -363,21 +336,14 @@ public class MainWindow extends javax.swing.JFrame {
     private void disableRuleActionPerformed(ActionEvent evt) {
         int row = TestTree.getSelectedRow();
         String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
-
         XMLInterface.setDisabledRule(ruleID, true);
-
-        disableMenuItem.setEnabled(false);
-        enableMenuItem.setEnabled(true);
     }
 
-    private void enableRuleActionPerformed(ActionEvent evt){
+    private void enableRuleActionPerformed(ActionEvent evt) {
         int row = TestTree.getSelectedRow();
         String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
 
         XMLInterface.setDisabledRule(ruleID, false);
-
-        enableMenuItem.setEnabled(false);
-        disableMenuItem.setEnabled(true);
     }
 
     private void cleanUpMenuButtonActionPerformed(ActionEvent e) {
@@ -405,7 +371,7 @@ public class MainWindow extends javax.swing.JFrame {
             connectionInfoWindow.setVisible(true);
         }
 
-        if(connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
+        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
 
         disconnectMenuButton.setEnabled(true);
 
@@ -449,52 +415,46 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
-
         // if we have not chosen save directory yet
         if (XMLInterface.getXmlFile() == null) {
             saveAsFile();
-            return;
+        } else {
+            try {
+                XMLInterface.saveCurrentFile();
+            } catch (IOException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
         }
 
-        try {
-            XMLInterface.saveCurrentFile();
-        } catch (IOException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
     }
 
     private void saveSetAsMenuButtonActionPerformed(ActionEvent evt) {
-
         saveAsFile();
     }
 
     /**
-     * Saves the currently open masking set.
+     * Saves the currently open masking set. If no file is registered, it creates a new one and
+     * saved the current set that is being worked on.
      */
     private void saveAsFile() {
 
-        JFileChooser chooser = new JFileChooser();
-        chooser.setAcceptAllFileFilterUsed(false);
+        JFileChooser chooser = new JFileChooser(Constants.WORKING_DIRECTORY);
 
-
-        int returnOption = chooser.showSaveDialog(null);
-        if (returnOption == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File newFile = chooser.getSelectedFile();
-            if (!newFile.exists()) {
-                try {
+            logger.debug("Saving to a file: " + newFile.getAbsolutePath());
+            try {
+                if (!newFile.exists()) {
                     newFile.createNewFile();
-                } catch (IOException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
+                XMLInterface.saveSetToAFile(newFile);
+                XMLInterface.setXMLFile(newFile);
+            } catch (IOException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            } catch (XmlException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
             }
-            XMLInterface.setXMLFile(newFile);
             RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
-        }
-
-        try {
-            XMLInterface.saveCurrentFile();
-        } catch (IOException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
     }
 
@@ -503,6 +463,7 @@ public class MainWindow extends javax.swing.JFrame {
      *
      * @param evt
      */
+
     private void createNewDependentRuleRightClickMenuActionPerformed(ActionEvent evt) {
 
         int row = TestTree.getSelectedRow();
@@ -542,7 +503,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (!XMLInterface.isLeaf(ruleToDelete)) {
             Object[] options = {"Delete all child rules", "Cancel"};
             int userChoice = JOptionPane.showOptionDialog(null, "Deleting parent rule will result in deleting all child rules." +
-                    " Please choose one of the following", "Are you sure you want to delete this rule?",
+                            " Please choose one of the following", "Are you sure you want to delete this rule?",
                     JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
 
             if (userChoice != JOptionPane.YES_OPTION) {
@@ -612,6 +573,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
+
         // start off in the DataScrubber directory
         JFileChooser fc = new JFileChooser(Constants.WORKING_DIRECTORY);
         int returnVal = fc.showOpenDialog(openMaskingSetMenuButton);
@@ -623,16 +585,15 @@ public class MainWindow extends javax.swing.JFrame {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
 
-                // save the file for default usage so that it's already open on the next application start
-                File newDefaultFile = new File(Constants.WORKING_DIRECTORY + "/.defaultSchemaDS");
-                try {
-                    FileUtils.copyFile(openFile, newDefaultFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 // load the file
-                XMLInterface.setXMLFile(openFile);
+                try {
+                    XMLInterface.setXMLFile(openFile);
+                } catch (XmlException e) {
+                    logger.debug("XML file was invalid. Please recreate the file or (version2 of DS) try" +
+                            " set the settings and run it anyway");
+                    JOptionPane.showMessageDialog(this, "XML file is invalid." +
+                            " Please load a valid file(see logs for details)");
+                }
 
                 LinkedList<String> columnNames = new LinkedList();
                 columnNames.add("Rule ID");
@@ -658,7 +619,7 @@ public class MainWindow extends javax.swing.JFrame {
             iw.setVisible(true);
         }
 
-        if(!(iw.getReturnValue() == com.pearson.Interface.UIManager.CLOSED)) {
+        if (!(iw.getReturnValue() == com.pearson.Interface.UIManager.CLOSED)) {
             CreateNewRuleWindow newRuleWindow = new CreateNewRuleWindow();
             newRuleWindow.setVisible(true);
         }
@@ -696,4 +657,3 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
 }
-

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -27,7 +28,6 @@ import java.util.Iterator;
  * @author Ruslan Kiselev
  */
 public class XMLInterface {
-
     public static Logger logger = LoggerFactory.getLogger(XMLInterface.class.getName());
 
     public final static XmlOptions options = initialiseOptions();
@@ -47,7 +47,7 @@ public class XMLInterface {
      * Default constructor assumes that we just created a new set and have not
      * specified a name for it yet
      */
-    public static void setXMLFile(File xmlFile_) {
+    public static void setXMLFile(File xmlFile_) throws XmlException {
 
         xmlFile = xmlFile_;
 
@@ -64,8 +64,6 @@ public class XMLInterface {
                 }
                 throw new XmlException("XML file is invalid");
             }
-        } catch (XmlException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         } catch (IOException e) {
             logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
@@ -205,6 +203,10 @@ public class XMLInterface {
     public static void saveCurrentFile() throws IOException {
 
         setDocument.save(xmlFile, options);
+    }
+
+    public static void saveSetToAFile(File newFile) throws IOException {
+        setDocument.save(newFile, options);
     }
 
     public static RuleNode getRulesTree() {

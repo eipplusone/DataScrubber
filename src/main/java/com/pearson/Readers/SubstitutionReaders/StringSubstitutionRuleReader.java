@@ -1,14 +1,20 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.SQL.Database;
+import com.pearson.Utilities.Constants;
+import com.pearson.Utilities.Query;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.org.mozilla.javascript.internal.ast.Yield;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
@@ -35,11 +41,14 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         prepareToRun();
 
         if (actionType == SubstitutionActionType.SET_FROM_FILE) {
-            File selectedFile = new File(rule.getSubstitute().getFilePath());
+            String filePath = rule.getSubstitute().getStringValue1() ;
+            logger.debug("Selecting file: " + filePath);
+            File selectedFile = new File(filePath);
             setFromFile(selectedFile);
 
         } else if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             int stringLength = rule.getSubstitute().getNumericValue().intValue();
+            logger.debug("Value received from window is: " + stringLength);
             setToRandom(stringLength);
 
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
@@ -62,7 +71,13 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     public void setToRandom(int count) throws SQLException {
 
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), RandomStringUtils.random(count));
+        String charsetString = Constants.ASCII_SET;
+        char[] charset = charsetString.toCharArray();
+
+        String randomString = RandomStringUtils.random(count, charset);
+        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), randomString);
+        logger.debug("Set column to value: " + count);
+        logger.debug("Setting to random string: " + randomString);
     }
 
     /**
@@ -74,6 +89,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         Scanner scanner = null;
 
         //build a hashmap of words to replace
+        logger.debug("For substitution using file: " + file.getAbsolutePath());
         scanner = new Scanner(file);
 
         int i = 0;

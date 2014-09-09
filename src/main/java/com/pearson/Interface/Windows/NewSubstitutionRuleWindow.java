@@ -14,6 +14,7 @@ import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
 import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.NumericSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.StringSubstitutionTypes;
+import com.pearson.Utilities.Constants;
 import noNamespace.*;
 import noNamespace.RulesDocument.Rules;
 import org.slf4j.Logger;
@@ -98,46 +99,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
         this.setModalityType(ModalityType.APPLICATION_MODAL);
 
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewSubstitutionRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewSubstitutionRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewSubstitutionRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewSubstitutionRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new NewSubstitutionRuleWindow().setVisible(true);
-
-                } catch (SQLException ex) {
-                }
-            }
-        });
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -180,11 +141,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
         tablesSelectedTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tablesSelectedTableMouseClicked(evt);
-            }
-        });
-        tablesSelectedTable.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentShown(java.awt.event.ComponentEvent evt) {
-                tablesSelectedTableComponentShown(evt);
             }
         });
         tableScrollPane.setViewportView(tablesSelectedTable);
@@ -243,7 +199,6 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
 
-        valueTextField.setText("Value");
         valueTextField.setPreferredSize(columnsComboBox.getPreferredSize());
         valueTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -360,17 +315,12 @@ public class NewSubstitutionRuleWindow extends JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // Exit
         dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
+    }
 
-    private void tablesSelectedTableComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tablesSelectedTableComponentShown
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_tablesSelectedTableComponentShown
-
-    private void tablesSelectedTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablesSelectedTableMouseClicked
+    private void tablesSelectedTableMouseClicked(java.awt.event.MouseEvent evt) {
         // select table from the window
         isTriggersIsolated = true;
         isTableSelected = true;
@@ -386,9 +336,13 @@ public class NewSubstitutionRuleWindow extends JDialog {
         }
         isTriggersIsolated = false;
         columnsComboBox.setEnabled(true);
-    }//GEN-LAST:event_tablesSelectedTableMouseClicked
+    }
 
-    private void createSubstitutionRuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSubstitutionRuleActionPerformed
+    /**
+     * Once the user has entered all the relevant info for creating a rule, this code runs.
+     * @param evt
+     */
+    private void createSubstitutionRuleActionPerformed(java.awt.event.ActionEvent evt) {
 
         Rules rulesInSet = XMLInterface.getSetDocument().getMaskingSet().getRules();
 
@@ -406,16 +360,23 @@ public class NewSubstitutionRuleWindow extends JDialog {
             newRule.setId(parentRule.getId().concat("-" + parentRule.getDependencies().getRuleArray().length) + "");
         }
 
+        // Upload all the relevant info to the rule
         addRuleInformation(newRule);
-        // let other windows know that masking set has change
 
+        // let other windows know that masking set has change
         com.pearson.Interface.UIManager.update();
 
         dispose();
-    }//GEN-LAST:event_createSubstitutionRuleActionPerformed
+    }
 
-    private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_columnsComboBoxActionPerformed
+    /**
+     * Runs when user decides which column he would like to scrub. Populates
+     * the substitution types combo box.
+     * @param evt
+     */
+    private void columnsComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
 
+        // navigate user through window
         if (isTriggersIsolated) return;
 
         isTriggersIsolated = true;
@@ -425,6 +386,7 @@ public class NewSubstitutionRuleWindow extends JDialog {
         columnSelected = database.tables.get(tableSelected).columns.get(
                 columnSelectedString.substring(0, columnSelectedString.indexOf("(")));
 
+        // populate the substitution type combo box depending on the type of column it is
         if (MySQLDataType.isNumericType(columnSelected.getType())) addNumericToSubstitutionType();
         else if (MySQLDataType.isDateType(columnSelected.getType())) addDateToSubstitutionType();
         else if (MySQLDataType.isStringType(columnSelected.getType())) addStringToSubstitutionType();
@@ -433,10 +395,9 @@ public class NewSubstitutionRuleWindow extends JDialog {
         selectedColumnLabel.setText(columnSelectedString);
         typeOfSubstitutionComboBox.setEnabled(true);
         isTriggersIsolated = false;
-    }//GEN-LAST:event_columnsComboBoxActionPerformed
+    }
 
     private void addDateToSubstitutionType() {
-
         for (DateSubstitutionTypes type : DateSubstitutionTypes.values())
             typeOfSubstitutionComboBox.addItem(type.toString());
     }
@@ -475,6 +436,10 @@ public class NewSubstitutionRuleWindow extends JDialog {
     private void setValueInformation(SubstitutionActionType.Enum actionType, SubstitutionDataType.Enum dateType, Rule newRule) {
 
         String value = valueTextField.getText();
+        String filePathRaw = selectedValueLabel.getText();
+        String filePath = filePathRaw.substring(filePathRaw.indexOf('/'));
+        logger.debug("Received value from text field: " + value);
+        logger.debug("Received filePath: " + filePath);
 
         if (dateType == SubstitutionDataType.DATE) {
             if (actionType == SubstitutionActionType.SET_TO_VALUE) {
@@ -491,12 +456,18 @@ public class NewSubstitutionRuleWindow extends JDialog {
                 newRule.getSubstitute().setStringValue1(value);
             } else if (actionType == SubstitutionActionType.SET_FROM_FILE) {
                 // since we displayed the text inside the label we can use it
-                newRule.getSubstitute().setStringValue1(selectedValueLabel.getText());
+                logger.debug("Setting the rule file path: " + filePath);
+                newRule.getSubstitute().setStringValue1(filePath);
             }
         }
     }
 
-    private void typeOfSubstitutionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeOfSubstitutionComboBoxActionPerformed
+    /**
+     * Responsible for setting the right parameters for the user to enter depending on the kind of
+     * substitution he/she performed. Reruns every time a user performs that action
+     * @param evt
+     */
+    private void typeOfSubstitutionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
 
         if (isTriggersIsolated) return;
 
@@ -532,17 +503,20 @@ public class NewSubstitutionRuleWindow extends JDialog {
         isTriggersIsolated = false;
 
         // todo version 2.0: add random within range specified by the user
-    }//GEN-LAST:event_typeOfSubstitutionComboBoxActionPerformed
+    }
 
-    private void valueTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_valueTextFieldActionPerformed
-
+    private void valueTextFieldActionPerformed(java.awt.event.ActionEvent evt) {
         selectedValueLabel.setText(valueTextField.getText());
-    }//GEN-LAST:event_valueTextFieldActionPerformed
+    }
 
-    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+    /**
+     * Runs when user wants to substitute string from a list of strings
+     * @param evt
+     */
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         // create a file chooser
-        JFileChooser fc = new JFileChooser();
+        JFileChooser fc = new JFileChooser(Constants.WORKING_DIRECTORY);
         int returnVal = fc.showOpenDialog(browseButton);
         File file = null;
 
@@ -557,8 +531,5 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         setFromFile = file;
         selectedValueLabel.setText("File: " + file.getAbsolutePath());
-    }//GEN-LAST:event_browseButtonActionPerformed
-    // End of variables declaration//GEN-END:variables
-
-
+    }
 }

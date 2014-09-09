@@ -48,11 +48,6 @@ public class CreateNewRuleWindow extends JDialog {
                 newSubstitutionRuleButtonActionPerformed(evt);
             }
         });
-        newSubstitutionRuleButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                newSubstitutionRuleButtonKeyPressed(evt);
-            }
-        });
 
         newShuffleRuleButton.setText("New Shuffle Rule...");
         newShuffleRuleButton.addActionListener(new java.awt.event.ActionListener() {
@@ -60,21 +55,11 @@ public class CreateNewRuleWindow extends JDialog {
                 newShuffleRuleButtonActionPerformed(evt);
             }
         });
-        newShuffleRuleButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                newShuffleRuleButtonKeyPressed(evt);
-            }
-        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
-            }
-        });
-        cancelButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                cancelButtonKeyPressed(evt);
             }
         });
 
@@ -129,9 +114,9 @@ public class CreateNewRuleWindow extends JDialog {
 
         pack();
         setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void newSubstitutionRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonActionPerformed
+    private void newSubstitutionRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // open the new substitution rule window
 
 
@@ -150,7 +135,7 @@ public class CreateNewRuleWindow extends JDialog {
         rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
     }
 
-    private void newShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonActionPerformed
+    private void newShuffleRuleButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // open the new shuffle rule window
         NewShuffleRuleWindow srw = null;
         try {
@@ -162,84 +147,10 @@ public class CreateNewRuleWindow extends JDialog {
         dispose();
         srw.setVisible(true);
         srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-    }//GEN-LAST:event_newShuffleRuleButtonActionPerformed
+    }
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // action event for cancle button
         dispose();
-    }//GEN-LAST:event_cancelButtonActionPerformed
-
-    private void newSubstitutionRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newSubstitutionRuleButtonKeyPressed
-        // if enter key is pressed by user on new shuffle rule button, open the new substitution rule window
-        int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-        NewSubstitutionRuleWindow rw = null;
-        try {
-        rw = new NewSubstitutionRuleWindow();
-        } catch (SQLException ex) {
-        }
-        dispose();
-        rw.setVisible(true);
-        rw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-            
-        }
-    }//GEN-LAST:event_newSubstitutionRuleButtonKeyPressed
-
-    private void newShuffleRuleButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_newShuffleRuleButtonKeyPressed
-        // if enter key is pressed by user on new shuffle rule button, open the new shuffle rule window
-         int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-            NewShuffleRuleWindow srw = null;
-        try {
-            srw = new NewShuffleRuleWindow();
-        } catch (SQLException ex) {
-        }
-        dispose();
-        srw.setVisible(true);
-        srw.setDefaultCloseOperation(MainWindow.HIDE_ON_CLOSE);
-        }
-    }//GEN-LAST:event_newShuffleRuleButtonKeyPressed
-
-    private void cancelButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cancelButtonKeyPressed
-        // if enter key is pressed on cancel button, close the window
-         int kc = evt.getKeyCode();
-        if (kc == evt.VK_ENTER){
-            dispose();
-        }
-    }//GEN-LAST:event_cancelButtonKeyPressed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CreateNewRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CreateNewRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CreateNewRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CreateNewRuleWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CreateNewRuleWindow().setVisible(true);
-            }
-        });
     }
 }
