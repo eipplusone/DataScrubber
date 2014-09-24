@@ -1,9 +1,12 @@
 package com.pearson.Utilities;
 
+import noNamespace.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jeffrey Schmidt
@@ -40,5 +43,11 @@ public class LoggerUtils {
         
         return doesFileExist(filePath + File.separator + filename);
     }
-    
+
+    public static void printRuleArray(List<Rule> rulesRunning) {
+        System.out.println("Rules running: ");
+        for (Rule rule : rulesRunning) {
+            System.out.print(rule.getId() + " ");
+        }
+    }
 }

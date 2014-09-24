@@ -100,7 +100,7 @@
     <xs:element name="rules">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="rule" type="rule" maxOccurs="unbounded"/>
+                <xs:element name="rule" type="rule" maxOccurs="unbounded" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

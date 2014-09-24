@@ -1,10 +1,12 @@
 package com.pearson.Readers;
 
+import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
 import com.pearson.Interface.Windows.ProgressWindow;
+import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
@@ -14,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.text.Utilities;
+import java.io.File;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.Timer;
 import java.util.concurrent.ExecutionException;
@@ -43,15 +48,16 @@ public class SetReader extends SwingWorker<Integer, String> {
     private int numberOfThreadsAllowed = 50;
     String setName;
     ExecutorService executor;
-
+    private ArrayList<Rule> rulesRunning;
 
     public SetReader(final MaskingSetDocument setDocument, Database database, final String name) {
         this.setDocument = setDocument;
         this.database = database;
         this.setName = name;
+        rulesRunning = new ArrayList<Rule>();
 
-        System.out.println();
-
+        File configFile = new File(Constants.CONFIG_FILE);
+        XMLInterface.checkConfigFile(configFile);
 
         progressWindow = new ProgressWindow(this);
 
@@ -164,6 +170,7 @@ public class SetReader extends SwingWorker<Integer, String> {
             publish("Something terrible happened; check the logs");
             logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
         }
+
         return 0;
     }
 
@@ -176,9 +183,12 @@ public class SetReader extends SwingWorker<Integer, String> {
             if (!rule.getDisabled()) {
                 publish("Rule " + rule.getId() + " starts running");
                 logger.info("Rule " + rule.getId() + " starts running");
-                    executor.submit(new RuleReader(rule, database, this));
+                rulesRunning.add(rule);
+                executor.submit(new RuleReader(rule, database, this));
             }
         }
+
+        com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
     }
 
     public boolean addTarget(String target) {
@@ -187,15 +197,24 @@ public class SetReader extends SwingWorker<Integer, String> {
         }
     }
 
-    public synchronized void updateDoneRule(Rule doneRule, boolean isSuccessful)  {
+    public synchronized void updateDoneRule(Rule doneRule, boolean isSuccessful) {
         tablesOccupied.remove(doneRule.getTarget());
+        rulesRunning.remove(doneRule);
+        com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
         if (isSuccessful) {
             publish("Rule " + doneRule.getId() + " has completed running");
-            if (!XMLInterface.isLeaf(doneRule))
-                executeThreads(Arrays.asList(doneRule.getDependencies().getRuleArray()));
-            else {
-                return;
+            if (!XMLInterface.isLeaf(doneRule)) {
+                List<Rule> ruleList = Arrays.asList(doneRule.getDependencies().getRuleArray());
+                executeThreads(ruleList);
             }
+        }
+
+        if (rulesRunning.isEmpty()) try {
+            logger.debug("Cleaning up after using setReader");
+            database.cleanUp();
+        } catch (SQLException e) {
+            logger.debug("Weren't able to clean up after database usage");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
 
     }
@@ -203,4 +222,5 @@ public class SetReader extends SwingWorker<Integer, String> {
     public synchronized void addToLog(String s) {
         publish(s);
     }
+
 }

@@ -66,10 +66,6 @@ public class RuleNode extends AbstractMutableTreeTableNode {
                     if (substitutionRule.isSetDateValue1()) return substitutionRule.getDateValue1();
                     else if (substitutionRule.isSetNumericValue()) return substitutionRule.getNumericValue();
                     else if (substitutionRule.isSetStringValue1()) return substitutionRule.getStringValue1();
-                    else if (substitutionRule.isSetFilePath()){
-                        File file = new File(substitutionRule.getFilePath());
-                        return file.getName();
-                    }
                     else return "";
                 }
             case RulesTreeTableModel.DISABLED:

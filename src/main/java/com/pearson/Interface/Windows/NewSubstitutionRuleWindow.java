@@ -15,6 +15,7 @@ import com.pearson.Rules.SubstitutionTypes.DateSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.NumericSubstitutionTypes;
 import com.pearson.Rules.SubstitutionTypes.StringSubstitutionTypes;
 import com.pearson.Utilities.Constants;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.*;
 import noNamespace.RulesDocument.Rules;
 import org.slf4j.Logger;
@@ -25,7 +26,10 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -366,6 +370,12 @@ public class NewSubstitutionRuleWindow extends JDialog {
         // let other windows know that masking set has change
         com.pearson.Interface.UIManager.update();
 
+        try {
+            database.cleanUp();
+        } catch (SQLException e) {
+            logger.debug("Weren't able to clean up database");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
         dispose();
     }
 
@@ -436,14 +446,20 @@ public class NewSubstitutionRuleWindow extends JDialog {
     private void setValueInformation(SubstitutionActionType.Enum actionType, SubstitutionDataType.Enum dateType, Rule newRule) {
 
         String value = valueTextField.getText();
-        String filePathRaw = selectedValueLabel.getText();
-        String filePath = filePathRaw.substring(filePathRaw.indexOf('/'));
         logger.debug("Received value from text field: " + value);
-        logger.debug("Received filePath: " + filePath);
 
         if (dateType == SubstitutionDataType.DATE) {
             if (actionType == SubstitutionActionType.SET_TO_VALUE) {
-                newRule.getSubstitute().setDateValue1(BigInteger.valueOf(Integer.parseInt(value)));
+                SimpleDateFormat format = new SimpleDateFormat("mm/dd/yyyy");
+                Date enteredDate;
+                try {
+                    enteredDate = format.parse(value);
+                } catch (ParseException e) {
+                    JOptionPane.showMessageDialog(this, "Invalid Date format. Please enter" +
+                            "date in format mm/dd/yyyy");
+                    return;
+                }
+                newRule.getSubstitute().setDateValue1(BigInteger.valueOf(enteredDate.getTime()));
             }
         } else if (dateType == SubstitutionDataType.NUMERIC) {
             if (actionType == SubstitutionActionType.SET_TO_VALUE) {
@@ -456,7 +472,9 @@ public class NewSubstitutionRuleWindow extends JDialog {
                 newRule.getSubstitute().setStringValue1(value);
             } else if (actionType == SubstitutionActionType.SET_FROM_FILE) {
                 // since we displayed the text inside the label we can use it
-                logger.debug("Setting the rule file path: " + filePath);
+                String filePathRaw = selectedValueLabel.getText();
+                String filePath = filePathRaw.substring(filePathRaw.indexOf('/'));
+                logger.debug("Received filePath: " + filePath);
                 newRule.getSubstitute().setStringValue1(filePath);
             }
         }

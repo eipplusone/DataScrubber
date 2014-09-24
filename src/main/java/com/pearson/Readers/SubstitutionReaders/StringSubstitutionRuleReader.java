@@ -2,19 +2,14 @@ package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.SQL.Database;
 import com.pearson.Utilities.Constants;
-import com.pearson.Utilities.Query;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.org.mozilla.javascript.internal.ast.Yield;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Random;
@@ -74,8 +69,12 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         String charsetString = Constants.ASCII_SET;
         char[] charset = charsetString.toCharArray();
 
-        String randomString = RandomStringUtils.random(count, charset);
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), randomString);
+        String randomString = null;
+        for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
+            randomString = RandomStringUtils.random(count, charset);
+            mySQLTable.updateRow(randomString, rule.getSubstitute().getColumn(), j);
+        }
+
         logger.debug("Set column to value: " + count);
         logger.debug("Setting to random string: " + randomString);
     }
@@ -110,5 +109,6 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
             mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), j);
         }
+
     }
 }

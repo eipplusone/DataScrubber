@@ -50,12 +50,8 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
 
     private void setToRandom(MySQLDataType dataType) throws SQLException {
 
-        if (mySQLTable.getAutoIncrementColumn() == null) {
-            mySQLTable.addAutoIncrementColumn();
-        }
-
         Column targetColumn = database.getTable(mySQLTable.getTableName()).columns.get(rule.getSubstitute().getColumn());
-        for (int i = 0; i < mySQLTable.getNumberOfRows(targetColumn.getName()); i++) {
+        for (int i = 0; i <= mySQLTable.getNumberOfRows(targetColumn.getName()); i++) {
             Random random = new Random();
             if (dataType == MySQLDataType.BIGINT || dataType == MySQLDataType.INT)
                 mySQLTable.updateRow(random.nextInt(2147483647), targetColumn.getName(), i);
@@ -70,7 +66,5 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
             else if (dataType == MySQLDataType.DOUBLE)
                 mySQLTable.updateRow(random.nextDouble(), targetColumn.getName(), i);
         }
-
-        mySQLTable.deleteAutoIncrementColumn();
     }
 }

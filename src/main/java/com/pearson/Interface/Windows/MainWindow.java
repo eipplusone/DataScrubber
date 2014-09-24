@@ -12,13 +12,10 @@ import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
-import com.sun.tools.internal.jxc.apt.Const;
 import noNamespace.Rule;
-import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
 import org.jdesktop.swingx.JXTreeTable;
 import org.slf4j.LoggerFactory;
-import sun.misc.JavaxSecurityAuthKerberosAccess;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -63,7 +60,6 @@ public class MainWindow extends javax.swing.JFrame {
     private JMenu connectionMenuItem = new JMenu();
     private javax.swing.JMenuItem saveSetAsMenuButton = new JMenuItem();
     private javax.swing.JMenuItem saveSetMenuButton = new JMenuItem();
-    private javax.swing.JPanel settings = new JPanel();
     private JMenuItem rightClickMenuItem, disableMenuItem, enableMenuItem = new JMenuItem();
     private JPopupMenu rulesInSetRightClickMenu = new JPopupMenu();
     private JMenuItem setConnectionMenuButton = new JMenuItem();
@@ -100,29 +96,6 @@ public class MainWindow extends javax.swing.JFrame {
         com.pearson.Interface.UIManager.setMainWindow(this);
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        //todo set the look and feel such that the save dialog displays files correctly
-        final MainWindow window = new MainWindow();
-
-        // not allow user to close the window until saved or explicitly discarded
-        window.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        window.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
-                    Object[] options = {"Discard", "Cancel"};
-                    int userChoice = JOptionPane.showOptionDialog(null, "Please Save Or Discard New Changes", "Are you sure you want to exit?",
-                            JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
-                    if (userChoice == JOptionPane.YES_OPTION) window.dispose();
-                } else window.dispose();
-            }
-        });
-        window.setVisible(true);
-    }
 
     private void initComponents() {
 
@@ -182,29 +155,6 @@ public class MainWindow extends javax.swing.JFrame {
         jCheckBox1.setText("New Disable FK Constraints Rule...");
 
         jCheckBox3.setText("New Disable Triggers Rule...");
-
-        javax.swing.GroupLayout settingsLayout = new javax.swing.GroupLayout(settings);
-        settings.setLayout(settingsLayout);
-        settingsLayout.setHorizontalGroup(
-                settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(settingsLayout.createSequentialGroup()
-                                .addGap(52, 52, 52)
-                                .addGroup(settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jCheckBox3)
-                                        .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(280, Short.MAX_VALUE))
-        );
-        settingsLayout.setVerticalGroup(
-                settingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(settingsLayout.createSequentialGroup()
-                                .addGap(31, 31, 31)
-                                .addComponent(jCheckBox1)
-                                .addGap(23, 23, 23)
-                                .addComponent(jCheckBox3)
-                                .addContainerGap(417, Short.MAX_VALUE))
-        );
-
-        RulesInSetPane.addTab("Settings", settings);
 
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -330,6 +280,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         pack();
+        setSize(Constants.MAIN_WINDOW_WIDTH, Constants.MAIN_WINDOW_HEIGHT);
         setLocationRelativeTo(null);
     } // please don't look here, it's so ugly
 
@@ -364,22 +315,32 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void setConnectionMenuButtonActionPerformed(ActionEvent e) {
+        getConnectionInformation();
+    }
 
+    /**
+     * Creates a window that lets user populate the connection information. That in turn is passed to UIManager
+     * to store as the main connection inforamtion.
+     *
+     * @return false if user closed the window, true if the information is uploaded to UIManager
+     */
+    private boolean getConnectionInformation() {
         DatabaseConnectionInfoWindow connectionInfoWindow = new DatabaseConnectionInfoWindow();
 
         if (!com.pearson.Interface.UIManager.isUserInformationSet()) {
             connectionInfoWindow.setVisible(true);
         }
 
-        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return;
+        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return false;
 
         disconnectMenuButton.setEnabled(true);
-
+        return true;
     }
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
 
-        setConnectionMenuButtonActionPerformed(e);
+        // if user closed connection window
+        if(!getConnectionInformation()) return;
 
         Database database = null;
         try {
@@ -392,7 +353,14 @@ public class MainWindow extends javax.swing.JFrame {
             exception.printStackTrace();
         }
 
-        SetReader setReader = new SetReader(XMLInterface.getSetDocument(), database, XMLInterface.getXmlFile().getName());
+        SetReader setReader;
+        if (XMLInterface.getXmlFile() != null) {
+            setReader = new SetReader(XMLInterface.getSetDocument(), database, XMLInterface.getXmlFile().getName());
+        }
+        else {
+            setReader = new SetReader(XMLInterface.getSetDocument(), database, "Unsaved Masking Set");
+        }
+
 
 
         try {
@@ -401,6 +369,7 @@ public class MainWindow extends javax.swing.JFrame {
         } catch (Exception exc) {
             logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
         }
+
 
         // todo need to figure out a way to clean up the database
         // ****** BUG *****
@@ -513,11 +482,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         XMLInterface.removeRule(ruleToDelete);
 
-        try {
-            XMLInterface.saveCurrentFile();
-        } catch (IOException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
         updateTreeModel();
     }
 
@@ -538,12 +502,12 @@ public class MainWindow extends javax.swing.JFrame {
             if (saveOption == JOptionPane.YES_OPTION) {
                 saveAsFile();
             } else if (saveOption == JOptionPane.NO_OPTION) {
-                XMLInterface.createNewFile();
+                XMLInterface.createNewFile("New Masking Set");
                 RulesInSetPane.setTitleAt(0, "New Masking Set");
                 updateTreeModel();
             }
         } else {
-            XMLInterface.createNewFile();
+            XMLInterface.createNewFile("New Masking Set");
             TestTree.setTreeTableModel(new RulesTreeTableModel());
 
             setMaskingSetLogic(true);
@@ -589,10 +553,12 @@ public class MainWindow extends javax.swing.JFrame {
                 try {
                     XMLInterface.setXMLFile(openFile);
                 } catch (XmlException e) {
-                    logger.debug("XML file was invalid. Please recreate the file or (version2 of DS) try" +
-                            " set the settings and run it anyway");
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                     JOptionPane.showMessageDialog(this, "XML file is invalid." +
                             " Please load a valid file(see logs for details)");
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "File isn't available. Please see the logs");
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
                 }
 
                 LinkedList<String> columnNames = new LinkedList();

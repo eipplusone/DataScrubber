@@ -5,7 +5,7 @@
 2) User - friendliness
 DataScrubber 1.0
 
-2) Foreign key shuffling
-3) Making sure that logs go to a file
+2) F	joreign key shuffling
+3) fdsMaking sure that logs go to a file
 4) Test on a large data set
 5) Make sure the application is able to run the set multiple times

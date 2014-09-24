@@ -1,0 +1,13 @@
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);
+insert into DStesting values (100, 100, 100, 'dummy', 'dummy','dummy','dummy', 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010, 10/10/2010);

@@ -26,11 +26,12 @@ public class EnumInterface {
                 substitutionType.equals(NumericSubstitutionTypes.SET_TO_NULL.toString())){
             return SubstitutionActionType.SET_TO_NULL;
         }
-        else if(substitutionType.equals(StringSubstitutionTypes.SET_TO_VALUE.toString())){
+        else if(substitutionType.equals(StringSubstitutionTypes.SET_TO_VALUE.toString()) ||
+                substitutionType.equals(DateSubstitutionTypes.SET_TO_VALUE.toString())){
             return SubstitutionActionType.SET_TO_VALUE;
         }
         else if(substitutionType.equals(StringSubstitutionTypes.RANDOM_STRING.toString()) ||
-                substitutionType.equals(DateSubstitutionTypes.RANDOM_DATE_WITHING_RANGE.toString()) ||
+                substitutionType.equals(DateSubstitutionTypes.RANDOM_DATE.toString()) ||
                 substitutionType.equals(NumericSubstitutionTypes.RANDOM_NUMBER.toString())){
             return SubstitutionActionType.SET_TO_RANDOM;
         }

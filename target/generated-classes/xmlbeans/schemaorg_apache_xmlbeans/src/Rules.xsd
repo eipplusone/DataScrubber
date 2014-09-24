@@ -28,6 +28,7 @@
     </xs:simpleType>
 
     <xs:element name="column" type="xs:string"/>
+    <xs:element name="name" type="xs:string"/>
     <xs:element name="date_created" type="xs:date"/>
     <xs:element name="id" type="xs:string"/>
     <xs:element name="file_path" type="xs:string"/>
@@ -74,7 +75,6 @@
     <xs:complexType name="substitution_rule">
         <xs:sequence>
             <xs:element ref="column" minOccurs="1" maxOccurs="1"/>
-            <xs:element ref="file_path" minOccurs="0"/>
             <xs:choice minOccurs="1" maxOccurs="1">
                 <xs:element ref="numeric_value" minOccurs="0"/>
                 <xs:element ref="string_value" minOccurs="0"/>
@@ -91,7 +91,7 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="date_created"/>
-
+                <xs:element ref="name" minOccurs="1" maxOccurs="1"/>
                 <xs:element ref="rules" maxOccurs="1" minOccurs="1"/>
             </xs:sequence>
         </xs:complexType>
@@ -100,7 +100,7 @@
     <xs:element name="rules">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="rule" type="rule" maxOccurs="unbounded"/>
+                <xs:element name="rule" type="rule" maxOccurs="unbounded" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

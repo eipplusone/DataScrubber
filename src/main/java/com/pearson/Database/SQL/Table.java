@@ -15,7 +15,7 @@ public class Table {
     
     private static Logger logger = LoggerFactory.getLogger(Table.class.getName());
 
-    public HashMap<String, Column> columns = new HashMap<>();
+    public HashMap<String, Column> columns = new HashMap();
     protected String tableName;
 
     public Table(String tableName) {

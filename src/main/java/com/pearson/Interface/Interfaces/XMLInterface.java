@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -47,13 +46,19 @@ public class XMLInterface {
      * Default constructor assumes that we just created a new set and have not
      * specified a name for it yet
      */
-    public static void setXMLFile(File xmlFile_) throws XmlException {
-
+    public static void setXMLFile(File xmlFile_) throws XmlException, IOException {
         xmlFile = xmlFile_;
+        checkXMLfile(xmlFile_);
+    }
 
-
-        try {
-            ArrayList validationErrors = new ArrayList<>();
+    /**
+     * Validates the file
+     * @param xmlFile
+     * @throws IOException
+     * @throws XmlException
+     */
+    private static void checkXMLfile(File xmlFile) throws IOException, XmlException {
+            ArrayList validationErrors = new ArrayList();
             XmlOptions validationOptions = new XmlOptions();
             validationOptions.setErrorListener(validationErrors);
             setDocument = MaskingSetDocument.Factory.parse(xmlFile);
@@ -64,15 +69,12 @@ public class XMLInterface {
                 }
                 throw new XmlException("XML file is invalid");
             }
-        } catch (IOException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
     }
 
     /**
      * Creates a new representation of the XML rule file internally.
      */
-    public static void createNewFile() {
+    public static void createNewFile(String name) {
 
         setDocument = MaskingSetDocument.Factory.newInstance();
         MaskingSet maskingSet = setDocument.addNewMaskingSet();
@@ -81,6 +83,7 @@ public class XMLInterface {
 
         maskingSet.setDateCreated(new GregorianCalendar());
         maskingSet.addNewRules();
+        maskingSet.setName(name);
     }
 
     /**
@@ -235,4 +238,6 @@ public class XMLInterface {
         ruleToDisable.setDisabled(disabled);
     }
 
+    public static void checkConfigFile(File configFile) {
+    }
 }

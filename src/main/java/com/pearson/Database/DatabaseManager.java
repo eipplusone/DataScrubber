@@ -49,11 +49,8 @@ public class DatabaseManager {
     public Connection getConnection() throws SQLException {
         Connection returnConnection = connectionPool.getConnection();
         openConnections.add(returnConnection);
+        logger.debug("Opened a new connection");
         return returnConnection;
-    }
-
-    public void disconnect(Connection connection) throws SQLException {
-        connection.close();
     }
 
     public void shutDown() throws SQLException {

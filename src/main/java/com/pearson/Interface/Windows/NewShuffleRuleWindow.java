@@ -5,6 +5,7 @@ import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
+import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.RuleType;
 import noNamespace.RulesDocument.Rules;
@@ -15,8 +16,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this template, choose Tools | Templates
@@ -155,99 +154,6 @@ public class NewShuffleRuleWindow extends JDialog {
         shuffleTabbedPane.addTab("List of Columns", shuffleColumnsPane);
 
         pseudoCodeLabel.setText("Pseudo code");
-
-        /**enableWhereClauseCheckbox.setText("Enable Where Clause");
-        enableWhereClauseCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enableWhereClauseCheckboxActionPerformed(evt);
-            }
-        });
-
-        whereClauseTextArea.setColumns(20);
-        whereClauseTextArea.setRows(5);
-        whereClauseTextArea.setText("where...\n");
-        whereClauseScrollpane.setViewportView(whereClauseTextArea);
-        whereClauseTextArea.setVisible(false);
-
-        javax.swing.GroupLayout whereClausePaneLayout = new javax.swing.GroupLayout(whereClausePane);
-        whereClausePane.setLayout(whereClausePaneLayout);
-        whereClausePaneLayout.setHorizontalGroup(
-                whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(whereClausePaneLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.DEFAULT_SIZE, 406, Short.MAX_VALUE)
-                                        .addComponent(enableWhereClauseCheckbox)
-                                        .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(pseudoCodeTextfield))
-                                .addContainerGap(38, Short.MAX_VALUE))
-        );
-        whereClausePaneLayout.setVerticalGroup(
-                whereClausePaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(whereClausePaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(pseudoCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pseudoCodeTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(enableWhereClauseCheckbox)
-                                .addGap(18, 18, 18)
-                                .addComponent(whereClauseScrollpane, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(28, Short.MAX_VALUE))
-        );
-
-        shuffleTabbedPane.addTab("Where Clause", whereClausePane);
-
-        ignoreErrorsCheckbox.setText("Ignore listed errors");
-        ignoreErrorsCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ignoreErrorsCheckboxActionPerformed(evt);
-            }
-        });
-
-        errorTextArea.setColumns(20);
-        errorTextArea.setRows(5);
-        errorTextArea.addAncestorListener(new javax.swing.event.AncestorListener() {
-            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
-            }
-
-            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
-                errorTextAreaAncestorAdded(evt);
-            }
-
-            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
-            }
-        });
-        errorScrollPane.setViewportView(errorTextArea);
-        errorTextArea.setVisible(false);
-
-        skipCheckBox.setText("If error is ignored, skip all dependent rules");
-
-        javax.swing.GroupLayout errorMgrPaneLayout = new javax.swing.GroupLayout(errorMgrPane);
-        errorMgrPane.setLayout(errorMgrPaneLayout);
-        errorMgrPaneLayout.setHorizontalGroup(
-                errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(errorMgrPaneLayout.createSequentialGroup()
-                                .addGap(21, 21, 21)
-                                .addGroup(errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(skipCheckBox)
-                                        .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(ignoreErrorsCheckbox))
-                                .addContainerGap(212, Short.MAX_VALUE))
-        );
-        errorMgrPaneLayout.setVerticalGroup(
-                errorMgrPaneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(errorMgrPaneLayout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addComponent(ignoreErrorsCheckbox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(errorScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(skipCheckBox)
-                                .addContainerGap(139, Short.MAX_VALUE))
-        );
-
-        shuffleTabbedPane.addTab("Error Mgr", errorMgrPane); **/
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -432,6 +338,12 @@ public class NewShuffleRuleWindow extends JDialog {
 
         com.pearson.Interface.UIManager.update();
 
+        try {
+            database.cleanUp();
+        } catch (SQLException e) {
+            logger.debug("Weren't able to clean up database");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
         dispose();
     }//GEN-LAST:event_createShuffleRuleButtonActionPerformed
     // End of variables declaration                   

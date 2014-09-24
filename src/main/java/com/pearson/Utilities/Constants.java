@@ -13,4 +13,8 @@ public class Constants {
     public static final boolean IN_DEVELOPMENT = true;
     public static final String WORKING_DIRECTORY = System.getProperty("user.dir");
     public static final String ASCII_SET = "qwertyuiopasdfghjklzxcvbnm123456789";
+    public static final int MAIN_WINDOW_WIDTH = 800;
+    public static final int MAIN_WINDOW_HEIGHT = 600;
+    public static final String CONFIG_FILE = "DSconfig.xml";
+    public static final long BEGINNING_OF_TIME = 22340403000L;
 }

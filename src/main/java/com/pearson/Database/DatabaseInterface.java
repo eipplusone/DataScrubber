@@ -4,6 +4,7 @@ import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.tools.JavaCompiler;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class DatabaseInterface {
     public PreparedStatement createPreparedStatement(String sql) throws SQLException {
 
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatementParameters = new ArrayList<>();
+            preparedStatementParameters = new ArrayList();
 
             return preparedStatement;
     }
@@ -151,10 +152,14 @@ public class DatabaseInterface {
                 }
             }
             else if (object instanceof java.sql.Timestamp) {
+                logger.debug("Setting TimeStamp: " + (java.sql.Timestamp) object);
                 preparedStatement.setTimestamp(index++, (java.sql.Timestamp) object);
             }
             else if (object instanceof java.sql.Date) {
                 preparedStatement.setDate(index++, (java.sql.Date) object);
+            }
+            else if (object instanceof java.sql.Time) {
+                preparedStatement.setTime(index++, (java.sql.Time) object);
             }
             else if (object instanceof java.util.Date) {
                 java.util.Date tempDate = (java.util.Date) object;

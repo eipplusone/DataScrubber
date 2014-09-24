@@ -12,6 +12,7 @@ import noNamespace.SubstitutionDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.modelmbean.XMLParseException;
 import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,14 +45,14 @@ public class RuleReader implements Runnable {
         this.setReader = setReader;
     }
 
-    public Rule call(Database database) throws SQLException, FileNotFoundException {
+    public void call(Database database) throws SQLException, FileNotFoundException, XMLParseException {
 
-        if (rule.getRuleType() == RuleType.SHUFFLE) return callShuffle(database);
-        else if (rule.getRuleType() == RuleType.SUBSTITUTION) return callSubstitution(database);
+        if (rule.getRuleType() == RuleType.SHUFFLE) callShuffle(database);
+        else if (rule.getRuleType() == RuleType.SUBSTITUTION) callSubstitution(database);
         else throw new IllegalArgumentException("XML file is invalid");
     }
 
-    private Rule callShuffle(Database database) throws SQLException {
+    private void callShuffle(Database database) throws SQLException {
 
         MySQLTable mySQLTable = database.getTable(rule.getTarget());
 
@@ -60,8 +61,8 @@ public class RuleReader implements Runnable {
         // to exit with exception right away.
 
         // Aug 12th: Checked on a test set, wasn't able to imitate the bug.
-        // Thereotically it shouldn't matter since the quieries that these methods
-        // do if ran, don't affect the running of the program. English skilzz
+        // Theoretically it shouldn't matter since the queries that these methods
+        // do if ran, don't affect the running of the program.
 
         mySQLTable.getConnectionConfig().setDefaultDatabase(database);
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
@@ -95,18 +96,40 @@ public class RuleReader implements Runnable {
         logger.debug("Rule " + rule.getId() + ":Cleaning resources");
         mySQLTable.cleanResourses();
         logger.debug("Rule " + rule.getId() + ":Finished running; returning to dispatch thread");
-
-        return rule;
     }
 
-    private Rule callSubstitution(Database database) throws SQLException, FileNotFoundException {
+    private void callSubstitution(Database database) throws SQLException, FileNotFoundException, XMLParseException {
+
+        MySQLTable mySQLTable = database.getTable(rule.getTarget());
+
+        /* TODO: WARNING! THIS LEAVES DATABASE IN A STATE DIFFERENT THAN FROM BEFORE!!! NEED TO FIGURE OUT A WAY  TO FIX THIS!!!*/
+        // or maybe it's session based so no need to worry
+        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+        mySQLTable.getConnectionConfig().disableUniqueChecks();
 
         SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
 
-        if (dataType == SubstitutionDataType.DATE) return new DateSubstitutionRuleReader(rule, database).call();
-        else if (dataType == SubstitutionDataType.NUMERIC)
-            return new NumericSubstitutionRuleReader(rule, database).call();
-        else return new StringSubstitutionRuleReader(rule, database).call();
+        boolean autoIncrementColumnCreated = false;
+        if (mySQLTable.getAutoIncrementColumn() == null) {
+            mySQLTable.addAutoIncrementColumn();
+            logger.debug("Creating autoincrement column");
+            autoIncrementColumnCreated = true;
+        }
+
+        Rule returnRule = null;
+        if (dataType == SubstitutionDataType.DATE) returnRule =  new DateSubstitutionRuleReader(rule, database).call();
+        else if (dataType == SubstitutionDataType.NUMERIC) returnRule =  new NumericSubstitutionRuleReader(rule, database).call();
+        else if (dataType == SubstitutionDataType.STRING) returnRule =  new StringSubstitutionRuleReader(rule, database).call();
+        else throw new SQLException("SubstitutionDataType doesn't match any specified types.");
+
+        if (autoIncrementColumnCreated) {
+            logger.debug("Rule " + rule.getId() + ": Deleting autoincrement column");
+            mySQLTable.deleteAutoIncrementColumn();
+            autoIncrementColumnCreated = false;
+        }
+
+        mySQLTable.cleanResourses();
     }
 
     @Override
