@@ -18,9 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
+import java.util.*;
 
 
 /**
@@ -53,22 +51,23 @@ public class XMLInterface {
 
     /**
      * Validates the file
+     *
      * @param xmlFile
      * @throws IOException
      * @throws XmlException
      */
     private static void checkXMLfile(File xmlFile) throws IOException, XmlException {
-            ArrayList validationErrors = new ArrayList();
-            XmlOptions validationOptions = new XmlOptions();
-            validationOptions.setErrorListener(validationErrors);
-            setDocument = MaskingSetDocument.Factory.parse(xmlFile);
-            if (!setDocument.validate(validationOptions)) {
-                Iterator itr = validationErrors.iterator();
-                while (itr.hasNext()) {
-                    System.out.println(">> " + itr.next() + "\n");
-                }
-                throw new XmlException("XML file is invalid");
+        ArrayList validationErrors = new ArrayList();
+        XmlOptions validationOptions = new XmlOptions();
+        validationOptions.setErrorListener(validationErrors);
+        setDocument = MaskingSetDocument.Factory.parse(xmlFile);
+        if (!setDocument.validate(validationOptions)) {
+            Iterator itr = validationErrors.iterator();
+            while (itr.hasNext()) {
+                System.out.println(">> " + itr.next() + "\n");
             }
+            throw new XmlException("XML file is invalid");
+        }
     }
 
     /**
@@ -217,9 +216,7 @@ public class XMLInterface {
     }
 
     public static boolean isFileSaved() {
-
         if (setDocument == null || xmlFile == null) throw new IllegalArgumentException("File was not chosen");
-
         try {
             // compare the texts of xml files - if no changes were made, they should be the same
             return setDocument.xmlText().equals(MaskingSetDocument.Factory.parse(xmlFile).xmlText());
@@ -232,12 +229,21 @@ public class XMLInterface {
     }
 
     public static void setDisabledRule(String ruleID, boolean disabled) {
-
         Rule ruleToDisable = getRule(ruleID);
 
         ruleToDisable.setDisabled(disabled);
     }
 
     public static void checkConfigFile(File configFile) {
+    }
+
+    public static Set<String> getAllTargets(MaskingSetDocument setDocument) {
+        Rule[] rules = setDocument.getMaskingSet().getRules().getRuleArray();
+        Set<String> returnSet = new HashSet<String>();
+        for (Rule rule : rules) {
+            String target = rule.getTarget();
+            if (returnSet.add(target)) logger.debug("Adding " + target + " to target list");
+        }
+        return returnSet;
     }
 }

@@ -1,12 +1,11 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
-import com.pearson.Utilities.Constants;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
-import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +14,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.Random;
 
 /**
  * @author Ruslan Kiselev
@@ -27,8 +25,8 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
 
     private static Logger logger = LoggerFactory.getLogger(DateSubstitutionRuleReader.class.getName());
 
-    public DateSubstitutionRuleReader(Rule rule, Database database) {
-        super(rule, database);
+    public DateSubstitutionRuleReader(Rule rule, Database database, MySQLTable mySQLTable) {
+        super(rule, database, mySQLTable);
     }
 
     @Override
@@ -53,14 +51,13 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
             }
             // in case of Date, DateTime, Year
             else if (selectedColumn.getType() == MySQLDataType.DATE ||
-                     selectedColumn.getType() == MySQLDataType.DATETIME||
-                     selectedColumn.getType() == MySQLDataType.YEAR) {
+                    selectedColumn.getType() == MySQLDataType.DATETIME ||
+                    selectedColumn.getType() == MySQLDataType.YEAR) {
                 logger.debug("Shuffling Date/DateTime/Year");
                 for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
                     mySQLTable.updateRow(getRandomDate(), rule.getSubstitute().getColumn(), j);
                 }
-            }
-            else throw new XMLParseException("Date type doesn't match any supported date types");
+            } else throw new XMLParseException("Date type doesn't match any supported date types");
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
             setToNull();
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
@@ -93,6 +90,6 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
     }
 
     private long getRandomMillis() {
-        return (long)(System.currentTimeMillis() * Math.random());
+        return (long) (System.currentTimeMillis() * Math.random());
     }
 }

@@ -5,12 +5,12 @@ import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Interface.DatabaseConnection;
 import com.pearson.Utilities.SQLStatements;
 import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +21,7 @@ import java.util.TreeMap;
  * change this template use File | Settings | File Templates.
  */
 public class Database {
-    
+
     private static Logger logger = LoggerFactory.getLogger(Database.class.getName());
 
     private String databaseName;
@@ -29,12 +29,17 @@ public class Database {
     private DatabaseManager databaseManager;
     private DatabaseSettings databaseSettings;
 
+    public Database(DatabaseConnection connection) {
+        databaseName = connection.getDefaultSchema();
+        connect(connection.getUsername(), connection.getPassword(), connection.getJDBCURL())
+    }
+
     public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
 
         try {
             DatabaseManager databaseManager = new DatabaseManager(username, password, url);
             return true;
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
             return false;
         }
     }
@@ -49,7 +54,7 @@ public class Database {
         databaseName = schema_name;
         connect(username, password, JDBCURL);
         fillTables();
-        databaseSettings = new DatabaseSettings(new DatabaseInterface(databaseManager.getConnection()));
+        databaseSettings = new DatabaseSettings(new DatabaseInterface(databaseManager.getConnection()), this);
     }
 
     /**
@@ -57,7 +62,7 @@ public class Database {
      *
      * @param username username that is used to log in on MySQL server
      * @param password password that is used to log in on MySQL server
-     * @param JDBCURL url that is used to log in on MySQL server
+     * @param JDBCURL  url that is used to log in on MySQL server
      */
     private void connect(String username, String password, String JDBCURL) throws SQLException {
         databaseManager = new DatabaseManager(username, password, JDBCURL);
@@ -133,9 +138,12 @@ public class Database {
         tables.put(mySQLTable.getTableName(), mySQLTable);
     }
 
-    public MySQLTable getTable(String tableName) {
+    public MySQLTable getTable(String tableName) throws SQLException {
 
-        if (!tables.containsKey(tableName)) throw new IllegalArgumentException("Table " + tableName + " does not exist in the database " + databaseName);
+        if (!tables.containsKey(tableName)) {
+            throw new SQLException("Table " + tableName +
+                    " does not exist in the database " + databaseName);
+        }
         return tables.get(tableName);
     }
 

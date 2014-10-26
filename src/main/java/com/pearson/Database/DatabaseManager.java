@@ -1,6 +1,5 @@
 package com.pearson.Database;
 
-import ch.qos.logback.core.pattern.color.BlackCompositeConverter;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 import org.slf4j.Logger;
@@ -56,11 +55,12 @@ public class DatabaseManager {
     public void shutDown() throws SQLException {
         closeAllConnections();
         connectionPool.close();
+        logger.info("Connection pool was closed");
     }
 
     public void closeAllConnections() throws SQLException {
-        synchronized (openConnections){
-            for(Connection connection : openConnections){
+        synchronized (openConnections) {
+            for (Connection connection : openConnections) {
                 connection.close();
             }
         }

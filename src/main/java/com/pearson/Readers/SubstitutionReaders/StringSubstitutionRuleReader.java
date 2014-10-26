@@ -1,5 +1,6 @@
 package com.pearson.Readers.SubstitutionReaders;
 
+import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Utilities.Constants;
 import noNamespace.Rule;
@@ -25,8 +26,8 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     private static Logger logger = LoggerFactory.getLogger(StringSubstitutionRuleReader.class.getName());
 
-    public StringSubstitutionRuleReader(Rule rule, Database database) {
-        super(rule, database);
+    public StringSubstitutionRuleReader(Rule rule, Database database, MySQLTable mySQLTable) {
+        super(rule, database, mySQLTable);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         prepareToRun();
 
         if (actionType == SubstitutionActionType.SET_FROM_FILE) {
-            String filePath = rule.getSubstitute().getStringValue1() ;
+            String filePath = rule.getSubstitute().getStringValue1();
             logger.debug("Selecting file: " + filePath);
             File selectedFile = new File(filePath);
             setFromFile(selectedFile);

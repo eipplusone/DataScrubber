@@ -25,11 +25,10 @@ public abstract class SubstitutionReader implements Callable<Rule> {
     Rule rule;
     MySQLTable mySQLTable;
 
-    public SubstitutionReader(Rule rule, Database database) {
+    public SubstitutionReader(Rule rule, Database database, MySQLTable mySQLTable) {
         this.rule = rule;
         this.database = database;
-
-        mySQLTable = database.getTable(rule.getTarget());
+        this.mySQLTable = mySQLTable;
     }
 
     public void setToNull() throws SQLException {

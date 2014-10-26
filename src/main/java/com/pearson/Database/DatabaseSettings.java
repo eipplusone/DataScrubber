@@ -1,5 +1,6 @@
 package com.pearson.Database;
 
+import com.pearson.Database.SQL.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +19,11 @@ public class DatabaseSettings {
 
     private DatabaseInterface databaseInterface;
 
-    public DatabaseSettings(DatabaseInterface databaseInterface) {
+    public DatabaseSettings(DatabaseInterface databaseInterface, Database database) throws SQLException {
 
         this.databaseInterface = databaseInterface;
+        String sql = "USE " + database.getDatabaseName();
+        databaseInterface.createStatement().execute(sql);
     }
 
     private void copyTable(String tableToCopyFrom, String newTable) throws SQLException {

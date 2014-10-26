@@ -1,6 +1,7 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
+import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
 import noNamespace.Rule;
@@ -21,9 +22,9 @@ public class NumericSubstitutionRuleReader extends SubstitutionReader {
 
     private static Logger logger = LoggerFactory.getLogger(NumericSubstitutionRuleReader.class.getName());
 
-    public NumericSubstitutionRuleReader(Rule rule, Database database) {
+    public NumericSubstitutionRuleReader(Rule rule, Database database, MySQLTable mySQLTable) {
 
-        super(rule, database);
+        super(rule, database, mySQLTable);
     }
 
     public Rule call() throws SQLException {

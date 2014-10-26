@@ -1,7 +1,7 @@
 package com.pearson.Readers;
 
-import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
+import com.pearson.Database.MySQL.MySQLTable;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
@@ -16,12 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import javax.swing.text.Utilities;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.Timer;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -49,6 +47,7 @@ public class SetReader extends SwingWorker<Integer, String> {
     String setName;
     ExecutorService executor;
     private ArrayList<Rule> rulesRunning;
+    private Set<String> autoIncrementColumns;
 
     public SetReader(final MaskingSetDocument setDocument, Database database, final String name) {
         this.setDocument = setDocument;
@@ -58,6 +57,7 @@ public class SetReader extends SwingWorker<Integer, String> {
 
         File configFile = new File(Constants.CONFIG_FILE);
         XMLInterface.checkConfigFile(configFile);
+        autoIncrementColumns = new HashSet<String>();
 
         progressWindow = new ProgressWindow(this);
 
@@ -108,7 +108,6 @@ public class SetReader extends SwingWorker<Integer, String> {
      * @param root Pointer to the root of the tree
      */
     private static void appendNode(Rule rule, RuleNode root) {
-
         RuleNode ruleNode = new RuleNode(rule);
         root.add(ruleNode);
 
@@ -121,9 +120,7 @@ public class SetReader extends SwingWorker<Integer, String> {
     }
 
     private LinkedList<Rule> getChildren(RuleNode root) {
-
         LinkedList<Rule> rulesToReturn = new LinkedList();
-
         // Breadth-first search
         Enumeration it = root.children();
 
@@ -132,7 +129,6 @@ public class SetReader extends SwingWorker<Integer, String> {
             RuleNode firstLevelRule = (RuleNode) it.nextElement();
             rulesToReturn.add(firstLevelRule.getRule());
         }
-
 
         return rulesToReturn;
     }
@@ -147,6 +143,7 @@ public class SetReader extends SwingWorker<Integer, String> {
     public Integer doInBackground() throws Exception {
         RuleNode root = getRulesTree(this.setDocument);
         publish("Partitioned the set");
+        createAutoIncrementColumns();
 
         // get the list of all rules that yet to be run in the order they suppose to run
         LinkedList<Rule> rulesToRun = getChildren(root);
@@ -174,6 +171,67 @@ public class SetReader extends SwingWorker<Integer, String> {
         return 0;
     }
 
+    private void cleanUp() {
+        if (rulesRunning.isEmpty()) try {
+            cleanUpAutoIncrementColumns();
+            database.cleanUp();
+        } catch (SQLException e) {
+            logger.debug("Weren't able to clean up after database usage");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
+    }
+
+    /**
+     * Deletes all the autoincrement columns we have created so far
+     */
+    private void cleanUpAutoIncrementColumns() throws SQLException {
+        for (String target : autoIncrementColumns) {
+            MySQLTable mySQLTable = null;
+            try {
+                mySQLTable = database.getTable(target);
+                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
+            } catch (SQLException e) {
+                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
+            logger.debug(target + ": Deleting autoincrement column");
+            try {
+                mySQLTable.deleteAutoIncrementColumn();
+            } catch (SQLException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
+
+            mySQLTable.cleanResourses();
+        }
+    }
+
+    /**
+     * Creates autoincrement columns for tables within masking set that don't have one.
+     */
+    private void createAutoIncrementColumns() {
+        Set<String> targets = XMLInterface.getAllTargets(setDocument);
+
+        for (String target : targets) {
+            MySQLTable mySQLTable = null;
+            try {
+                mySQLTable = database.getTable(target);
+            } catch (SQLException e) {
+                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
+
+            if (mySQLTable.getAutoIncrementColumn() == null) {
+                try {
+                    mySQLTable.addAutoIncrementColumn();
+                    logger.debug("Added autoincrement column to " + target);
+                    autoIncrementColumns.add(target);
+                } catch (SQLException e) {
+                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+                }
+                logger.debug("Creating autoincrement column for " + target);
+            }
+
+        }
+    }
+
     private void executeThreads(List<Rule> list) {
 
         tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
@@ -198,23 +256,22 @@ public class SetReader extends SwingWorker<Integer, String> {
     }
 
     public synchronized void updateDoneRule(Rule doneRule, boolean isSuccessful) {
-        tablesOccupied.remove(doneRule.getTarget());
-        rulesRunning.remove(doneRule);
-        com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
-        if (isSuccessful) {
-            publish("Rule " + doneRule.getId() + " has completed running");
-            if (!XMLInterface.isLeaf(doneRule)) {
-                List<Rule> ruleList = Arrays.asList(doneRule.getDependencies().getRuleArray());
-                executeThreads(ruleList);
+        synchronized (rulesRunning) {
+            tablesOccupied.remove(doneRule.getTarget());
+            rulesRunning.remove(doneRule);
+            com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
+            if (isSuccessful) {
+                publish("Rule " + doneRule.getId() + " has completed running");
+                if (!XMLInterface.isLeaf(doneRule)) {
+                    List<Rule> ruleList = Arrays.asList(doneRule.getDependencies().getRuleArray());
+                    executeThreads(ruleList);
+                }
             }
-        }
 
-        if (rulesRunning.isEmpty()) try {
-            logger.debug("Cleaning up after using setReader");
-            database.cleanUp();
-        } catch (SQLException e) {
-            logger.debug("Weren't able to clean up after database usage");
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            if (rulesRunning.isEmpty()) {
+                logger.debug("Finished running all rules");
+                cleanUp();
+            }
         }
 
     }

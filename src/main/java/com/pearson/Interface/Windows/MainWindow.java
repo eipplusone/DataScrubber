@@ -7,6 +7,7 @@ package com.pearson.Interface.Windows;
 
 import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
+import com.pearson.Interface.UIManager;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
@@ -20,11 +21,17 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 
 /*
  * To change this template, choose Tools | Templates
@@ -69,7 +76,7 @@ public class MainWindow extends javax.swing.JFrame {
     /**
      * Creates new form DataMaskFrontEndGUI
      */
-    public MainWindow() {
+    public MainWindow(String[] args) {
 
         initComponents();
         TestTree.setComponentPopupMenu(new JPopupMenu("label"));
@@ -94,6 +101,13 @@ public class MainWindow extends javax.swing.JFrame {
         setMaskingSetLogic(true);
 
         com.pearson.Interface.UIManager.setMainWindow(this);
+
+        Set<String> argSet = new HashSet<String>(Arrays.asList(args));
+
+        if (argSet.contains("debug")) {
+            setFile(new File("testingMasterSet.xml"));
+            runSet();
+        }
     }
 
 
@@ -245,15 +259,6 @@ public class MainWindow extends javax.swing.JFrame {
         });
         connectionMenuItem.add(setConnectionMenuButton);
 
-        cleanUpMenuButton.setText("Set Connection");
-        cleanUpMenuButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cleanUpMenuButtonActionPerformed(e);
-            }
-        });
-        connectionMenuItem.add(cleanUpMenuButton);
-
         disconnectMenuButton.setText("Disconnect");
         disconnectMenuButton.addActionListener(new ActionListener() {
             @Override
@@ -315,7 +320,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void setConnectionMenuButtonActionPerformed(ActionEvent e) {
-        getConnectionInformation();
+        setConnectionInformation();
     }
 
     /**
@@ -324,53 +329,36 @@ public class MainWindow extends javax.swing.JFrame {
      *
      * @return false if user closed the window, true if the information is uploaded to UIManager
      */
-    private boolean getConnectionInformation() {
+    private void setConnectionInformation() {
         DatabaseConnectionInfoWindow connectionInfoWindow = new DatabaseConnectionInfoWindow();
-
-        if (!com.pearson.Interface.UIManager.isUserInformationSet()) {
-            connectionInfoWindow.setVisible(true);
-        }
-
-        if (connectionInfoWindow.getReturnValue() == com.pearson.Interface.UIManager.CLOSED) return false;
-
-        disconnectMenuButton.setEnabled(true);
-        return true;
+        connectionInfoWindow.setVisible(true);
     }
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
+        try {
+            runSet();
+        } catch (IOException | SQLException e1) {
+            logger.error(e1 + System.lineSeparator() + StackTrace.getStringFromStackTrace(e1));
+        }
+    }
 
-        // if user closed connection window
-        if(!getConnectionInformation()) return;
+    private void runSet() throws IOException, SQLException {
+        // if user connection info isn't set
+        if (!UIManager.isUserInformationSet()) {
+            setConnectionInformation();
+        }
 
         Database database = null;
-        try {
-            database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(),
-                    com.pearson.Interface.UIManager.getUsername(),
-                    com.pearson.Interface.UIManager.getPassword(),
-                    "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
-                            + ":" + com.pearson.Interface.UIManager.getPort());
-        } catch (SQLException exception) {
-            exception.printStackTrace();
-        }
+        database = new Database(UIManager.getCurrentConnection());
 
         SetReader setReader;
         if (XMLInterface.getXmlFile() != null) {
             setReader = new SetReader(XMLInterface.getSetDocument(), database, XMLInterface.getXmlFile().getName());
-        }
-        else {
-            setReader = new SetReader(XMLInterface.getSetDocument(), database, "Unsaved Masking Set");
-        }
-
-
-
-        try {
-            setReader.execute();
-//            setReader.run(); // temporary hack
-        } catch (Exception exc) {
-            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
+        } else {
+            throw new IOException("MaskingSet file wasn't set; Please open/create new MaskingSet");
         }
 
-
+        setReader.execute();
         // todo need to figure out a way to clean up the database
         // ****** BUG *****
         // here is the bug; If we run execute(), the edt thread continues on
@@ -548,33 +536,36 @@ public class MainWindow extends javax.swing.JFrame {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 openFile = fc.getSelectedFile();
-
-                // load the file
-                try {
-                    XMLInterface.setXMLFile(openFile);
-                } catch (XmlException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                    JOptionPane.showMessageDialog(this, "XML file is invalid." +
-                            " Please load a valid file(see logs for details)");
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(this, "File isn't available. Please see the logs");
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
-
-                LinkedList<String> columnNames = new LinkedList();
-                columnNames.add("Rule ID");
-                columnNames.add("Rule Type");
-                columnNames.add("Target");
-                columnNames.add("Columns");
-
-                setMaskingSetLogic(true);
-
-                RulesInSetPane.setTitleAt(0, openFile.getName());
-                updateTreeModel();
-                TestTree.expandAll();
+                setFile(openFile);
             }
         }
 
+    }
+
+    private void setFile(File openFile) {
+        // load the file
+        try {
+            XMLInterface.setXMLFile(openFile);
+        } catch (XmlException e) {
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            JOptionPane.showMessageDialog(this, "XML file is invalid." +
+                    " Please load a valid file(see logs for details)");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File isn't available. Please see the logs");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
+
+        LinkedList<String> columnNames = new LinkedList();
+        columnNames.add("Rule ID");
+        columnNames.add("Rule Type");
+        columnNames.add("Target");
+        columnNames.add("Columns");
+
+        setMaskingSetLogic(true);
+
+        RulesInSetPane.setTitleAt(0, openFile.getName());
+        updateTreeModel();
+        TestTree.expandAll();
     }
 
     private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {

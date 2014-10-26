@@ -35,6 +35,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
             HostNameField.setText("127.0.0.1");
             UserNameField.setText("root");
             DefaultSchemaField.setText("sakila");
+            okButtonPressed();
         }
         // otherwise use the previous setting entered by the user
         else {
@@ -283,6 +284,11 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {
         //test connection and open the createNewRuleWindow
+        okButtonPressed();
+
+    }
+
+    private void okButtonPressed() {
         if (isInputNotEmpty()) {
             fetch();
             if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
@@ -297,7 +303,6 @@ public class DatabaseConnectionInfoWindow extends JDialog {
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
             }
         }
-
     }
 
 

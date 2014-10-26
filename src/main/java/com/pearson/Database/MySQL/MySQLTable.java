@@ -224,7 +224,8 @@ public class MySQLTable extends Table {
     public void deleteAutoIncrementColumn() throws SQLException {
         try {
             establishConnection();
-            databaseInterface.createStatement().executeUpdate("ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name);
+            String sql = "ALTER TABLE " + tableName + " DROP " + getAutoIncrementColumn().name;
+            databaseInterface.createStatement().executeUpdate(sql);
             databaseInterface.commit();
         } catch (SQLException exc) {
             databaseInterface.rollback();

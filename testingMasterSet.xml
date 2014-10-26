@@ -3,79 +3,79 @@
     <date_created>2014-09-16-05:00</date_created>
     <name>New Masking Set</name>
     <rules>
+        <!--<rule target="DStesting" rule_type="substitution">
+              <id>1</id>
+              <substitute substitution__action_type="setToNull" substitution_data_type="numeric">
+                  <column>intSetToNull</column>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>2</id>
+              <substitute substitution__action_type="setToRandom" substitution_data_type="numeric">
+                  <column>intSetToRandom</column>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>3</id>
+              <substitute substitution__action_type="setToValue" substitution_data_type="numeric">
+                  <column>intSetToValue</column>
+                  <numeric_value>100</numeric_value>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>4</id>
+              <substitute substitution__action_type="setToNull" substitution_data_type="string">
+                  <column>stringSetToNull</column>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>5</id>
+              <substitute substitution__action_type="setToValue" substitution_data_type="string">
+                  <column>stringSetToValue</column>
+                  <string_value>I Love Futurama!</string_value>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>6</id>
+              <substitute substitution__action_type="setToRandom" substitution_data_type="string">
+                  <column>stringSetToRandom</column>
+                  <numeric_value>8</numeric_value>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>7</id>
+              <substitute substitution__action_type="setFromFile" substitution_data_type="string">
+                  <column>stringSetFromFile</column>
+                  <string_value>/Users/ruslankiselev/Google Drive/Work/DataScrubber/loadFromFile.txt</string_value>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>8</id>
+              <substitute substitution__action_type="setToNull" substitution_data_type="date">
+                  <column>dateSetToNull</column>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>9</id>
+              <substitute substitution__action_type="setToValue" substitution_data_type="date">
+                  <column>dateSetToValue</column>
+                  <date_value>978328860000</date_value>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>10</id>
+              <substitute substitution__action_type="setToRandom" substitution_data_type="date">
+                  <column>dateSetToRandom</column>
+              </substitute>
+          </rule>
+          <rule target="DStesting" rule_type="substitution">
+              <id>11</id>
+              <substitute substitution__action_type="setToRandom" substitution_data_type="date">
+                  <column>timeSetToRandom</column>
+              </substitute>
+          </rule>-->
         <rule target="DStesting" rule_type="substitution">
             <id>1</id>
-            <substitute substitution__action_type="setToNull" substitution_data_type="numeric">
-                <column>intSetToNull</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>2</id>
-            <substitute substitution__action_type="setToRandom" substitution_data_type="numeric">
-                <column>intSetToRandom</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>3</id>
-            <substitute substitution__action_type="setToValue" substitution_data_type="numeric">
-                <column>intSetToValue</column>
-                <numeric_value>100</numeric_value>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>4</id>
-            <substitute substitution__action_type="setToNull" substitution_data_type="string">
-                <column>stringSetToNull</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>5</id>
-            <substitute substitution__action_type="setToValue" substitution_data_type="string">
-                <column>stringSetToValue</column>
-                <string_value>I Love Futurama!</string_value>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>6</id>
-            <substitute substitution__action_type="setToRandom" substitution_data_type="string">
-                <column>stringSetToRandom</column>
-                <numeric_value>8</numeric_value>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>7</id>
-            <substitute substitution__action_type="setFromFile" substitution_data_type="string">
-                <column>stringSetFromFile</column>
-                <string_value>/Users/ruslankiselev/Google Drive/Work/DataScrubber/loadFromFile.txt</string_value>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>8</id>
-            <substitute substitution__action_type="setToNull" substitution_data_type="date">
-                <column>dateSetToNull</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>9</id>
-            <substitute substitution__action_type="setToValue" substitution_data_type="date">
-                <column>dateSetToValue</column>
-                <date_value>978328860000</date_value>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>10</id>
-            <substitute substitution__action_type="setToRandom" substitution_data_type="date">
-                <column>dateSetToRandom</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>11</id>
-            <substitute substitution__action_type="setToRandom" substitution_data_type="date">
-                <column>timeSetToRandom</column>
-            </substitute>
-        </rule>
-        <rule target="DStesting" rule_type="substitution">
-            <id>12</id>
             <substitute substitution__action_type="setToRandom" substitution_data_type="date">
                 <column>timeStampSetToRandom</column>
             </substitute>

@@ -18,8 +18,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Ruslan Kiselev
@@ -68,12 +66,6 @@ public class RuleReader implements Runnable {
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
         mySQLTable.getConnectionConfig().disableUniqueChecks();
 
-        boolean autoIncrementColumnCreated = false;
-        if (mySQLTable.getAutoIncrementColumn() == null) {
-            mySQLTable.addAutoIncrementColumn();
-            autoIncrementColumnCreated = true;
-        }
-
         // begin shuffling
         logger.debug("Rule " + rule.getId() + " finished setting up; begin shuffling");
         for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
@@ -86,12 +78,6 @@ public class RuleReader implements Runnable {
         // get the result set that has already been shuffled
         logger.debug("Rule " + rule.getId() + " finished shuffling");
 
-        if (autoIncrementColumnCreated) {
-            logger.debug("Rule " + rule.getId() + ": Deleting autoincrement column");
-            mySQLTable.deleteAutoIncrementColumn();
-            autoIncrementColumnCreated = false;
-        }
-
         // clean all the resources
         logger.debug("Rule " + rule.getId() + ":Cleaning resources");
         mySQLTable.cleanResourses();
@@ -100,9 +86,10 @@ public class RuleReader implements Runnable {
 
     private void callSubstitution(Database database) throws SQLException, FileNotFoundException, XMLParseException {
 
-        MySQLTable mySQLTable = database.getTable(rule.getTarget());
+        String target = rule.getTarget();
+        MySQLTable mySQLTable = database.getTable(target);
 
-        /* TODO: WARNING! THIS LEAVES DATABASE IN A STATE DIFFERENT THAN FROM BEFORE!!! NEED TO FIGURE OUT A WAY  TO FIX THIS!!!*/
+        /* TODO: WARNING! THIS LEAVES DATABASE IN A STATE DIFFERENT THAN FROM BEFORE!!! NEED TO FIGURE OUT A WAY TO FIX THIS!!!*/
         // or maybe it's session based so no need to worry
         mySQLTable.getConnectionConfig().setDefaultDatabase(database);
         mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
@@ -110,24 +97,14 @@ public class RuleReader implements Runnable {
 
         SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
 
-        boolean autoIncrementColumnCreated = false;
-        if (mySQLTable.getAutoIncrementColumn() == null) {
-            mySQLTable.addAutoIncrementColumn();
-            logger.debug("Creating autoincrement column");
-            autoIncrementColumnCreated = true;
-        }
-
         Rule returnRule = null;
-        if (dataType == SubstitutionDataType.DATE) returnRule =  new DateSubstitutionRuleReader(rule, database).call();
-        else if (dataType == SubstitutionDataType.NUMERIC) returnRule =  new NumericSubstitutionRuleReader(rule, database).call();
-        else if (dataType == SubstitutionDataType.STRING) returnRule =  new StringSubstitutionRuleReader(rule, database).call();
+        if (dataType == SubstitutionDataType.DATE)
+            returnRule = new DateSubstitutionRuleReader(rule, database, mySQLTable).call();
+        else if (dataType == SubstitutionDataType.NUMERIC)
+            returnRule = new NumericSubstitutionRuleReader(rule, database, mySQLTable).call();
+        else if (dataType == SubstitutionDataType.STRING)
+            returnRule = new StringSubstitutionRuleReader(rule, database, mySQLTable).call();
         else throw new SQLException("SubstitutionDataType doesn't match any specified types.");
-
-        if (autoIncrementColumnCreated) {
-            logger.debug("Rule " + rule.getId() + ": Deleting autoincrement column");
-            mySQLTable.deleteAutoIncrementColumn();
-            autoIncrementColumnCreated = false;
-        }
 
         mySQLTable.cleanResourses();
     }
