@@ -22,7 +22,7 @@ public class UIManager {
     public static Logger logger = LoggerFactory.getLogger(UIManager.class.getName());
 
     public static final int CLOSED = -1;
-    private static DatabaseConnection currentConnection;
+    private static DatabaseConnectionInfo currentConnection;
     private static MainWindow mainWindow;
     private static boolean userEnteredLogInInformation = true;
     private static Rule parentRule;
@@ -35,12 +35,12 @@ public class UIManager {
         mainWindow = mainWindowLink;
     }
 
-    static public DatabaseConnection getCurrentConnection() {
+    static public DatabaseConnectionInfo getCurrentConnection() {
         return currentConnection;
     }
 
-    static public void setCurrentConnection(DatabaseConnection currentConnection) {
-        this.currentConnection = currentConnection;
+    static public void setCurrentConnection(DatabaseConnectionInfo currentConnection) {
+        UIManager.currentConnection = currentConnection;
     }
 
     // only one UIManager for application

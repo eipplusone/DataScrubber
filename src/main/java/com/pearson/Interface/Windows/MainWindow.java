@@ -2,14 +2,12 @@
 // save for the current session and don't ask for the information again.
 
 // for database connection make sure that when you cancel databse connection window you return a value that can be checked in the main window
-// so we know that user cancelled window and don't bring new rule window if so. Yo.
+// so we know that user cancelled windo
 package com.pearson.Interface.Windows;
 
-import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
-import com.pearson.Interface.UIManager;
+import com.pearson.Interface.Windows.Controllers.MainWindowController;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
-import com.pearson.Readers.SetReader;
 import com.pearson.Utilities.CleanUp;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
@@ -48,25 +46,25 @@ import java.util.Set;
 public class MainWindow extends javax.swing.JFrame {
 
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(MainWindow.class.getName());
+    MainWindowController mainWindowController = new MainWindowController();
 
-    private RulesTreeTableModel rulesInSetTreeModel = new RulesTreeTableModel();
-    private javax.swing.JTabbedPane RulesInSetPane = new JTabbedPane();
-    private javax.swing.JTree RulesInSetTree = new JTree();
+    private JTabbedPane RulesInSetPane = new JTabbedPane();
+    private JTree RulesInSetTree = new JTree();
     private org.jdesktop.swingx.JXTreeTable TestTree = new JXTreeTable();
-    private javax.swing.JCheckBox jCheckBox1 = new JCheckBox();
-    private javax.swing.JCheckBox jCheckBox3 = new JCheckBox();
-    private javax.swing.JMenuBar topMenuBar = new JMenuBar();
-    private javax.swing.JPanel jPanel1 = new JPanel();
-    private javax.swing.JScrollPane jScrollPane1 = new JScrollPane();
-    private javax.swing.JMenu maskingSetMenuItem = new JMenu();
-    private javax.swing.JMenuItem newMaskingSetMenuButton = new JMenuItem();
+    private JCheckBox jCheckBox1 = new JCheckBox();
+    private JCheckBox jCheckBox3 = new JCheckBox();
+    private JMenuBar topMenuBar = new JMenuBar();
+    private JPanel jPanel1 = new JPanel();
+    private JScrollPane jScrollPane1 = new JScrollPane();
+    private JMenu maskingSetMenuItem = new JMenu();
+    private JMenuItem newMaskingSetMenuButton = new JMenuItem();
     private JMenuItem runMaskingSetMenuButton = new JMenuItem();
-    private javax.swing.JMenuItem newRuleMenuButton = new JMenuItem();
-    private javax.swing.JMenuItem openMaskingSetMenuButton = new JMenuItem();
-    private javax.swing.JMenu ruleMenuItem = new JMenu();
+    private JMenuItem newRuleMenuButton = new JMenuItem();
+    private JMenuItem openMaskingSetMenuButton = new JMenuItem();
+    private JMenu ruleMenuItem = new JMenu();
     private JMenu connectionMenuItem = new JMenu();
-    private javax.swing.JMenuItem saveSetAsMenuButton = new JMenuItem();
-    private javax.swing.JMenuItem saveSetMenuButton = new JMenuItem();
+    private JMenuItem saveSetAsMenuButton = new JMenuItem();
+    private JMenuItem saveSetMenuButton = new JMenuItem();
     private JMenuItem rightClickMenuItem, disableMenuItem, enableMenuItem = new JMenuItem();
     private JPopupMenu rulesInSetRightClickMenu = new JPopupMenu();
     private JMenuItem setConnectionMenuButton = new JMenuItem();
@@ -106,7 +104,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         if (argSet.contains("debug")) {
             setFile(new File("testingMasterSet.xml"));
-            runSet();
+            Constants.IN_DEVELOPMENT = true;
+            try {
+                mainWindowController.runSet();
+            } catch (IOException | SQLException e) {
+                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
         }
     }
 
@@ -161,7 +164,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        RulesInSetTree.setModel(rulesInSetTreeModel);
+        RulesInSetTree.setModel(mainWindowController.getRulesInSetTreeModel());
         jScrollPane1.setViewportView(RulesInSetTree);
         jScrollPane1.setViewportView(TestTree);
         RulesInSetPane.addTab("Rules In Set", jScrollPane1);
@@ -320,55 +323,15 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void setConnectionMenuButtonActionPerformed(ActionEvent e) {
-        setConnectionInformation();
-    }
-
-    /**
-     * Creates a window that lets user populate the connection information. That in turn is passed to UIManager
-     * to store as the main connection inforamtion.
-     *
-     * @return false if user closed the window, true if the information is uploaded to UIManager
-     */
-    private void setConnectionInformation() {
-        DatabaseConnectionInfoWindow connectionInfoWindow = new DatabaseConnectionInfoWindow();
-        connectionInfoWindow.setVisible(true);
+        mainWindowController.setConnectionInformation();
     }
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
         try {
-            runSet();
+            mainWindowController.runSet();
         } catch (IOException | SQLException e1) {
             logger.error(e1 + System.lineSeparator() + StackTrace.getStringFromStackTrace(e1));
         }
-    }
-
-    private void runSet() throws IOException, SQLException {
-        // if user connection info isn't set
-        if (!UIManager.isUserInformationSet()) {
-            setConnectionInformation();
-        }
-
-        Database database = null;
-        database = new Database(UIManager.getCurrentConnection());
-
-        SetReader setReader;
-        if (XMLInterface.getXmlFile() != null) {
-            setReader = new SetReader(XMLInterface.getSetDocument(), database, XMLInterface.getXmlFile().getName());
-        } else {
-            throw new IOException("MaskingSet file wasn't set; Please open/create new MaskingSet");
-        }
-
-        setReader.execute();
-        // todo need to figure out a way to clean up the database
-        // ****** BUG *****
-        // here is the bug; If we run execute(), the edt thread continues on
-        // and tries to cleanUp DB while the set is still performing operations on the DB.
-        // YOU ARE AN IDIOT!!!
-//        try {
-//            database.cleanUp();
-//        } catch (SQLException exc) {
-//            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
-//        }
     }
 
     private void saveSetMenuButtonActionPerformed(ActionEvent evt) {
@@ -377,7 +340,7 @@ public class MainWindow extends javax.swing.JFrame {
             saveAsFile();
         } else {
             try {
-                XMLInterface.saveCurrentFile();
+                mainWindowController.saveCurrentFile();
             } catch (IOException e) {
                 logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
             }
@@ -388,38 +351,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void saveSetAsMenuButtonActionPerformed(ActionEvent evt) {
         saveAsFile();
     }
-
-    /**
-     * Saves the currently open masking set. If no file is registered, it creates a new one and
-     * saved the current set that is being worked on.
-     */
-    private void saveAsFile() {
-
-        JFileChooser chooser = new JFileChooser(Constants.WORKING_DIRECTORY);
-
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File newFile = chooser.getSelectedFile();
-            logger.debug("Saving to a file: " + newFile.getAbsolutePath());
-            try {
-                if (!newFile.exists()) {
-                    newFile.createNewFile();
-                }
-                XMLInterface.saveSetToAFile(newFile);
-                XMLInterface.setXMLFile(newFile);
-            } catch (IOException e) {
-                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            } catch (XmlException e) {
-                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            }
-            RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
-        }
-    }
-
-    /**
-     * Creates a new dependent rule using context menu.
-     *
-     * @param evt
-     */
 
     private void createNewDependentRuleRightClickMenuActionPerformed(ActionEvent evt) {
 
@@ -445,17 +376,12 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }
 
-    /**
-     * Deletes a rule from a set using context menu.
-     *
-     * @param evt
-     */
     private void deleteRightClickMenuActionPerformed(ActionEvent evt) {
 
         int row = TestTree.getSelectedRow();
         String ruleID = TestTree.getValueAt(row, RulesTreeTableModel.RULE_ID_COLUMN).toString();
 
-        Rule ruleToDelete = XMLInterface.getRule(ruleID);
+        Rule ruleToDelete = mainWindowController.getRule(ruleID);
 
         if (!XMLInterface.isLeaf(ruleToDelete)) {
             Object[] options = {"Delete all child rules", "Cancel"};
@@ -468,21 +394,16 @@ public class MainWindow extends javax.swing.JFrame {
             }
         }
 
-        XMLInterface.removeRule(ruleToDelete);
+        mainWindowController.removeRule(ruleToDelete);
 
         updateTreeModel();
     }
 
-    /**
-     * Runs when a user creates a new set.
-     *
-     * @param evt
-     */
     private void newMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         // need to do checks if a masking set has already been created and if the user wants
         // to save it
-        if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
+        if (mainWindowController.getXmlFile() != null && !mainWindowController.isFileSaved()) {
             Object[] options = {"Save", "Discard", "Cancel"};
             int saveOption = JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
@@ -490,16 +411,15 @@ public class MainWindow extends javax.swing.JFrame {
             if (saveOption == JOptionPane.YES_OPTION) {
                 saveAsFile();
             } else if (saveOption == JOptionPane.NO_OPTION) {
-                XMLInterface.createNewFile("New Masking Set");
+                mainWindowController.createNewFile("New Masking Set");
                 RulesInSetPane.setTitleAt(0, "New Masking Set");
                 updateTreeModel();
             }
         } else {
-            XMLInterface.createNewFile("New Masking Set");
+            mainWindowController.createNewFile("New Masking Set");
             TestTree.setTreeTableModel(new RulesTreeTableModel());
 
             setMaskingSetLogic(true);
-
             RulesInSetPane.setTitleAt(0, "New Masking Set");
         }
     }
@@ -512,7 +432,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void openMaskingSetMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // create a file chooser
 
-        if (XMLInterface.getXmlFile() != null && !XMLInterface.isFileSaved()) {
+        if (mainWindowController.getXmlFile() != null && !mainWindowController.isFileSaved()) {
             Object[] options = {"Save", "Discard", "Cancel"};
             int saveOption = JOptionPane.showOptionDialog(null, "Please save or discard your changes", "Create New Masking Set", JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
@@ -542,32 +462,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     }
 
-    private void setFile(File openFile) {
-        // load the file
-        try {
-            XMLInterface.setXMLFile(openFile);
-        } catch (XmlException e) {
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            JOptionPane.showMessageDialog(this, "XML file is invalid." +
-                    " Please load a valid file(see logs for details)");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "File isn't available. Please see the logs");
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
-
-        LinkedList<String> columnNames = new LinkedList();
-        columnNames.add("Rule ID");
-        columnNames.add("Rule Type");
-        columnNames.add("Target");
-        columnNames.add("Columns");
-
-        setMaskingSetLogic(true);
-
-        RulesInSetPane.setTitleAt(0, openFile.getName());
-        updateTreeModel();
-        TestTree.expandAll();
-    }
-
     private void newRuleMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {
 
         DatabaseConnectionInfoWindow iw = new DatabaseConnectionInfoWindow();
@@ -593,7 +487,7 @@ public class MainWindow extends javax.swing.JFrame {
      *
      * @param isVisible
      */
-    private void setMaskingSetLogic(boolean isVisible) {
+    public void setMaskingSetLogic(boolean isVisible) {
 
         RulesInSetPane.setVisible(isVisible);
         ruleMenuItem.setEnabled(isVisible);
@@ -604,13 +498,63 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     /**
+     * Saves the currently open masking set. If no file is registered, it creates a new one and
+     * saved the current set that is being worked on.
+     */
+    public void saveAsFile() {
+
+        JFileChooser chooser = new JFileChooser(Constants.WORKING_DIRECTORY);
+
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File newFile = chooser.getSelectedFile();
+            logger.debug("Saving to a file: " + newFile.getAbsolutePath());
+            try {
+                if (!newFile.exists()) {
+                    newFile.createNewFile();
+                }
+                mainWindowController.saveSetToAFile(newFile);
+                mainWindowController.setXMLFile(newFile);
+            } catch (IOException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            } catch (XmlException e) {
+                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
+            RulesInSetPane.setTitleAt(0, XMLInterface.getXmlFile().getName());
+        }
+    }
+
+    /**
      * Updates the rules in set view
      */
     public void updateTreeModel() {
 
-        rulesInSetTreeModel = new RulesTreeTableModel(XMLInterface.getRulesTree());
-        TestTree.setTreeTableModel(rulesInSetTreeModel);
+        TestTree.setTreeTableModel(mainWindowController.getRulesInSetTreeModel());
         TestTree.expandAll();
     }
 
+    public void setFile(File openFile) {
+        // load the file
+        try {
+            mainWindowController.setXMLFile(openFile);
+        } catch (XmlException e) {
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            JOptionPane.showMessageDialog(this, "XML file is invalid." +
+                    " Please load a valid file(see logs for details)");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "File isn't available. Please see the logs");
+            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
+
+        LinkedList<String> columnNames = new LinkedList();
+        columnNames.add("Rule ID");
+        columnNames.add("Rule Type");
+        columnNames.add("Target");
+        columnNames.add("Columns");
+
+        setMaskingSetLogic(true);
+
+        RulesInSetPane.setTitleAt(0, openFile.getName());
+        updateTreeModel();
+        TestTree.expandAll();
+    }
 }

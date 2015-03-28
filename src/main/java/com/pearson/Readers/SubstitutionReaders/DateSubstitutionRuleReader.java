@@ -1,11 +1,12 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
-import com.pearson.Database.SQL.Database;
+import com.pearson.Readers.RuleReader;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,28 +26,27 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
 
     private static Logger logger = LoggerFactory.getLogger(DateSubstitutionRuleReader.class.getName());
 
-    public DateSubstitutionRuleReader(Rule rule, Database database, MySQLTable mySQLTable) {
-        super(rule, database, mySQLTable);
+    public DateSubstitutionRuleReader(RuleReader.Builder builder) throws SQLException {
+       super(builder);
     }
 
-    @Override
-    public Rule call() throws SQLException, XMLParseException {
+    public void runRule() throws SQLException, XMLParseException {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
-        Column selectedColumn = mySQLTable.columns.get(rule.getSubstitute().getColumn());
-        prepareToRun();
+        Column selectedColumn = mySQLTableWorker.getMySQLTable().columns.get(rule.getSubstitute().getColumn());
 
-        //todo modify this to be a date within range
+        createAutoIncrementColumn(mySQLTable, mySQLTableWorker);
+
+        // todo modify this to be a date within range
         if (actionType == SubstitutionActionType.SET_TO_RANDOM) {
             if (selectedColumn.getType() == MySQLDataType.TIME) {
-                logger.debug("Shuffling time");
-                for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
-                    mySQLTable.updateRow(getRandomTime(), rule.getSubstitute().getColumn(), j);
+                for (int j = 0; j <= mySQLTableWorker.getNumberOfRows(); j++) {
+                    mySQLTableWorker.updateRow(getRandomTime(), rule.getSubstitute().getColumn(), j);
                 }
             } else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP) {
                 logger.debug("Shuffling TimeStamp");
-                for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
-                    mySQLTable.updateRow(getRandomTimeStamp(), rule.getSubstitute().getColumn(), j);
+                for (int j = 0; j <= mySQLTableWorker.getNumberOfRows(); j++) {
+                    mySQLTableWorker.updateRow(getRandomTimeStamp(), rule.getSubstitute().getColumn(), j);
                 }
             }
             // in case of Date, DateTime, Year
@@ -54,27 +54,25 @@ public class DateSubstitutionRuleReader extends SubstitutionReader {
                     selectedColumn.getType() == MySQLDataType.DATETIME ||
                     selectedColumn.getType() == MySQLDataType.YEAR) {
                 logger.debug("Shuffling Date/DateTime/Year");
-                for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
-                    mySQLTable.updateRow(getRandomDate(), rule.getSubstitute().getColumn(), j);
+                for (int j = 0; j <= mySQLTableWorker.getNumberOfRows(); j++) {
+                    mySQLTableWorker.updateRow(getRandomDate(), rule.getSubstitute().getColumn(), j);
                 }
             } else throw new XMLParseException("Date type doesn't match any supported date types");
         } else if (actionType == SubstitutionActionType.SET_TO_NULL) {
             setToNull();
         } else if (actionType == SubstitutionActionType.SET_TO_VALUE) {
             if (selectedColumn.getType() == MySQLDataType.TIME) {
-                mySQLTable.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
+                mySQLTableWorker.setColumnToValue(selectedColumn.name, new Time(rule.getSubstitute().getDateValue1().longValue()));
             } else if (selectedColumn.getType() == MySQLDataType.TIMESTAMP) {
-                mySQLTable.setColumnToValue(selectedColumn.name, new Timestamp(rule.getSubstitute().getDateValue1().longValue()));
+                mySQLTableWorker.setColumnToValue(selectedColumn.name, new Timestamp(rule.getSubstitute().getDateValue1().longValue()));
             }
             // in case of Date, DateTime, Year
             else {
-                mySQLTable.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
+                mySQLTableWorker.setColumnToValue(selectedColumn.name, new Date(rule.getSubstitute().getDateValue1().longValue()));
             }
         }
 
-        mySQLTable.cleanResourses();
-
-        return rule;
+        mySQLTableWorker.cleanupAutomatic();
     }
 
     private Time getRandomTime() {

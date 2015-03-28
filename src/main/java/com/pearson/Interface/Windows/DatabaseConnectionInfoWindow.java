@@ -1,6 +1,7 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.SQL.Database;
+import com.pearson.Interface.DatabaseConnectionInfo;
 import com.pearson.Interface.UIManager;
 import com.pearson.Utilities.Constants;
 import org.slf4j.Logger;
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.util.Arrays;
 
 /**
  * @author Ruslan Kiselev, Jia Ma
@@ -17,11 +20,7 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
     private static Logger logger = LoggerFactory.getLogger(DatabaseConnectionInfoWindow.class.getName());
 
-    String username = null;
-    String password = null;
-    String url = null;
-    String defaultSchema = null;
-    String port = null;
+    private DatabaseConnectionInfo currentConnection;
     private int returnValue;
 
     /**
@@ -32,17 +31,18 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
         // if we are in development, use the localhost as the sqlserver
         if (Constants.IN_DEVELOPMENT) {
-            HostNameField.setText("127.0.0.1");
+            HostNameField.setText("localhost");
             UserNameField.setText("root");
+//            PasswordField.setText("root");
             DefaultSchemaField.setText("sakila");
             okButtonPressed();
         }
         // otherwise use the previous setting entered by the user
         else {
-            HostNameField.setText(UIManager.getUrl());
-            UserNameField.setText(UIManager.getUsername());
-            PasswordField.setText(UIManager.getPassword());
-            DefaultSchemaField.setText(UIManager.getDefaultSchema());
+            HostNameField.setText(UIManager.getCurrentConnection().getUrl());
+            UserNameField.setText(UIManager.getCurrentConnection().getUsername());
+            PasswordField.setText(UIManager.getCurrentConnection().getPassword());
+            DefaultSchemaField.setText(UIManager.getCurrentConnection().getDefaultSchema());
         }
 
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -231,11 +231,13 @@ public class DatabaseConnectionInfoWindow extends JDialog {
 
         if (isInputNotEmpty()) {
             fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
+            if (Database.isConnectionValid(currentConnection)) {
                 JOptionPane.showMessageDialog(null, "Connection has been established");
             } else {
-                JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
+                JOptionPane.showMessageDialog(null, "Couldn't establish the connection.");
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please enter connection information");
         }
 
     }
@@ -255,31 +257,34 @@ public class DatabaseConnectionInfoWindow extends JDialog {
             JOptionPane.showMessageDialog(null, "Please enter the username");
             return false;
         }
-        String port = PortField.getText();
-        if (port.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter port number");
-            return false;
-        }
+
         String url = HostNameField.getText();
         if (url.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Please enter the url");
             return false;
         }
+
         String defaultSchema = DefaultSchemaField.getText();
         if (defaultSchema.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please enter the default schema");
+            JOptionPane.showMessageDialog(null, "Please enter the database name");
             return false;
         }
+
         return true;
     }
 
     public void fetch() {
-        username = UserNameField.getText();
-        password = PasswordField.getText();
-        port = PortField.getText();
-        url = HostNameField.getText();
-        defaultSchema = DefaultSchemaField.getText();
 
+        String username = UserNameField.getText();
+        String password = String.valueOf(PasswordField.getPassword());
+        String port = PortField.getText();
+        String url = HostNameField.getText();
+        String defaultSchema = DefaultSchemaField.getText();
+
+        DatabaseConnectionInfo.Builder builder = new DatabaseConnectionInfo.Builder(username,
+                password, url).defaultSchema(defaultSchema).port(port);
+
+        currentConnection = builder.build();
     }
 
     private void OKButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -289,17 +294,21 @@ public class DatabaseConnectionInfoWindow extends JDialog {
     }
 
     private void okButtonPressed() {
-        if (isInputNotEmpty()) {
-            fetch();
-            if (Database.isConnectionValid(defaultSchema, username, password, "jdbc:mysql://" + url + ":" + port)) {
-                UIManager.setUsername(username);
-                UIManager.setPassword(password);
-                UIManager.setUrl(url);
-                UIManager.setDefaultSchema(defaultSchema);
-                UIManager.setPort(port);
 
+        if (isInputNotEmpty()) {
+            logger.info("Input is not empty");
+
+            fetch();
+
+            if (Database.isConnectionValid(currentConnection)) {
+
+                UIManager.setCurrentConnection(currentConnection);
+
+                logger.info("Disposing connection info window");
                 dispose();
+
             } else {
+
                 JOptionPane.showMessageDialog(null, "Error - couldn't establish the connection. Please check setting above");
             }
         }

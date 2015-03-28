@@ -5,7 +5,8 @@ import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * @author Ruslan Kiselev
@@ -13,21 +14,21 @@ import java.sql.SQLException;
  *         Time: 11:59 AM
  *         Project Name: DataScrubber
  */
-public class ConnectionConfig {
+public class DatabaseSession {
     
-    private static Logger logger = LoggerFactory.getLogger(ConnectionConfig.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(DatabaseSession.class.getName());
 
-    DatabaseInterface databaseInterface;
+    final DatabaseInterface databaseInterface;
 
-    public ConnectionConfig(DatabaseInterface databaseInterface) {
-        this.databaseInterface = databaseInterface;
+    public DatabaseSession(Connection connection) {
+        databaseInterface = new DatabaseInterface(connection);
     }
 
     // disable different keys checks
 
     public void disableSafeUpdate() throws SQLException {
 
-        
+
         if (!databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
@@ -39,7 +40,7 @@ public class ConnectionConfig {
 
     public void enableSafeUpdate() throws SQLException {
 
-        
+
         if (!databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
@@ -51,7 +52,7 @@ public class ConnectionConfig {
 
     public void disableForeignKeyConstraints() throws SQLException {
 
-        
+
         if (!databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
@@ -77,7 +78,7 @@ public class ConnectionConfig {
 
     public void setCharacterSetClient(String characterSet) throws SQLException {
 
-        
+
         if (!databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
@@ -92,7 +93,7 @@ public class ConnectionConfig {
 
     public void setSessionProperties(String properties) throws SQLException {
 
-        
+
         if (!databaseInterface.isConnectionValid()) {
             throw new SQLException("Connection is not valid");
         }
@@ -133,16 +134,61 @@ public class ConnectionConfig {
         databaseInterface.commit();
     }
 
-    public void setDatabaseInterface(DatabaseInterface databaseInterface) {
-        this.databaseInterface = databaseInterface;
-    }
-
-    public void setDefaultDatabase(Database database) throws SQLException {
+    public void setDefaultDatabase(String defaultDatabase) throws SQLException {
 
         if(!databaseInterface.isConnectionValid()){
-            throw new SQLException("ConnectionConfig - Connection isn't valid");
+            throw new SQLException("DatabaseConnection - Connection isn't valid");
         }
 
-        databaseInterface.createStatement().executeUpdate("USE " + database.getDatabaseName());
+        if (defaultDatabase == null) {
+            throw new SQLException("Database name can't be null");
+        }
+
+        logger.info("Using database " + defaultDatabase);
+        databaseInterface.createStatement().executeUpdate("USE " + defaultDatabase);
+
+        databaseInterface.commit();
+    }
+
+    public Statement createStatement() throws SQLException {
+        return databaseInterface.createStatement();
+    }
+
+    public void cleanupAutomatic() throws SQLException {
+        databaseInterface.cleanupAutomatic();
+    }
+
+    public PreparedStatement createPreparedStatement(String sql) throws SQLException {
+
+        return databaseInterface.createPreparedStatement(sql);
+
+    }
+
+    public ResultSet executePreparedStatement() throws SQLException {
+
+        return databaseInterface.executePreparedStatement();
+    }
+
+    public void addPreparedStatementParameters(Object... objects) {
+
+        databaseInterface.addPreparedStatementParameters(objects);
+    }
+
+    public void commit() throws SQLException {
+
+        databaseInterface.commit();
+    }
+
+    public void rollback() throws SQLException {
+
+        databaseInterface.rollback();
+    }
+
+    public boolean isConnectionValid() {
+        return databaseInterface.isConnectionValid();
+    }
+
+    public void setPreparedStatementParameters() throws SQLException {
+        databaseInterface.setPreparedStatementParameters();
     }
 }

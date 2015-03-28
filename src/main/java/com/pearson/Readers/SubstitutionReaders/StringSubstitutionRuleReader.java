@@ -1,7 +1,6 @@
 package com.pearson.Readers.SubstitutionReaders;
 
-import com.pearson.Database.MySQL.MySQLTable;
-import com.pearson.Database.SQL.Database;
+import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Utilities.Constants;
 import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
@@ -26,15 +25,15 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
     private static Logger logger = LoggerFactory.getLogger(StringSubstitutionRuleReader.class.getName());
 
-    public StringSubstitutionRuleReader(Rule rule, Database database, MySQLTable mySQLTable) {
-        super(rule, database, mySQLTable);
+    public StringSubstitutionRuleReader(Builder builder) throws SQLException {
+        super(builder);
     }
 
-    @Override
-    public Rule call() throws SQLException, FileNotFoundException {
+    public void runRule() throws SQLException, FileNotFoundException {
 
         SubstitutionActionType.Enum actionType = rule.getSubstitute().getSubstitutionActionType();
-        prepareToRun();
+
+        createAutoIncrementColumn(mySQLTable, mySQLTableWorker);
 
         if (actionType == SubstitutionActionType.SET_FROM_FILE) {
             String filePath = rule.getSubstitute().getStringValue1();
@@ -55,14 +54,12 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
             setToNull();
         }
 
-        mySQLTable.cleanResourses();
-
-        return rule;
+        mySQLTableWorker.cleanupAutomatic();
     }
 
     public void setToValue(String value) throws SQLException {
 
-        mySQLTable.setColumnToValue(rule.getSubstitute().getColumn(), value);
+        mySQLTableWorker.setColumnToValue(rule.getSubstitute().getColumn(), value);
     }
 
     public void setToRandom(int count) throws SQLException {
@@ -71,9 +68,9 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
         char[] charset = charsetString.toCharArray();
 
         String randomString = null;
-        for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
+        for (int j = 0; j <= mySQLTableWorker.getNumberOfRows(); j++) {
             randomString = RandomStringUtils.random(count, charset);
-            mySQLTable.updateRow(randomString, rule.getSubstitute().getColumn(), j);
+            mySQLTableWorker.updateRow(randomString, rule.getSubstitute().getColumn(), j);
         }
 
         logger.debug("Set column to value: " + count);
@@ -106,9 +103,9 @@ public class StringSubstitutionRuleReader extends SubstitutionReader {
 
         Random random = new Random();
         // get a random word from the list and update with it next row inside column
-        for (int j = 0; j <= mySQLTable.getNumberOfRows(); j++) {
+        for (int j = 0; j <= mySQLTableWorker.getNumberOfRows(); j++) {
             String stringToUpdate = words.get(random.nextInt(words.size() - 1));
-            mySQLTable.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), j);
+            mySQLTableWorker.updateRow(stringToUpdate, rule.getSubstitute().getColumn(), j);
         }
 
     }

@@ -10,7 +10,7 @@ public class Constants {
 
     public final static long MILLISECONDS_IN_A_YEAR = 3154000000L;
 
-    public static final boolean IN_DEVELOPMENT = true;
+    public static boolean IN_DEVELOPMENT = false;
     public static final String WORKING_DIRECTORY = System.getProperty("user.dir");
     public static final String ASCII_SET = "qwertyuiopasdfghjklzxcvbnm123456789";
     public static final int MAIN_WINDOW_WIDTH = 800;

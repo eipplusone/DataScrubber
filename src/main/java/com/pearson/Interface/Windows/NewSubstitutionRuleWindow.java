@@ -5,9 +5,11 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.MySQLTable;
+import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
@@ -82,12 +84,10 @@ public class NewSubstitutionRuleWindow extends JDialog {
      */
 
     public NewSubstitutionRuleWindow() throws SQLException {
-        database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(), com.pearson.Interface.UIManager.getUsername(),
-                com.pearson.Interface.UIManager.getPassword(), "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
-                + ":" + com.pearson.Interface.UIManager.getPort());
+        database = new Database(com.pearson.Interface.UIManager.getCurrentConnection());
 
         // end of preparing database structure
-        for (MySQLTable table : database.tables.values()) {
+        for (MySQLTable table : database) {
             tableNames.add(table.getTableName());
         }
 
@@ -335,8 +335,12 @@ public class NewSubstitutionRuleWindow extends JDialog {
 
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
         tableSelected = tableNames.get(row);
-        for (Column column : database.tables.get(tableSelected).columns.values()) {
-            columnsComboBox.addItem(column.name + "(" + column.getType() + ")");
+        try {
+            for (Column column : database.getTable(tableSelected).columns.values()) {
+                columnsComboBox.addItem(column.name + "(" + column.getType() + ")");
+            }
+        } catch (SQLException e) {
+            logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
         isTriggersIsolated = false;
         columnsComboBox.setEnabled(true);
@@ -393,8 +397,12 @@ public class NewSubstitutionRuleWindow extends JDialog {
         String columnSelectedString = columnsComboBox.getSelectedItem().toString();
         typeOfSubstitutionComboBox.removeAllItems();
 
-        columnSelected = database.tables.get(tableSelected).columns.get(
-                columnSelectedString.substring(0, columnSelectedString.indexOf("(")));
+        try {
+            columnSelected = database.getTable(tableSelected).columns.get(
+                    columnSelectedString.substring(0, columnSelectedString.indexOf("(")));
+        } catch (SQLException e) {
+            logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+        }
 
         // populate the substitution type combo box depending on the type of column it is
         if (MySQLDataType.isNumericType(columnSelected.getType())) addNumericToSubstitutionType();

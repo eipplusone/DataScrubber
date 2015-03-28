@@ -7,7 +7,7 @@ package com.pearson.Interface;
  * <p/>
  * Adhering Builder patter - see Effective Java by Joshua Bloch
  */
-public class DatabaseConnection {
+public class DatabaseConnectionInfo {
     public static String getUsername() {
         return username;
     }
@@ -35,10 +35,18 @@ public class DatabaseConnection {
     private static String port = null;
 
     public String getJDBCURL() {
-        
+        StringBuilder builder = new StringBuilder("jdbc:mysql://" + url);
+        if (!port.isEmpty()) builder.append(":" + port);
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "URL: " + getJDBCURL() + " Password " + password;
     }
 
     public static class Builder {
+        //required
         private static String username;
         private static String password;
         private static String url;
@@ -62,12 +70,12 @@ public class DatabaseConnection {
             return this;
         }
 
-        public DatabaseConnection build() {
-            return new DatabaseConnection(this);
+        public DatabaseConnectionInfo build() {
+            return new DatabaseConnectionInfo(this);
         }
     }
 
-    public DatabaseConnection(Builder builder) {
+    private DatabaseConnectionInfo(Builder builder) {
         username = builder.username;
         password = builder.password;
         url = builder.url;

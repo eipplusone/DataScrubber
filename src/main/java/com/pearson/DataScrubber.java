@@ -1,6 +1,8 @@
 package com.pearson;
 
 import com.pearson.Interface.Windows.MainWindow;
+import org.apache.commons.cli.*;
+import sun.net.dns.ResolverConfiguration;
 
 import javax.swing.*;
 
@@ -12,6 +14,7 @@ public class DataScrubber {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 String[] argCopy = args.clone();
                 new MainWindow(argCopy).setVisible(true);
             }

@@ -1,7 +1,8 @@
 package com.pearson.Readers.SubstitutionReaders;
 
-import com.pearson.Database.MySQL.MySQLTable;
-import com.pearson.Database.SQL.Database;
+import com.pearson.Database.MySQL.MySQLTableWorker;
+import com.pearson.Database.SQL.MySQLTable;
+import com.pearson.Readers.RuleReader;
 import noNamespace.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,34 +19,26 @@ import java.util.concurrent.Callable;
  *         Time: 9:22 AM
  *         Project Name: DataScrubber
  */
-public abstract class SubstitutionReader implements Callable<Rule> {
+public abstract class SubstitutionReader extends RuleReader {
 
     private static Logger logger = LoggerFactory.getLogger(SubstitutionReader.class.getName());
-    Database database;
-    Rule rule;
-    MySQLTable mySQLTable;
+    MySQLTableWorker mySQLTableWorker;
 
-    public SubstitutionReader(Rule rule, Database database, MySQLTable mySQLTable) {
-        this.rule = rule;
-        this.database = database;
-        this.mySQLTable = mySQLTable;
+    protected SubstitutionReader(RuleReader.Builder builder) throws SQLException {
+        super(builder);
+        this.mySQLTableWorker = new MySQLTableWorker(mySQLTable, connection, databaseName);
     }
 
     public void setToNull() throws SQLException {
 
-        mySQLTable.setColumnToNull(rule.getSubstitute().getColumn());
+        mySQLTableWorker.setColumnToNull(rule.getSubstitute().getColumn());
     }
 
-    protected void disableConstraints() throws SQLException {
-
-        mySQLTable.getConnectionConfig().disableUniqueChecks();
-        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
+    protected void createAutoIncrementColumn(MySQLTable table, MySQLTableWorker mySQLTableWorker) throws SQLException {
+        synchronized (table) {
+            if (mySQLTableWorker.getAutoIncrementColumn() == null) {
+                mySQLTableWorker.addAutoIncrementColumn();
+            }
+        }
     }
-
-    protected void prepareToRun() throws SQLException {
-
-        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-        disableConstraints();
-    }
-
 }

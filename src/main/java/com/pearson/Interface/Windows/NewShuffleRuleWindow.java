@@ -1,8 +1,9 @@
 package com.pearson.Interface.Windows;
 
-import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.MySQLTable;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;
 import com.pearson.Utilities.StackTrace;
@@ -62,11 +63,9 @@ public class NewShuffleRuleWindow extends JDialog {
      */
     public NewShuffleRuleWindow() throws SQLException {
 
-        database = new Database(com.pearson.Interface.UIManager.getDefaultSchema(), com.pearson.Interface.UIManager.getUsername(),
-                com.pearson.Interface.UIManager.getPassword(), "jdbc:mysql://" + com.pearson.Interface.UIManager.getUrl()
-                + ":" + com.pearson.Interface.UIManager.getPort());
+        database = new Database(com.pearson.Interface.UIManager.getCurrentConnection());
 
-        for (MySQLTable table : database.tables.values()) {
+        for (MySQLTable table : database) {
             tableNames.add(table.getTableName());
         }
 
@@ -291,8 +290,12 @@ public class NewShuffleRuleWindow extends JDialog {
         int row = tablesSelectedTable.rowAtPoint(evt.getPoint());
 
         String tableSelected = tableNames.get(row);
-        for (Column column : database.tables.get(tableSelected).columns.values()) {
-            columnsComboBox.addItem(column.name);
+        try {
+            for (Column column : database.getTable(tableSelected).columns.values()) {
+                columnsComboBox.addItem(column.name);
+            }
+        } catch (SQLException e) {
+            logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
         }
         firstTimeSelected = false;
     }//GEN-LAST:event_tablesSelectedTableMouseClicked

@@ -1,13 +1,17 @@
 package com.pearson.Readers;
 
 import com.pearson.Database.DatabaseSettings;
-import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTableWorker;
+import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.MySQLTable;
+import com.pearson.Interface.DatabaseConnectionInfo;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.RuleNode;
 import com.pearson.Interface.Windows.ProgressWindow;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
+import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -15,6 +19,7 @@ import noNamespace.RulesDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.modelmbean.XMLParseException;
 import javax.swing.*;
 import java.io.File;
 import java.sql.SQLException;
@@ -36,30 +41,34 @@ public class SetReader extends SwingWorker<Integer, String> {
 
     private static final int TIMER_PERIOD = 5000;
     public static Logger logger = LoggerFactory.getLogger(SetReader.class.getName());
+    private final Database database;
 
     ProgressWindow progressWindow;
 
-    private static Set<String> tablesOccupied;
+    private static Set<String> tablesOccupied; // main locking mechanism
+    private static Set<MySQLTable> tablesUsed; // for after run cleaning purposes
     MaskingSetDocument setDocument = null;
-    Database database;
-    Timer timer;
+    DatabaseConnectionInfo connectionInfo;
     private int numberOfThreadsAllowed = 50;
     String setName;
     ExecutorService executor;
     private ArrayList<Rule> rulesRunning;
-    private Set<String> autoIncrementColumns;
 
-    public SetReader(final MaskingSetDocument setDocument, Database database, final String name) {
+    public SetReader(final MaskingSetDocument setDocument, DatabaseConnectionInfo connectionInfo, final String name) throws SQLException {
         this.setDocument = setDocument;
-        this.database = database;
         this.setName = name;
+        this.connectionInfo = connectionInfo;
         rulesRunning = new ArrayList<Rule>();
 
         File configFile = new File(Constants.CONFIG_FILE);
         XMLInterface.checkConfigFile(configFile);
-        autoIncrementColumns = new HashSet<String>();
 
+        database = new Database(connectionInfo);
         progressWindow = new ProgressWindow(this);
+
+        // to guarantee thread safety
+        tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
+        tablesUsed = Collections.synchronizedSet(new HashSet<MySQLTable>());
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -76,12 +85,15 @@ public class SetReader extends SwingWorker<Integer, String> {
      */
     public static RuleNode getRulesTree(MaskingSetDocument setDocument) {
 
+        if (setDocument == null) throw new IllegalArgumentException("SetDocument is Null");
+
+        // parse the document
         MaskingSetDocument.MaskingSet maskingSet = setDocument.getMaskingSet();
         RulesDocument.Rules rules = maskingSet.getRules();
 
+        // a dummy root rule; it is not displayed inside main window(rules have to start somewhere)
         Rule rootRule = RulesDocument.Factory.newInstance().addNewRules().addNewRule();
 
-        // a dummy root rule; it is not displayed inside main window
         rootRule.setId("Root");
         rootRule.setTarget("Root");
         rootRule.setRuleType(RuleType.SHUFFLE);
@@ -90,6 +102,7 @@ public class SetReader extends SwingWorker<Integer, String> {
         // root is not displayed; it only creates number of columns TODO make it more generic
         RuleNode root = new RuleNode(rootRule);
 
+        // populate the tree with the nodes we parsed out
         for (Rule rule : rules.getRuleArray()) {
             appendNode(rule, root);
         }
@@ -143,98 +156,17 @@ public class SetReader extends SwingWorker<Integer, String> {
     public Integer doInBackground() throws Exception {
         RuleNode root = getRulesTree(this.setDocument);
         publish("Partitioned the set");
-        createAutoIncrementColumns();
 
         // get the list of all rules that yet to be run in the order they suppose to run
         LinkedList<Rule> rulesToRun = getChildren(root);
         executor = Executors.newFixedThreadPool(numberOfThreadsAllowed);
 
-        DatabaseSettings databaseSettings = database.getDatabaseSettings();
-        try {
-            if (databaseSettings.isTriggersExist()) {
-                databaseSettings.disableTriggers();
-                executeThreads(rulesToRun);
-                databaseSettings.enableTriggers();
-            }
-            // if database has no triggers
-            else {
-                executeThreads(rulesToRun);
-            }
-        } catch (MySQLException sqlexc) {
-            publish("Rule " + sqlexc.getRuleID() + " has exited with an SQL exception: " + sqlexc);
-            logger.error(sqlexc + System.lineSeparator() + StackTrace.getStringFromStackTrace(sqlexc));
-        } catch (Exception exc) {
-            publish("Something terrible happened; check the logs");
-            logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
-        }
-
+        executeThreads(rulesToRun);
         return 0;
-    }
-
-    private void cleanUp() {
-        if (rulesRunning.isEmpty()) try {
-            cleanUpAutoIncrementColumns();
-            database.cleanUp();
-        } catch (SQLException e) {
-            logger.debug("Weren't able to clean up after database usage");
-            logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-        }
-    }
-
-    /**
-     * Deletes all the autoincrement columns we have created so far
-     */
-    private void cleanUpAutoIncrementColumns() throws SQLException {
-        for (String target : autoIncrementColumns) {
-            MySQLTable mySQLTable = null;
-            try {
-                mySQLTable = database.getTable(target);
-                mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-            } catch (SQLException e) {
-                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            }
-            logger.debug(target + ": Deleting autoincrement column");
-            try {
-                mySQLTable.deleteAutoIncrementColumn();
-            } catch (SQLException e) {
-                logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            }
-
-            mySQLTable.cleanResourses();
-        }
-    }
-
-    /**
-     * Creates autoincrement columns for tables within masking set that don't have one.
-     */
-    private void createAutoIncrementColumns() {
-        Set<String> targets = XMLInterface.getAllTargets(setDocument);
-
-        for (String target : targets) {
-            MySQLTable mySQLTable = null;
-            try {
-                mySQLTable = database.getTable(target);
-            } catch (SQLException e) {
-                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-            }
-
-            if (mySQLTable.getAutoIncrementColumn() == null) {
-                try {
-                    mySQLTable.addAutoIncrementColumn();
-                    logger.debug("Added autoincrement column to " + target);
-                    autoIncrementColumns.add(target);
-                } catch (SQLException e) {
-                    logger.error(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
-                }
-                logger.debug("Creating autoincrement column for " + target);
-            }
-
-        }
     }
 
     private void executeThreads(List<Rule> list) {
 
-        tablesOccupied = Collections.synchronizedSet(new HashSet<String>());
         for (Rule rule : list) {
 
             Future<Rule> future;
@@ -242,11 +174,24 @@ public class SetReader extends SwingWorker<Integer, String> {
                 publish("Rule " + rule.getId() + " starts running");
                 logger.info("Rule " + rule.getId() + " starts running");
                 rulesRunning.add(rule);
-                executor.submit(new RuleReader(rule, database, this));
+                try {
+                    tablesUsed.add(database.getTable(rule.getTarget()));
+                    RuleReader.Builder builder = new RuleReader.Builder()
+                            .rule(rule)
+                            .connection(database.getConnection("For running rule" + rule.getId()))
+                            .databaseName(database.getDatabaseName())
+                            .setReader(this)
+                            .mySQLTable(database.getTable(rule.getTarget()));
+                    executor.submit(builder.build());
+                }
+                catch (SQLException exc) {
+                    logger.error(exc + System.lineSeparator() + StackTrace.getStringFromStackTrace(exc));
+                } catch (XMLParseException e) {
+                    logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+                }
             }
         }
-
-        com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
+//        com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
     }
 
     public boolean addTarget(String target) {
@@ -255,14 +200,21 @@ public class SetReader extends SwingWorker<Integer, String> {
         }
     }
 
+    /**
+     * This method handles all the work that needs to be done on the GUI related part
+     * that happens after a rule is done. Rule reader *has* to call this method.
+     * @param doneRule
+     * @param isSuccessful
+     */
     public synchronized void updateDoneRule(Rule doneRule, boolean isSuccessful) {
         synchronized (rulesRunning) {
             tablesOccupied.remove(doneRule.getTarget());
             rulesRunning.remove(doneRule);
-            com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
+//            com.pearson.Utilities.LoggerUtils.printRuleArray(rulesRunning);
             if (isSuccessful) {
                 publish("Rule " + doneRule.getId() + " has completed running");
                 if (!XMLInterface.isLeaf(doneRule)) {
+                    publish("Running leaf rules of rule " + doneRule.getId());
                     List<Rule> ruleList = Arrays.asList(doneRule.getDependencies().getRuleArray());
                     executeThreads(ruleList);
                 }
@@ -270,14 +222,47 @@ public class SetReader extends SwingWorker<Integer, String> {
 
             if (rulesRunning.isEmpty()) {
                 logger.debug("Finished running all rules");
-                cleanUp();
+                int numberOfOpenConnections = 0;
+                try {
+                    numberOfOpenConnections = database.getNumberOfOpenConnections();
+                } catch (SQLException e) {
+                    logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+                }
+                if (numberOfOpenConnections != 0) {
+                    logger.debug("Opened connections " + numberOfOpenConnections);
+                    logger.debug("Total connections opened " + database.getTotalOpenedConnections());
+                }
+
+                List<String> metadata = database.getConnectionsMetadata();
+                for (String entry : metadata) {
+                    logger.debug("Unclosed connection: " + entry);
+                }
+                try {
+                    cleanUp();
+                } catch (SQLException e) {
+                    logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+                }
             }
         }
-
     }
 
     public synchronized void addToLog(String s) {
         publish(s);
     }
 
+    private void cleanUp() throws SQLException {
+        for (MySQLTable table : tablesUsed) {
+            try {
+                MySQLTableWorker worker = new MySQLTableWorker(table, database.getConnection("Cleaning up datascrubber_rowid"), database.getDatabaseName());
+                Column autoIncrementColumn = worker.getAutoIncrementColumn();
+                if (autoIncrementColumn != null && autoIncrementColumn.getName().equals("datascrubber_rowid")) {
+                    worker.deleteAutoIncrementColumn();
+                }
+                worker.cleanupAutomatic();
+            } catch (SQLException e) {
+                logger.debug(e + System.lineSeparator() + StackTrace.getStringFromStackTrace(e));
+            }
+        }
+        database.cleanUp();
+    }
 }

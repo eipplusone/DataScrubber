@@ -4,68 +4,41 @@ import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
 import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTable;
-import com.pearson.Interface.DatabaseConnection;
+import com.pearson.Interface.DatabaseConnectionInfo;
 import com.pearson.Utilities.SQLStatements;
 import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.plugin2.message.GetAppletMessage;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA. User: UKISERU Date: 6/7/13 Time: 9:25 AM To
  * change this template use File | Settings | File Templates.
  */
-public class Database {
+public class Database implements Iterable<MySQLTable>{
 
     private static Logger logger = LoggerFactory.getLogger(Database.class.getName());
 
     private String databaseName;
-    public TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
+    private TreeMap<String, MySQLTable> tables = new TreeMap<String, MySQLTable>();
     private DatabaseManager databaseManager;
-    private DatabaseSettings databaseSettings;
 
-    public Database(DatabaseConnection connection) {
-        databaseName = connection.getDefaultSchema();
-        connect(connection.getUsername(), connection.getPassword(), connection.getJDBCURL())
-    }
-
-    public static boolean isConnectionValid(String defaultSchema, String username, String password, String url) {
-
-        try {
-            DatabaseManager databaseManager = new DatabaseManager(username, password, url);
-            return true;
-        } catch (SQLException ex) {
-            return false;
-        }
+    public Database(DatabaseConnectionInfo connectionInfo) throws SQLException {
+        databaseName = connectionInfo.getDefaultSchema();
+        databaseManager = new DatabaseManager(connectionInfo);
+        fillTables();
     }
 
     public String getDatabaseName() {
         return databaseName;
-    }
-
-
-    public Database(String schema_name, String username, String password, String JDBCURL) throws SQLException {
-
-        databaseName = schema_name;
-        connect(username, password, JDBCURL);
-        fillTables();
-        databaseSettings = new DatabaseSettings(new DatabaseInterface(databaseManager.getConnection()), this);
-    }
-
-    /**
-     * Connect creates connection pool to draw connections from
-     *
-     * @param username username that is used to log in on MySQL server
-     * @param password password that is used to log in on MySQL server
-     * @param JDBCURL  url that is used to log in on MySQL server
-     */
-    private void connect(String username, String password, String JDBCURL) throws SQLException {
-        databaseManager = new DatabaseManager(username, password, JDBCURL);
     }
 
     @Override
@@ -77,22 +50,20 @@ public class Database {
      * fillTables populates database with information(tables and columns).
      */
     private void fillTables() throws SQLException {
-        DatabaseInterface databaseInterface = new DatabaseInterface(databaseManager.getConnection());
-        ConnectionConfig config = new ConnectionConfig(databaseInterface);
-        config.setDefaultDatabase(this);
-        System.out.println("bla3");
+        DatabaseSession databaseSession = new DatabaseSession(databaseManager.getConnection("Filling tables for database"));
+        databaseSession.setDefaultDatabase(databaseName);
         try {
-            try (PreparedStatement tablesStmt = databaseInterface.createPreparedStatement(SQLStatements.GET_TABLES)) {
+            try (PreparedStatement tablesStmt = databaseSession.createPreparedStatement(SQLStatements.GET_TABLES)) {
                 try (ResultSet tablesResult = tablesStmt.executeQuery()) {
                     while (tablesResult.next()) {
-                        add(new MySQLTable(tablesResult.getString("Tables_in_" + databaseName), this.databaseManager));
+                        add(new MySQLTable(tablesResult.getString("Tables_in_" + databaseName)));
                     }
                 }
             }
 
 
             for (MySQLTable mySQLTable : tables.values()) {
-                try (PreparedStatement columnsStmt = databaseInterface.createPreparedStatement(SQLStatements.GET_COLUMNS)) {
+                try (PreparedStatement columnsStmt = databaseSession.createPreparedStatement(SQLStatements.GET_COLUMNS)) {
                     columnsStmt.setString(1, mySQLTable.getTableName());
                     try (ResultSet columnsResult = columnsStmt.executeQuery()) {
                         while (columnsResult.next()) {
@@ -124,9 +95,9 @@ public class Database {
         } catch (SQLException sqle) {
             logger.error(sqle + System.lineSeparator() + StackTrace.getStringFromStackTrace(sqle));
         } finally {
-            if (databaseInterface.isConnectionValid()) {
+            if (databaseSession.isConnectionValid()) {
                 try {
-                    databaseInterface.cleanupAutomatic();
+                    databaseSession.cleanupAutomatic();
                 } catch (SQLException sqle) {
                     logger.error(sqle + System.lineSeparator() + StackTrace.getStringFromStackTrace(sqle));
                 }
@@ -134,12 +105,17 @@ public class Database {
         }
     }
 
-    public void add(MySQLTable mySQLTable) {
+    private void add(MySQLTable mySQLTable) {
         tables.put(mySQLTable.getTableName(), mySQLTable);
     }
 
+    /**
+     * Returns MySQLTable object associated with the tableName in the Database object
+     * @param tableName - String value of tableName
+     * @return MySQLTable object
+     * @throws SQLException if the table doesn't exist
+     */
     public MySQLTable getTable(String tableName) throws SQLException {
-
         if (!tables.containsKey(tableName)) {
             throw new SQLException("Table " + tableName +
                     " does not exist in the database " + databaseName);
@@ -147,14 +123,33 @@ public class Database {
         return tables.get(tableName);
     }
 
-    public DatabaseSettings getDatabaseSettings() {
-
-        return databaseSettings;
-    }
-
     public void cleanUp() throws SQLException {
 
-        databaseSettings.cleanUp();
         databaseManager.shutDown();
+    }
+
+    public Connection getConnection(String metadata) throws SQLException {
+        return databaseManager.getConnection(metadata);
+    }
+
+    public int getNumberOfOpenConnections() throws SQLException {
+        return databaseManager.getNumberOfOpenConnections();
+    }
+
+    public List<String> getConnectionsMetadata(){
+        return databaseManager.getConnectionsMetadata();
+    }
+
+    public static boolean isConnectionValid(DatabaseConnectionInfo currentConnection) {
+        return DatabaseManager.isConnectionValid(currentConnection);
+    }
+
+    @Override
+    public Iterator<MySQLTable> iterator() {
+        return tables.values().iterator();
+    }
+
+    public int getTotalOpenedConnections() {
+        return databaseManager.getTotalConnectionsOpened();
     }
 }

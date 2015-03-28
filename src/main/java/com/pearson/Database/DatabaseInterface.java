@@ -1,10 +1,8 @@
 package com.pearson.Database;
 
-import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.JavaCompiler;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -34,6 +32,9 @@ public class DatabaseInterface {
     public void cleanupAutomatic() throws SQLException {
 
         if (connection != null){
+            // trying to debug
+            logger.debug("CLOSING OFF A CONNECTION");
+//            connection.commit();
             connection.close();
         }
 
@@ -74,9 +75,7 @@ public class DatabaseInterface {
 
             setPreparedStatementParameters();
 
-            boolean result = preparedStatement.execute();
-
-            if (result) {
+            if (preparedStatement.execute()) {
                 results = preparedStatement.getResultSet();
             }
 
@@ -94,7 +93,7 @@ public class DatabaseInterface {
                 connection.commit();
             }
             else {
-                logger.debug("Cannot commit when Auto-Commit is enabled");
+                logger.error("Cannot commit when Auto-Commit is enabled");
             }
     }
 
@@ -104,7 +103,7 @@ public class DatabaseInterface {
                 connection.rollback();
             }
             else {
-                logger.debug("Cannot rollback when Auto-Commit is enabled");
+                logger.error("Cannot rollback when Auto-Commit is enabled");
             }
     }
 
@@ -152,7 +151,6 @@ public class DatabaseInterface {
                 }
             }
             else if (object instanceof java.sql.Timestamp) {
-                logger.debug("Setting TimeStamp: " + (java.sql.Timestamp) object);
                 preparedStatement.setTimestamp(index++, (java.sql.Timestamp) object);
             }
             else if (object instanceof java.sql.Date) {

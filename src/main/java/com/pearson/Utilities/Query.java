@@ -1,6 +1,4 @@
-package com.pearson.Utilities;
-
-import java.util.ArrayList;
+package com.pearson.Utilities;  import java.util.ArrayList;
 
 /**
  * @author Ruslan Kiselev

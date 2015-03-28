@@ -45,9 +45,10 @@ public class LoggerUtils {
     }
 
     public static void printRuleArray(List<Rule> rulesRunning) {
-        System.out.println("Rules running: ");
+        System.out.print("Rules running: ");
         for (Rule rule : rulesRunning) {
             System.out.print(rule.getId() + " ");
         }
+        System.out.println();
     }
 }

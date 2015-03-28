@@ -1,19 +1,22 @@
 package com.pearson.Readers;
 
-import com.pearson.Database.MySQL.MySQLTable;
+import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Database;
+import com.pearson.Database.SQL.MySQLTable;
 import com.pearson.Readers.SubstitutionReaders.DateSubstitutionRuleReader;
 import com.pearson.Readers.SubstitutionReaders.NumericSubstitutionRuleReader;
 import com.pearson.Readers.SubstitutionReaders.StringSubstitutionRuleReader;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.RuleType;
+import noNamespace.ShuffleRule;
 import noNamespace.SubstitutionDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.management.modelmbean.XMLParseException;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,90 +27,103 @@ import java.util.Arrays;
  *         Date: 7/15/13
  *         Time: 3:42 PM
  *         Project Name: DataScrubber
- *         <p/>
+
  *         Rule reader is called everytime we need to parse a rule. Shuffling is implemented within
  *         RuleReader, whereas all the substitution methods are handled by calling the respective substitution
  *         class.
  */
-public class RuleReader implements Runnable {
+public abstract class RuleReader implements Runnable, RuleRunner {
 
     private static Logger logger = LoggerFactory.getLogger(RuleReader.class.getName());
 
-    private Rule rule;
-    private Database database;
-    private SetReader setReader;
+    protected Rule rule;
+    protected Connection connection;
+    protected SetReader setReader;
+    protected String databaseName;
+    protected MySQLTable mySQLTable;
 
-    public RuleReader(Rule rule, Database database, SetReader setReader) {
-        this.rule = rule;
-        this.database = database;
-        this.setReader = setReader;
+    protected RuleReader(Builder builder) {
+
+        this.rule = builder.rule;
+        this.connection = builder.connection;
+        this.setReader = builder.setReader;
+        this.databaseName = builder.databaseName;
+        this.mySQLTable = builder.mySQLTable;
     }
 
-    public void call(Database database) throws SQLException, FileNotFoundException, XMLParseException {
+    public static class Builder {
 
-        if (rule.getRuleType() == RuleType.SHUFFLE) callShuffle(database);
-        else if (rule.getRuleType() == RuleType.SUBSTITUTION) callSubstitution(database);
-        else throw new IllegalArgumentException("XML file is invalid");
-    }
+        private Rule rule;
+        private Connection connection;
+        private SetReader setReader;
+        private String databaseName;
+        private MySQLTable mySQLTable;
 
-    private void callShuffle(Database database) throws SQLException {
-
-        MySQLTable mySQLTable = database.getTable(rule.getTarget());
-
-        // BUG; having already done these setting in a parent rule causes the child rule,
-        // if it's the rule that targets the same table
-        // to exit with exception right away.
-
-        // Aug 12th: Checked on a test set, wasn't able to imitate the bug.
-        // Theoretically it shouldn't matter since the queries that these methods
-        // do if ran, don't affect the running of the program.
-
-        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().disableUniqueChecks();
-
-        // begin shuffling
-        logger.debug("Rule " + rule.getId() + " finished setting up; begin shuffling");
-        for (int i = 0; i < mySQLTable.getNumberOfRows(); i++) {
-            // two random rows to be swapped
-            String[] columnNamesArray = rule.getShuffle().getColumnArray();
-            ResultSet randomRow1 = mySQLTable.getRandomRow(new ArrayList(Arrays.asList(columnNamesArray)));
-            ResultSet randomRow2 = mySQLTable.getRandomRow(new ArrayList(Arrays.asList(columnNamesArray)));
-            mySQLTable.swap(randomRow1, randomRow2, new ArrayList(Arrays.asList(columnNamesArray)));
+        public Builder rule(Rule rule) {
+            this.rule = rule; return this;
         }
-        // get the result set that has already been shuffled
-        logger.debug("Rule " + rule.getId() + " finished shuffling");
 
-        // clean all the resources
-        logger.debug("Rule " + rule.getId() + ":Cleaning resources");
-        mySQLTable.cleanResourses();
-        logger.debug("Rule " + rule.getId() + ":Finished running; returning to dispatch thread");
+        public Builder connection(Connection connection) {
+            this.connection = connection; return this;
+        }
+
+        public Builder setReader(SetReader setReader) {
+            this.setReader = setReader; return this;
+        }
+
+        public Builder databaseName(String databaseName) {
+            this.databaseName = databaseName; return this;
+        }
+
+        public Builder mySQLTable(MySQLTable mySQLTable) {
+            this.mySQLTable = mySQLTable; return this;
+        }
+
+        public RuleReader build() throws XMLParseException, SQLException {
+            if (rule.getRuleType() == RuleType.SHUFFLE) return new ShuffleRuleReader(this);
+            else if (rule.getRuleType() == RuleType.SUBSTITUTION) {
+
+                SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
+
+                if (dataType == SubstitutionDataType.DATE) return new DateSubstitutionRuleReader(this);
+                else if (dataType == SubstitutionDataType.NUMERIC) return new NumericSubstitutionRuleReader(this);
+                else if (dataType == SubstitutionDataType.STRING) return new StringSubstitutionRuleReader(this);
+                else throw new XMLParseException("SubstitutionDataType doesn't match any specified types.");
+            }
+            else throw new XMLParseException("XML file is invalid");
+        }
+
+        private class ShuffleRuleReader extends RuleReader {
+            public ShuffleRuleReader(Builder builder) {
+                super(builder);
+            }
+
+            public void runRule() throws SQLException {
+
+                MySQLTableWorker mysqlTableWorker = new MySQLTableWorker(mySQLTable, connection, databaseName);
+
+                // begin shuffling
+                logger.debug("Rule " + rule.getId() + " finished setting up; begin shuffling");
+
+                for (int i = 0; i < mysqlTableWorker.getNumberOfRows(); i++) {
+                    // two random rows to be swapped
+                    String[] columnNamesArray = rule.getShuffle().getColumnArray();
+                    ResultSet randomRow1 = mysqlTableWorker.getRandomRow(new ArrayList(Arrays.asList(columnNamesArray)));
+                    ResultSet randomRow2 = mysqlTableWorker.getRandomRow(new ArrayList(Arrays.asList(columnNamesArray)));
+                    mysqlTableWorker.swap(randomRow1, randomRow2, new ArrayList(Arrays.asList(columnNamesArray)));
+                }
+
+                // get the result set that has already been shuffled
+                logger.debug("Rule " + rule.getId() + " finished shuffling");
+
+                // clean all the resources
+                logger.debug("Rule " + rule.getId() + ":Cleaning resources");
+                mysqlTableWorker.cleanupAutomatic();
+                logger.debug("Rule " + rule.getId() + ":Finished running; returning to dispatch thread");
+            }
+        }
     }
 
-    private void callSubstitution(Database database) throws SQLException, FileNotFoundException, XMLParseException {
-
-        String target = rule.getTarget();
-        MySQLTable mySQLTable = database.getTable(target);
-
-        /* TODO: WARNING! THIS LEAVES DATABASE IN A STATE DIFFERENT THAN FROM BEFORE!!! NEED TO FIGURE OUT A WAY TO FIX THIS!!!*/
-        // or maybe it's session based so no need to worry
-        mySQLTable.getConnectionConfig().setDefaultDatabase(database);
-        mySQLTable.getConnectionConfig().disableForeignKeyConstraints();
-        mySQLTable.getConnectionConfig().disableUniqueChecks();
-
-        SubstitutionDataType.Enum dataType = rule.getSubstitute().getSubstitutionDataType();
-
-        Rule returnRule = null;
-        if (dataType == SubstitutionDataType.DATE)
-            returnRule = new DateSubstitutionRuleReader(rule, database, mySQLTable).call();
-        else if (dataType == SubstitutionDataType.NUMERIC)
-            returnRule = new NumericSubstitutionRuleReader(rule, database, mySQLTable).call();
-        else if (dataType == SubstitutionDataType.STRING)
-            returnRule = new StringSubstitutionRuleReader(rule, database, mySQLTable).call();
-        else throw new SQLException("SubstitutionDataType doesn't match any specified types.");
-
-        mySQLTable.cleanResourses();
-    }
 
     @Override
     public void run() {
@@ -123,7 +139,7 @@ public class RuleReader implements Runnable {
                 if (setReader.addTarget(rule.getTarget())) {
                     if (!rule.isSetDisabled() && rule.getDisabled() == false) {
                         logger.info("Rule " + rule.getId() + " has started running");
-                        call(database);
+                        runRule();
                     }
                     done = true;
                 } else {

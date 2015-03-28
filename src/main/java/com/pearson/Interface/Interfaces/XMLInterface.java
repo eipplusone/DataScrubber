@@ -211,7 +211,14 @@ public class XMLInterface {
         setDocument.save(newFile, options);
     }
 
+    /**
+     * Parses setDocument and creates a Rule tree.
+     *
+     * @return RuleNode tree or null if setDocument isn't set
+     */
     public static RuleNode getRulesTree() {
+        if (setDocument == null) return null;
+
         return SetReader.getRulesTree(setDocument);
     }
 
