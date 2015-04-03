@@ -5,6 +5,7 @@
 // so we know that user cancelled windo
 package com.pearson.Interface.Windows;
 
+import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Controllers.MainWindowController;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
@@ -240,7 +241,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         topMenuBar.add(maskingSetMenuItem);
         topMenuBar.add(ruleMenuItem);
-        topMenuBar.add(connectionMenuItem);
+        // This functionality isn't required in the base
+//        topMenuBar.add(connectionMenuItem);
 
         ruleMenuItem.setText("Rule");
         connectionMenuItem.setText("Connection");
@@ -328,8 +330,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void runMaskingSetMenuButtonActionPerformed(ActionEvent e) {
         try {
-            mainWindowController.runSet();
+            if (com.pearson.Interface.UIManager.isUserInformationSet()) {
+                mainWindowController.runSet();
+            }
         } catch (IOException | SQLException e1) {
+            JOptionPane.showMessageDialog(null, "Please name and save the set before running");
             logger.error(e1 + System.lineSeparator() + StackTrace.getStringFromStackTrace(e1));
         }
     }

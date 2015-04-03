@@ -175,6 +175,8 @@ public class MySQLTableWorker {
 
     }
 
+    /** don't fix what ain't broke... Isn't that kind of contradictive with notion of refactoring?
+
     /**
      * Adds an auto-increment column to the table, start from 1
      *
