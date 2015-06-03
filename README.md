@@ -11,4 +11,4 @@ MySQL data scrubbing tool. It allows to define rules that specify how to scrub d
   * and other
 
 ## Motivation
-This was an internship project, and apart from getting me an offer, it hasn't seen much use. If you would like to use this tool please let me know.
+This was an internship project, and apart from getting me an offer, it hasn't seen much use. If you would like to use this tool please let me know. Disclaimer: As most internship projects, this was coded without much development experience and thus doesn't follow many of good software development practices.
