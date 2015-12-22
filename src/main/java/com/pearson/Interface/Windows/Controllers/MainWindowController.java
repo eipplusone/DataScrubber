@@ -1,22 +1,17 @@
 package com.pearson.Interface.Windows.Controllers;
 
-import com.pearson.Database.SQL.Database;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.UIManager;
 import com.pearson.Interface.Windows.DatabaseConnectionInfoWindow;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;
 import com.pearson.Readers.SetReader;
-import com.pearson.Utilities.Constants;
-import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import org.apache.xmlbeans.XmlException;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 /**
  * Created by ruslankiselev on 10/25/14.

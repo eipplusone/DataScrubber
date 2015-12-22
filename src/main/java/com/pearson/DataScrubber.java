@@ -1,8 +1,6 @@
 package com.pearson;
 
 import com.pearson.Interface.Windows.MainWindow;
-import org.apache.commons.cli.*;
-import sun.net.dns.ResolverConfiguration;
 
 import javax.swing.*;
 

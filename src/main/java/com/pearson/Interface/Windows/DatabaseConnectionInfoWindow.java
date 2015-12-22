@@ -10,8 +10,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.util.Arrays;
 
 /**
  * @author Ruslan Kiselev, Jia Ma

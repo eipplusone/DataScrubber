@@ -3,12 +3,10 @@ package com.pearson.Readers.SubstitutionReaders;
 import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.MySQLTable;
 import com.pearson.Readers.RuleReader;
-import noNamespace.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.concurrent.Callable;
 
 /**
  * This is an abstract class for three types of substitution readers(sorted by type). SetToNull,

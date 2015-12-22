@@ -5,7 +5,6 @@
 // so we know that user cancelled windo
 package com.pearson.Interface.Windows;
 
-import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Controllers.MainWindowController;
 import com.pearson.Interface.Windows.Models.RulesTreeTableModel;

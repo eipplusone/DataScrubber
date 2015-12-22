@@ -1,7 +1,6 @@
 package com.pearson.Readers;
 
 import com.pearson.Database.MySQL.MySQLTableWorker;
-import com.pearson.Database.SQL.Database;
 import com.pearson.Database.SQL.MySQLTable;
 import com.pearson.Readers.SubstitutionReaders.DateSubstitutionRuleReader;
 import com.pearson.Readers.SubstitutionReaders.NumericSubstitutionRuleReader;
@@ -9,13 +8,11 @@ import com.pearson.Readers.SubstitutionReaders.StringSubstitutionRuleReader;
 import com.pearson.Utilities.StackTrace;
 import noNamespace.Rule;
 import noNamespace.RuleType;
-import noNamespace.ShuffleRule;
 import noNamespace.SubstitutionDataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.management.modelmbean.XMLParseException;
-import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,11 +33,11 @@ public abstract class RuleReader implements Runnable, RuleRunner {
 
     private static Logger logger = LoggerFactory.getLogger(RuleReader.class.getName());
 
-    protected Rule rule;
-    protected Connection connection;
-    protected SetReader setReader;
-    protected String databaseName;
-    protected MySQLTable mySQLTable;
+     protected Rule rule;
+     protected Connection connection;
+     protected SetReader setReader;
+     protected String databaseName;
+     protected MySQLTable mySQLTable;
 
     protected RuleReader(Builder builder) {
 

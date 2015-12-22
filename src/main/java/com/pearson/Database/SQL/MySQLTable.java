@@ -1,7 +1,5 @@
 package com.pearson.Database.SQL;
 
-import com.pearson.Database.DatabaseManager;
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,12 +1,9 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Readers.RuleReader;
-import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

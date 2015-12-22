@@ -1,15 +1,11 @@
 package com.pearson.Readers.SubstitutionReaders;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
-import com.pearson.Database.SQL.MySQLTable;
-import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import noNamespace.SubstitutionRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.jvm.hotspot.debugger.dummy.DummyDebugger;
 
 import java.sql.SQLException;
 import java.util.Random;

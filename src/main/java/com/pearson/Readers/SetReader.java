@@ -1,6 +1,5 @@
 package com.pearson.Readers;
 
-import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
@@ -11,7 +10,6 @@ import com.pearson.Interface.RuleNode;
 import com.pearson.Interface.Windows.ProgressWindow;
 import com.pearson.Utilities.Constants;
 import com.pearson.Utilities.StackTrace;
-import com.sun.xml.internal.ws.api.pipe.FiberContextSwitchInterceptor;
 import noNamespace.MaskingSetDocument;
 import noNamespace.Rule;
 import noNamespace.RuleType;
@@ -24,7 +22,6 @@ import javax.swing.*;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;

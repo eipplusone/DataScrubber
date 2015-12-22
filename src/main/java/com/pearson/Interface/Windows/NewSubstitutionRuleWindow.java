@@ -5,11 +5,9 @@
 package com.pearson.Interface.Windows;
 
 import com.pearson.Database.MySQL.MySQLDataType;
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Database.SQL.MySQLTable;
-import com.pearson.Interface.*;
 import com.pearson.Interface.Interfaces.EnumInterface;
 import com.pearson.Interface.Interfaces.XMLInterface;
 import com.pearson.Interface.Windows.Models.ItemsSelectedTableModel;

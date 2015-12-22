@@ -1,7 +1,8 @@
 package com.pearson.Database.MySQL;
 
-import com.pearson.Database.DatabaseInterface;
-import com.pearson.Database.SQL.*;
+import com.pearson.Database.SQL.Column;
+import com.pearson.Database.SQL.DatabaseSession;
+import com.pearson.Database.SQL.MySQLTable;
 import com.pearson.Utilities.Query;
 import com.pearson.Utilities.SQLStatements;
 import org.slf4j.Logger;

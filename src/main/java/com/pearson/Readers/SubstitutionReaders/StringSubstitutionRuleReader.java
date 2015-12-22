@@ -1,8 +1,6 @@
 package com.pearson.Readers.SubstitutionReaders;
 
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Utilities.Constants;
-import noNamespace.Rule;
 import noNamespace.SubstitutionActionType;
 import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;

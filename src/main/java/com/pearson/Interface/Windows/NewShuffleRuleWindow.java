@@ -1,6 +1,5 @@
 package com.pearson.Interface.Windows;
 
-import com.pearson.Database.MySQL.MySQLTableWorker;
 import com.pearson.Database.SQL.Column;
 import com.pearson.Database.SQL.Database;
 import com.pearson.Database.SQL.MySQLTable;
