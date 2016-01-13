@@ -7,7 +7,6 @@ package com.pearson.Interface;
  * <p/>
  * Adhering Builder patter - see Effective Java by Joshua Bloch
  */
-
 public class DatabaseConnectionInfo {
     public static String getUsername() {
         return username;

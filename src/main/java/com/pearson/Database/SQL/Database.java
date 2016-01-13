@@ -1,15 +1,12 @@
 package com.pearson.Database.SQL;
 
-import com.pearson.Database.DatabaseInterface;
 import com.pearson.Database.DatabaseManager;
-import com.pearson.Database.DatabaseSettings;
 import com.pearson.Database.MySQL.MySQLDataType;
 import com.pearson.Interface.DatabaseConnectionInfo;
 import com.pearson.Utilities.SQLStatements;
 import com.pearson.Utilities.StackTrace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.plugin2.message.GetAppletMessage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
