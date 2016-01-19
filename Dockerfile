@@ -1,3 +1,7 @@
 FROM java:8
 
-RUN git clone 
+WORKDIR /var/datascrubber
+COPY target /var/datascrubber
+#Might need to remap ports
+EXPOSE 4567
+CMD java -jar DataScrubber.jar
